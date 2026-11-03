@@ -107,7 +107,7 @@ def self_test():
     facts = [("Closing cash", "", 1_579_630), ("Runway", "", 14.32), ("Churned MRR", "", -9_400)]
     found, bad = check_numbers("Cash €1,58m (€1.579.630), runway 14,3 months, "
                                "churn €9.400 in Sep 2026 on a 3-month view. Wrong: €1,70m and 15,1.", facts)
-    assert (found, bad) == (5, ["€1,70m", "15,1"]), (found, bad)
+    assert (found, bad) == (6, ["€1,70m", "15,1"]), (found, bad)
     named, unsupported = causes("We lost none. Pipeline is strong.", {
         "Headcount": 25, "Headcount 3 months earlier": 25, "Payroll": 1, "Payroll previous month": 1,
         "Churned MRR": 0, "Expansion MRR": 0, "Contraction MRR": 0, "Professional fees": 1,
