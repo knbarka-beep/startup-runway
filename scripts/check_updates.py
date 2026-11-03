@@ -134,7 +134,7 @@ def main():
         words = len(text.split())
         n_found, unmatched = check_numbers(text, facts)
         named, unsupported = causes(text, fdict, month)
-        dash = any(ch in text for ch in "—–")
+        dash = "\u2014" in text or "\u2013" in text   # em dash or en dash
         passed = not unmatched and not unsupported and 120 <= words <= 180 and not dash
         rows.append([month, words, n_found, n_found - len(unmatched), "; ".join(unmatched),
                      "; ".join(named), "; ".join(unsupported), dash, passed])
