@@ -1,0 +1,9 @@
+web/node_modules/
+web/.next/
+web/out/
+web/next-env.d.ts
+data/*.duckdb
+data/*.duckdb.wal
+__pycache__/
+.env
+*.log

@@ -1,0 +1,103 @@
+customer_id,name,segment,plan,billing,start_month,end_month,mrr
+C001,Mollmyr Gruppen AB,Retail,Enterprise,annual,2023-07-01,2026-07-01,9400
+C002,Kvisttoft Partners A/S,Logistics,Starter,monthly,2022-12-01,,1110
+C003,Lyngrud Partners ApS,Professional services,Starter,annual,2023-02-01,,470
+C004,Ostraberg Industri AB,Retail,Growth,monthly,2024-09-01,,1270
+C005,Molllund Systems AB,Energy,Starter,monthly,2024-06-01,,390
+C006,Solveholt Energi AB,Energy,Starter,annual,2023-07-01,,630
+C007,Vesterdal Systems AB,Logistics,Enterprise,annual,2024-03-01,2025-03-01,3620
+C008,Furevik Industri AB,Retail,Enterprise,monthly,2023-09-01,,3150
+C009,Ostrarud Gruppen ApS,Retail,Growth,monthly,2022-12-01,,1320
+C010,Hvidlund Systems A/S,Retail,Starter,annual,2023-01-01,,750
+C011,Lyngtoft Gruppen AB,Retail,Growth,monthly,2023-09-01,2025-12-01,1290
+C012,Strandvik Handel Oy,Energy,Growth,annual,2023-01-01,,1580
+C013,Hvidvik Energi AS,Logistics,Starter,annual,2023-03-01,,600
+C014,Vardetoft Logistik AS,Professional services,Growth,monthly,2024-05-01,2025-01-01,1660
+C015,Tindholt Gruppen Oy,Manufacturing,Growth,annual,2024-01-01,,1630
+C016,Ekelmyr Gruppen AB,Energy,Growth,annual,2023-12-01,,1210
+C017,Birkerud Energi ApS,Retail,Growth,annual,2024-06-01,,1890
+C018,Skjoldnes Logistik A/S,Manufacturing,Starter,annual,2023-05-01,,780
+C019,Hvidtoft Logistik A/S,Professional services,Enterprise,monthly,2023-12-01,,3500
+C020,Ravnnes Energi ApS,Manufacturing,Growth,monthly,2023-04-01,2025-07-01,1750
+C021,Lyngsund Partners AB,Professional services,Growth,monthly,2024-03-01,,1960
+C022,Skjoldmyr Energi Oy,Retail,Enterprise,annual,2024-02-01,,2170
+C023,Hvidholt Logistik AB,Logistics,Growth,annual,2022-11-01,,1230
+C024,Ravntoft Energi AS,Retail,Growth,annual,2023-06-01,,1680
+C025,Vardelund Partners AS,Professional services,Growth,monthly,2024-03-01,2026-01-01,1210
+C026,Mollmyr Partners AB,Logistics,Enterprise,annual,2023-01-01,,4170
+C027,Ostrasund Partners ApS,Logistics,Starter,annual,2023-07-01,,480
+C028,Tindholt Systems ApS,Retail,Starter,monthly,2023-04-01,,840
+C029,Ostraberg Logistik AS,Manufacturing,Starter,annual,2023-09-01,,710
+C030,Halsvik Handel AB,Retail,Enterprise,monthly,2023-12-01,2025-05-01,4500
+C031,Skjoldmyr Logistik Oy,Professional services,Enterprise,annual,2023-04-01,,3180
+C032,Kvistvik Logistik Oy,Logistics,Growth,monthly,2024-04-01,,1510
+C033,Hvidtoft Energi A/S,Energy,Growth,annual,2024-06-01,,1610
+C034,Stranddal Gruppen AB,Retail,Starter,monthly,2023-03-01,,520
+C035,Skjoldholt Logistik AS,Energy,Starter,annual,2023-01-01,,450
+C036,Strandvik Industri A/S,Retail,Enterprise,monthly,2024-07-01,2025-02-01,3290
+C037,Tindrud Industri A/S,Retail,Starter,annual,2023-04-01,,500
+C038,Birketoft Handel AB,Retail,Starter,monthly,2023-04-01,,500
+C039,Vesterholt Gruppen AS,Manufacturing,Growth,monthly,2023-05-01,,2160
+C040,Strandvik Gruppen AS,Energy,Starter,annual,2024-05-01,,700
+C041,Ostravik Partners A/S,Retail,Growth,monthly,2024-10-01,2025-06-01,1060
+C042,Hvidsund Handel A/S,Professional services,Growth,annual,2024-10-01,,1900
+C043,Vardelund Gruppen AB,Professional services,Enterprise,annual,2024-11-01,,2100
+C044,Lyngsund Logistik AS,Logistics,Growth,annual,2024-11-01,,1570
+C045,Lynglund Partners A/S,Manufacturing,Growth,monthly,2024-11-01,,1480
+C046,Ostraholt Industri Oy,Energy,Starter,monthly,2024-12-01,,760
+C047,Birkedal Systems ApS,Retail,Starter,monthly,2024-12-01,,1000
+C048,Halsnes Industri ApS,Manufacturing,Growth,annual,2025-01-01,,1570
+C049,Strandnes Logistik AB,Retail,Growth,annual,2025-01-01,,1360
+C050,Vardenes Logistik AS,Manufacturing,Growth,annual,2025-02-01,,1050
+C051,Ekelvik Energi Oy,Logistics,Growth,monthly,2025-02-01,,1440
+C052,Lyngnes Gruppen AB,Manufacturing,Starter,annual,2025-03-01,,470
+C053,Mollvik Industri A/S,Energy,Starter,monthly,2025-03-01,,640
+C054,Strandtoft Systems Oy,Professional services,Starter,monthly,2025-04-01,,770
+C055,Skjolddal Systems A/S,Manufacturing,Starter,monthly,2025-04-01,,550
+C056,Skjoldlund Gruppen AS,Manufacturing,Starter,annual,2025-05-01,,490
+C057,Skjoldholt Gruppen Oy,Retail,Starter,annual,2025-05-01,2026-05-01,590
+C058,Ravnvik Systems Oy,Manufacturing,Starter,annual,2025-06-01,,580
+C059,Vardetoft Energi Oy,Retail,Starter,annual,2025-06-01,,540
+C060,Birketoft Partners AB,Energy,Growth,annual,2025-06-01,,1580
+C061,Birketoft Gruppen Oy,Manufacturing,Growth,annual,2025-07-01,,1010
+C062,Solvesund Energi Oy,Professional services,Starter,annual,2025-07-01,,460
+C063,Ostralund Partners AS,Manufacturing,Starter,annual,2025-08-01,,390
+C064,Vesternes Logistik AB,Manufacturing,Growth,annual,2025-08-01,,1470
+C065,Tindrud Partners AS,Logistics,Starter,monthly,2025-08-01,,490
+C066,Halsdal Partners Oy,Retail,Growth,annual,2025-09-01,2026-09-01,1520
+C067,Ravnholt Industri AS,Manufacturing,Starter,monthly,2025-09-01,,690
+C068,Skjoldholt Systems AS,Logistics,Enterprise,annual,2025-10-01,,2310
+C069,Vardevik Logistik AS,Manufacturing,Growth,annual,2025-10-01,,1440
+C070,Tindnes Industri Oy,Retail,Starter,annual,2025-11-01,,440
+C071,Birkeberg Gruppen AB,Professional services,Starter,monthly,2025-11-01,,670
+C072,Halsholt Handel AS,Energy,Growth,annual,2025-11-01,,1180
+C073,Ravnholt Industri AB,Professional services,Growth,annual,2025-12-01,,1160
+C074,Furerud Energi AB,Retail,Starter,annual,2025-12-01,,530
+C075,Birkelund Systems A/S,Professional services,Starter,monthly,2025-12-01,,510
+C076,Ekellund Gruppen Oy,Professional services,Starter,monthly,2026-01-01,,400
+C077,Mollnes Energi AS,Manufacturing,Growth,monthly,2026-01-01,,1560
+C078,Hvidlund Logistik AB,Energy,Starter,annual,2026-01-01,,500
+C079,Skjoldmyr Handel AB,Logistics,Starter,annual,2026-02-01,,610
+C080,Kvistnes Partners AB,Energy,Starter,annual,2026-02-01,,400
+C081,Lyngberg Partners ApS,Professional services,Growth,monthly,2026-03-01,,1300
+C082,Molllund Partners AB,Manufacturing,Starter,annual,2026-03-01,,490
+C083,Kvistholt Systems A/S,Logistics,Starter,annual,2026-03-01,,650
+C084,Strandmyr Handel AB,Manufacturing,Growth,monthly,2026-04-01,,1390
+C085,Ravntoft Gruppen AS,Logistics,Enterprise,annual,2026-04-01,,2600
+C086,Lyngberg Partners AS,Manufacturing,Starter,monthly,2026-04-01,,320
+C087,Fureholt Partners A/S,Professional services,Starter,annual,2026-05-01,,570
+C088,Vardetoft Partners AS,Manufacturing,Starter,monthly,2026-05-01,,790
+C089,Ekellund Logistik AS,Logistics,Starter,annual,2026-05-01,,460
+C090,Ekelmyr Logistik AB,Manufacturing,Starter,annual,2026-06-01,,500
+C091,Solvenes Energi Oy,Logistics,Starter,monthly,2026-06-01,,690
+C092,Skjoldtoft Partners Oy,Retail,Starter,monthly,2026-06-01,,820
+C093,Kvistberg Energi AB,Logistics,Starter,annual,2026-07-01,,640
+C094,Halsdal Handel ApS,Retail,Starter,annual,2026-07-01,,470
+C095,Vesterlund Systems Oy,Retail,Starter,monthly,2026-07-01,,530
+C096,Ekelrud Handel AS,Logistics,Starter,annual,2026-08-01,,450
+C097,Furemyr Partners A/S,Professional services,Enterprise,annual,2026-08-01,,3440
+C098,Furedal Logistik AB,Logistics,Growth,annual,2026-08-01,,1810
+C099,Ravnmyr Industri AS,Retail,Growth,monthly,2026-08-01,,1640
+C100,Molltoft Gruppen AB,Retail,Starter,annual,2026-09-01,,480
+C101,Ostranes Gruppen AS,Retail,Starter,annual,2026-09-01,,680
+C102,Ekelmyr Industri ApS,Logistics,Growth,annual,2026-09-01,,1630
