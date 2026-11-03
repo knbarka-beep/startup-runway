@@ -2511,8 +2511,214 @@
   "monthly_opex": 36437.0,
   "default_growth_rate": 0.037749582549397497,
   "default_churn_rate": 0.01347206407118186,
-  "cost_per_hire": 6718.625454545454
+  "cost_per_hire": 6718.625454545455
  },
- "updates": [],
- "update_checks": []
+ "updates": [
+  {
+   "month": "2025-10",
+   "text": "Oct 2025 closed with cash of €2,59m, down from €2,65m. Net burn was €68k, against €99k the month before. MRR rose to €82k from €78k, and ARR is €985k, up 22,9% on a year ago. We added 2 customers and lost none, ending with 63.\n\nThe MRR gain came from €3.750 of new MRR and €480 of expansion. The two new customers averaged €1.875 MRR each, well above the €966 average of the previous 12 months. Collections were €92k against payments of €160k. Annual customers pay upfront, so monthly burn moves around.\n\nRunway at the 3-month average burn of €89k is 29,2 months, with cash running out in Apr 2028. Last month the figure was 47,2 months, because the 3-month average burn rose from €56k to €89k. Headcount is now 19, up from 18, and payroll rose to €130k.\n\nNet revenue retention is 82,2% and the burn multiple is 2,4. Next month I will focus on improving retention among existing customers.",
+   "model": "claude-sonnet-5-5",
+   "prompt_version": "v1"
+  },
+  {
+   "month": "2025-11",
+   "text": "Nov 2025 closed with cash of €2,53m, down from €2,59m. Net burn was €55k against €68k last month. MRR reached €85.950, up €3.890, and ARR is €1,03m, 19,2% higher than a year ago. We have 66 active customers after adding 3 and losing none.\n\nThe MRR increase came from €2.290 of new MRR and €2.280 of expansion, with €680 of contraction and no churn. New customers averaged €763 MRR each, below the €1.007 average of the previous 12 months. Net revenue retention over 12 months is 84,2%, which remains the number I watch most closely.\n\nBurn fell because collections were €105k against payments of €160k. Annual customers pay upfront, so monthly burn moves around. Payroll was flat at €129.640 with headcount unchanged at 19.\n\nRunway at the 3-month average burn of €74k is 34,0 months, up from 29,2 last month. At that burn, cash runs out in Sep 2028.\n\nNext month my focus is retention and the size of new deals, since both are weaker than I want.",
+   "model": "claude-sonnet-5-5",
+   "prompt_version": "v1"
+  },
+  {
+   "month": "2025-12",
+   "text": "December closed with cash of €2,43m, down from €2,53m. MRR is €87.620, up €1.670 on November, and ARR is €1,05m, which is 19,7% higher than a year earlier. We have 68 active customers.\n\nMRR moved because we added 3 new customers worth €2.200 and expansion of €760, against one churned customer worth €1.290. Average MRR per new customer was €733, below the €905 average of the previous 12 months. Net revenue retention over 12 months is 84,2%, which is the number I am least happy with.\n\nNet burn was €99.519, compared with €55.811 in November. Collections were €61.630 and payments €161.149. Annual customers pay upfront, so monthly burn moves around, and I look at the 3-month average of €74.523. Payroll was unchanged at €129.640 with 19 people.\n\nAt that average burn, runway is 32,6 months, with cash lasting until Sep 2028. Burn multiple over the last 3 months is 1,9.\n\nFor January, my focus is retention and understanding why net revenue retention sits at 84,2%.",
+   "model": "claude-sonnet-5-5",
+   "prompt_version": "v1"
+  },
+  {
+   "month": "2026-01",
+   "text": "Jan 2026 closed with €2,44m in cash, up from €2,43m in Dec. Net burn was -€10k, meaning collections of €172k exceeded payments of €162k. MRR ended at €88.980, up €1.360, and ARR is €1,07m, 17,9% higher than a year ago.\n\nThe cash result comes from collections, not from a change in costs. Annual customers pay 12 months upfront, so burn moves around from month to month. Payroll stayed at €129.640 with headcount unchanged at 19. EBITDA was -€72.652.\n\nMRR grew because 3 new customers added €2.460 and expansion added €250. Against that, one customer churned for €1.210 and contraction took €140. New customers averaged €820 MRR, below €911 over the previous 12 months. Net revenue retention is 84,3%, which I am not happy with.\n\nRunway on the 3-month average net burn of €48k is 50,4 months, up from 32,6, with cash lasting to Apr 2030. The burn multiple is 1,7.\n\nNext month my focus is retention, since churn and an 84,3% net revenue retention are the main drag on growth.",
+   "model": "claude-sonnet-5-5",
+   "prompt_version": "v1"
+  },
+  {
+   "month": "2026-02",
+   "text": "Nordlys Analytics, update for Feb 2026\n\nMRR closed February at €90.000, up €1.020 from €88.980. Two new customers added €1.010 and expansion added €200, offset by €190 of contraction. No customers churned, and we have 72 active. ARR is €1,08m, 21,4% higher than a year ago. Net revenue retention over 12 months is 89,2%.\n\nCash closed at €2,36m, down from €2,44m. Net burn was €76.906 against collections of €84.100 and payments of €161.006. January showed net cash inflow of €10.178 because annual customers pay 12 months upfront, so single months move a lot. Payroll was unchanged at €129.640 with 19 people.\n\nRunway at the 3-month average burn of €55.416 is 42,7 months, down from 50,4, with cash running out in Sep 2029. The burn multiple is 3,4.\n\nNext month my focus is the size of new deals. The two new customers averaged €505 MRR, against €863 over the previous 12 months.",
+   "model": "claude-sonnet-5-5",
+   "prompt_version": "v1"
+  },
+  {
+   "month": "2026-03",
+   "text": "Closing cash for Mar 2026 was €2,24m, down from €2,36m. MRR reached €92.900, up €2.900 on last month, and ARR is €1,11m, 29,3% higher than a year ago. We have 75 active customers.\n\nMRR grew because we added 3 new customers worth €2.440 and expansion of €460. Nothing churned. Net revenue retention over 12 months is 94,1%, and gross margin is 90,3%.\n\nNet burn was €128.684, against €76.906 last month. Collections were only €55.910 while payments were €184.594. Annual customers pay 12 months upfront, so collections move a lot from month to month. Payroll rose to €149.184 from €129.640, as headcount went from 19 to 22.\n\nRunway at the 3-month average net burn of €65.137 is 34,3 months, down from 42,7 last month. That puts the zero-cash month at Feb 2029. The burn multiple over the last 3 months is 3,1.\n\nNext month my focus is turning the three new hires into output, and keeping a close eye on burn against that 3-month average.",
+   "model": "claude-sonnet-5-5",
+   "prompt_version": "v1"
+  },
+  {
+   "month": "2026-04",
+   "text": "April closed with MRR of €97k, up €4.180 from €92.900 in March, and ARR of €1,16m, 31,3% higher than twelve months ago. We added 3 new customers at an average of €1.453 MRR each, against €833 over the previous 12 months, and lost none. We now have 78 active customers. Net revenue retention over 12 months is 93,0%.\n\nNet burn was €117k, with €106k collected and €223k paid out. Payroll rose to €163k from €149k as headcount went from 22 to 24. Non-payroll costs rose to €60k from €35k, and professional fees were €27k against a 12-month average of €2k. Annual customers pay upfront, so monthly burn moves around.\n\nClosing cash is €2,12m. At the 3-month average burn of €108k, runway is 19,7 months, down from 34,3 last month, and cash would run out in Dec 2027. The burn multiple is 3,3.\n\nNext month I will focus on the cost base, starting with understanding the professional fees and the rise in non-payroll costs, and on lifting net revenue retention above 93,0%.",
+   "model": "claude-sonnet-5-5",
+   "prompt_version": "v1"
+  },
+  {
+   "month": "2026-05",
+   "text": "Hi all,\n\nMay closed with MRR of €98k, up €1.310 on April, and ARR of €1,18m, 38,7% higher than a year ago. We have 80 customers: 3 new, 1 churned.\n\nNew MRR was €1.660 and expansion €240, against €590 of churn from a single customer. New customers averaged €553 MRR each, below the €908 average of the previous 12 months. Net revenue retention is 98,0%.\n\nNet burn was €137k, up from €117k, because payments of €204k were set against collections of only €67.700. Headcount rose from 24 to 25, and payroll was €168.672. Burn multiple over three months is 3,8.\n\nCash closed at €1,98m. At the three-month average burn of €127k, runway is 15,6 months, down from 19,7 last month, and cash would run out in Sep 2027.\n\nNext month my focus is bringing new customer deal size back toward our usual level, and I will hold hiring while burn is above where it was.\n\nBest regards,\nFounder, Nordlys Analytics",
+   "model": "claude-sonnet-5-5",
+   "prompt_version": "v1"
+  },
+  {
+   "month": "2026-06",
+   "text": "Nordlys Analytics, Jun 2026 update\n\nClosing cash was €1,91m, down from €1,98m. Net burn was €71k against €137k in May. MRR rose to €100.830, up €2.440, and ARR is €1,21m, 38,2% higher than a year ago.\n\nMRR grew because new customers added €1.810 and expansion added €680, with contraction of €50 and no churn. We signed 3 new customers and now have 83 active. The new customers averaged €603 MRR each, below the €898 average of the previous 12 months. Net burn fell because collections were €133.520 against payments of €204.738. Annual customers pay upfront, so monthly burn moves around.\n\nRunway at the 3-month average burn of €108k is 17,7 months, up from 15,6, and cash would run out in Dec 2027. The burn multiple over three months is 3,4, which is still higher than I would like.\n\nNext month I will focus on the size of new deals, since new customers are landing below our usual average. If you know teams that fit our customer profile, introductions are welcome.",
+   "model": "claude-sonnet-5-5",
+   "prompt_version": "v1"
+  },
+  {
+   "month": "2026-07",
+   "text": "Closing cash for Jul 2026 was €1,79m, down from €1,91m in June. Net burn was €125k against €71k the month before. MRR fell to €94k from €101k, and ARR stands at €1,13m, 29,0% higher than a year ago. We have 85 customers and 25 people.\n\nMRR fell by €6.870 because one customer churned, taking €9.400 of MRR with it. New MRR was €1.540 from 3 new customers, averaging €513 each against €870 over the previous 12 months. Expansion added €990. Net revenue retention over 12 months is 90,5%. Burn was higher this month because collections were €79k while payments were €204k. Annual customers pay upfront, so collections vary a lot from month to month.\n\nAt the 3-month average burn of €111k, runway is 16,1 months, down from 17,7 last month, and cash would run out in Dec 2027.\n\nNext month our focus is on understanding why that customer left and on lifting the size of the new customers we sign.",
+   "model": "claude-sonnet-5-5",
+   "prompt_version": "v1"
+  },
+  {
+   "month": "2026-08",
+   "text": "August closed with MRR of €101.610, up from €93.960 in July. ARR is €1,22m, 34,5% higher than a year ago. Closing cash is €1,71m and net burn was €79k, down from €125k.\n\nMRR grew because we added 4 new customers worth €7.340 in new MRR, at an average of €1.835 each, against €846 over the previous 12 months. Expansion added €310. We lost no customers and had no contraction. We now have 89 active customers.\n\nNet burn is lumpy because annual customers pay 12 months upfront, so I look at the 3-month average of €92k. At that rate runway is 18,6 months, up from 16,1 last month, and cash would run out in Mar 2028. Headcount stayed at 25 and payroll was flat at €168.672.\n\nNet revenue retention over 12 months is 90,6% and the 3-month burn multiple is 7,1. Both need work.\n\nNext month my focus is on those two numbers, retention and burn efficiency. I will report on both.",
+   "model": "claude-sonnet-5-5",
+   "prompt_version": "v1"
+  },
+  {
+   "month": "2026-09",
+   "text": "Sep 2026 update. MRR closed at €103k, up €1.460 from €101.610 in Aug. ARR is €1,24m, 32,4% higher than a year ago. Closing cash is €1,58m, and net burn for the month was €126.839.\n\nMRR rose because new MRR of €2.790 and expansion of €510 outweighed contraction of €320 and churn of €1.520. Three new customers joined and one left, taking us to 91 active customers. The churned customer was our only loss this month and accounts for all the churned MRR. Net revenue retention over 12 months is 88,7%, which is below where we want it.\n\nNet burn rose from €79.146 to €126.839 because collections were €78.670 against payments of €205.509. Annual customers pay upfront, so collections move around from month to month. Payroll was flat at €168.672 with headcount at 25.\n\nOn the three-month average burn of €110.316, runway is 14,3 months, down from 18,6, with cash reaching zero in Dec 2027.\n\nNext month my focus is retention, starting with understanding why customers leave.",
+   "model": "claude-sonnet-5-5",
+   "prompt_version": "v1"
+  }
+ ],
+ "update_checks": [
+  {
+   "month": "2025-10",
+   "words": 161,
+   "numbers_found": 26,
+   "numbers_matched": 25,
+   "unmatched_numbers": "€160k",
+   "causes_named": "expansion; annual billing timing",
+   "unsupported_causes": null,
+   "dash_found": false,
+   "passed": false
+  },
+  {
+   "month": "2025-11",
+   "words": 168,
+   "numbers_found": 23,
+   "numbers_matched": 21,
+   "unmatched_numbers": "€55k; €160k",
+   "causes_named": "expansion; contraction; annual billing timing",
+   "unsupported_causes": null,
+   "dash_found": false,
+   "passed": false
+  },
+  {
+   "month": "2025-12",
+   "words": 165,
+   "numbers_found": 24,
+   "numbers_matched": 24,
+   "unmatched_numbers": null,
+   "causes_named": "churn; expansion; annual billing timing",
+   "unsupported_causes": null,
+   "dash_found": false,
+   "passed": true
+  },
+  {
+   "month": "2026-01",
+   "words": 170,
+   "numbers_found": 25,
+   "numbers_matched": 25,
+   "unmatched_numbers": null,
+   "causes_named": "churn; expansion; contraction; annual billing timing",
+   "unsupported_causes": null,
+   "dash_found": false,
+   "passed": true
+  },
+  {
+   "month": "2026-02",
+   "words": 151,
+   "numbers_found": 24,
+   "numbers_matched": 24,
+   "unmatched_numbers": null,
+   "causes_named": "expansion; contraction; annual billing timing",
+   "unsupported_causes": null,
+   "dash_found": false,
+   "passed": true
+  },
+  {
+   "month": "2026-03",
+   "words": 164,
+   "numbers_found": 24,
+   "numbers_matched": 24,
+   "unmatched_numbers": null,
+   "causes_named": "hiring; expansion; annual billing timing",
+   "unsupported_causes": null,
+   "dash_found": false,
+   "passed": true
+  },
+  {
+   "month": "2026-04",
+   "words": 171,
+   "numbers_found": 27,
+   "numbers_matched": 27,
+   "unmatched_numbers": null,
+   "causes_named": "hiring; annual billing timing",
+   "unsupported_causes": null,
+   "dash_found": false,
+   "passed": true
+  },
+  {
+   "month": "2026-05",
+   "words": 160,
+   "numbers_found": 25,
+   "numbers_matched": 25,
+   "unmatched_numbers": null,
+   "causes_named": "hiring; churn; expansion",
+   "unsupported_causes": null,
+   "dash_found": false,
+   "passed": true
+  },
+  {
+   "month": "2026-06",
+   "words": 170,
+   "numbers_found": 21,
+   "numbers_matched": 21,
+   "unmatched_numbers": null,
+   "causes_named": "expansion; contraction; annual billing timing",
+   "unsupported_causes": null,
+   "dash_found": false,
+   "passed": true
+  },
+  {
+   "month": "2026-07",
+   "words": 160,
+   "numbers_found": 23,
+   "numbers_matched": 23,
+   "unmatched_numbers": null,
+   "causes_named": "churn; expansion; annual billing timing",
+   "unsupported_causes": null,
+   "dash_found": false,
+   "passed": true
+  },
+  {
+   "month": "2026-08",
+   "words": 161,
+   "numbers_found": 20,
+   "numbers_matched": 20,
+   "unmatched_numbers": null,
+   "causes_named": "expansion; annual billing timing",
+   "unsupported_causes": null,
+   "dash_found": false,
+   "passed": true
+  },
+  {
+   "month": "2026-09",
+   "words": 166,
+   "numbers_found": 22,
+   "numbers_matched": 22,
+   "unmatched_numbers": null,
+   "causes_named": "churn; expansion; contraction; annual billing timing",
+   "unsupported_causes": null,
+   "dash_found": false,
+   "passed": true
+  }
+ ]
 }

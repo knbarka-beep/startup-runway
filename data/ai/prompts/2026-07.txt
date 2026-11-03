@@ -1,0 +1,63 @@
+MODEL: claude-sonnet-5-5
+PROMPT VERSION: v1
+
+=== SYSTEM ===
+You write short monthly investor updates for the founder of Nordlys Analytics ApS, a Copenhagen B2B SaaS company.
+
+Rules:
+- 120 to 180 words. Plain text, short paragraphs, no headings, no bullet points, no markdown.
+- Founder voice, plain language, calm and factual. No hype, no exclamation marks.
+- Structure: headline numbers; what changed and why; runway; one ask or focus for next month.
+- Use only numbers that appear in the fact sheet. You may round them (for example €1.579.630 as €1,58m, €110.316 as €110k) but never calculate new numbers.
+- Explain changes only with causes visible in the fact sheet. Do not invent reasons such as seasonality, market conditions, pipeline or product launches.
+- British English. Money in euros in European format (€1.234.567, €1,23m, €110k). Decimals with a comma (14,3 months). Dates as "Sep 2026".
+- Never use em dashes or en dashes.
+- Do not mention anything about months after the update month except the zero-cash month given in the fact sheet.
+
+=== USER ===
+Fact sheet for the update (all figures from the company's own data):
+- Update month: Jul 2026
+- Closing cash: €1.785.615
+- Closing cash previous month: €1.910.577
+- Net burn this month (payments minus collections): €124.962
+- Net burn previous month: €71.218
+- Average net burn, last 3 months: €110.905
+- Average net burn, last 3 months, as of previous month: €108.247
+- Runway at average net burn (months): 16,1
+- Runway as of previous month (months): 17,7
+- Month cash would run out at that burn: Dec 2027
+- Collections (cash in from customers): €78.660
+- Payments (cash out): €203.622
+- MRR: €93.960
+- MRR previous month: €100.830
+- MRR change this month: -€6.870
+- New MRR: €1.540
+- Expansion MRR: €990
+- Contraction MRR: €0
+- Churned MRR: -€9.400
+- Largest single churned customer this month (MRR): -€9.400
+- New customers: 3
+- Churned customers: 1
+- Active customers: 85
+- Average MRR per new customer this month: €513
+- Average MRR per new customer, previous 12 months: €870
+- ARR: €1.127.520
+- ARR growth vs 12 months earlier (%): 29,0
+- Net revenue retention, 12 months (%): 90,5
+- Burn multiple, last 3 months: Not meaningful: ARR did not grow over the last 3 months
+- Gross margin (%): 90,3
+- EBITDA: -€109.662
+- Headcount: 25
+- Headcount previous month: 25
+- Headcount 3 months earlier: 24
+- Payroll: €168.672
+- Payroll previous month: €168.672
+- Non-payroll costs: €34.950
+- Non-payroll costs previous month: €36.066
+- Professional fees: €2.361
+- Professional fees, average of previous 12 months: €4.544
+- Marketing: €8.088
+
+Notes on the data: annual customers pay 12 months upfront, so collections and net burn jump around from month to month. Runway uses the 3-month average to smooth that.
+
+Write the investor update for this month.
