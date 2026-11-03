@@ -4,6 +4,7 @@ Exit code 1 if any check fails, so it can block the build.
 Uses DuckDB to read the CSVs directly (no database file needed).
 """
 
+import json
 import sys
 from pathlib import Path
 
@@ -15,9 +16,13 @@ for t in ["customers", "mrr_movements", "mrr_snapshot", "headcount", "opex", "ca
     con.execute(f"CREATE VIEW {t} AS SELECT * FROM read_csv_auto('{RAW}/{t}.csv')")
 
 
+NAMES = []  # results, also written to data/check/reconciliation.json for the website
+
+
 def check(name, sql):
     """sql must return the rows that BREAK the rule. Zero rows = PASS."""
     bad = con.execute(sql).fetchall()
+    NAMES.append({"check": name, "passed": not bad})
     print(f"{'PASS' if not bad else 'FAIL'}  {name}" + (f"  ({len(bad)} bad rows, first: {bad[0]})" if bad else ""))
     return not bad
 
@@ -63,5 +68,8 @@ results = [
         WHERE c.collections IS DISTINCT FROM b.amount"""),
 ]
 
+out = Path(RAW).parent / "check" / "reconciliation.json"
+out.parent.mkdir(parents=True, exist_ok=True)
+out.write_text(json.dumps(NAMES, indent=1), encoding="utf-8")
 print(f"\n{sum(results)}/{len(results)} checks passed")
 sys.exit(0 if all(results) else 1)

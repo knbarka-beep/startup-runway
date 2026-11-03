@@ -1,0 +1,34 @@
+[
+ {
+  "check": "Cash: closing = opening + collections - payments + funding",
+  "passed": true
+ },
+ {
+  "check": "Cash: opening = previous month's closing",
+  "passed": true
+ },
+ {
+  "check": "Cash: payments = payroll + other opex",
+  "passed": true
+ },
+ {
+  "check": "MRR: roll-forward of movements ties to customer snapshot each month",
+  "passed": true
+ },
+ {
+  "check": "MRR: each customer's movements sum to their MRR (0 if churned)",
+  "passed": true
+ },
+ {
+  "check": "Payroll: headcount cost ties to payroll in payments",
+  "passed": true
+ },
+ {
+  "check": "Opex: opex table ties to other payments",
+  "passed": true
+ },
+ {
+  "check": "Collections: monthly plans + annual upfront invoices tie to collections",
+  "passed": true
+ }
+]

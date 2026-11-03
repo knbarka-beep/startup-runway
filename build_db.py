@@ -21,6 +21,7 @@ DB_PATH = ROOT / "data" / "runway.duckdb"
 EXPORT = ROOT / "data" / "export" / "dashboard.json"
 UPDATES = ROOT / "data" / "ai" / "updates.csv"
 CHECKS = ROOT / "data" / "check" / "update_checks.csv"
+RECON = ROOT / "data" / "check" / "reconciliation.json"
 
 RAW_TABLES = ["customers", "mrr_movements", "headcount", "opex", "cash"]
 
@@ -77,6 +78,7 @@ def export(con):
         "scenario_base": rows(con, "SELECT * FROM scenario_base")[0],
         "updates": [],
         "update_checks": [],
+        "reconciliation": json.loads(RECON.read_text(encoding="utf-8")) if RECON.exists() else [],
     }
     tables = {r[0] for r in con.execute("SHOW TABLES").fetchall()}
     if "updates" in tables:
