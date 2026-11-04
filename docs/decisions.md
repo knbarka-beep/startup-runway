@@ -69,3 +69,8 @@ Every choice made during the unattended first build, as a list: what, why, and t
 46. **Mobile screenshots load the page in a 375 px iframe**, because headless Edge will not make a window narrower than about 504 px. See `scripts/screenshots.ps1`.
 47. **`npm start` serves `web/out` with Python's built-in web server** instead of a Node package that would be downloaded on first use.
 48. **Rebuilding can change the last decimal places in `data/check/scenario_python.json`.** DuckDB averages in parallel, so the final digits of the cost per hire can differ between runs. This is far inside the €1 tolerance and does not change any displayed number.
+
+## Review round 1
+
+49. **Sparkline tooltip sits just above the line and follows the cursor or finger.** It shows the month and the exact value ("Jul 2026: €1.785.615", runway as "14,3 months"), in the same style as the other chart tooltips. The sparkline area uses `touch-action: pan-y`, so a sideways drag moves the tooltip and an up or down drag still scrolls the page. A tap without any movement shows nothing, because the chart library reacts to a moving finger. Alternative: a fixed label under the line (always visible, but takes space in a small card).
+50. **Screenshots are now taken by `scripts/screenshots.mjs`, which drives headless Edge through its built-in DevTools protocol** (a WebSocket that Node already has). This gives a true 375 px phone screen, can simulate a finger dragging along a sparkline (an automated touch check that prints PASS or FAIL), and can click preset buttons. It replaces `scripts/screenshots.ps1` and its 375 px iframe workaround (decision 46). Alternative: Playwright or Puppeteer (a large extra dependency for a few screenshots).

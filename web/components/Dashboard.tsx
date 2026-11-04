@@ -19,6 +19,7 @@ export default function Dashboard() {
 
   const m = months[idx];
   const upTo = months.slice(0, idx + 1);
+  const upMonths = upTo.map((x) => x.month);
   const projection = useMemo(() => project(base, s), [s]);
   const zero = zeroCashMonth(projection);
   const lowest = projection.reduce((a, b) => (b.cash < a.cash ? b : a));
@@ -76,7 +77,7 @@ export default function Dashboard() {
           <div className="label">Cash in bank</div>
           <div className="value">{eurShort(m.closing_cash)}</div>
           <div className="sub">End of {monthLabel(m.month)}{m.funding > 0 ? `, incl. ${eurShort(m.funding)} seed round` : ""}</div>
-          <Sparkline values={upTo.map((x) => x.closing_cash)} />
+          <Sparkline values={upTo.map((x) => x.closing_cash)} months={upMonths} format={eur} />
         </div>
         <div className="card kpi">
           <div className="label">Net burn (monthly)</div>
@@ -84,7 +85,7 @@ export default function Dashboard() {
           <div className="sub">
             {m.avg_net_burn_3m !== null ? `3-month average ${eurShort(m.avg_net_burn_3m)}. ` : ""}Payments minus collections
           </div>
-          <Sparkline values={upTo.map((x) => x.net_burn)} />
+          <Sparkline values={upTo.map((x) => x.net_burn)} months={upMonths} format={eur} />
         </div>
         <div className="card kpi">
           <div className="label">Runway</div>
@@ -94,7 +95,7 @@ export default function Dashboard() {
           <div className="sub">
             {m.zero_cash_month ? `Cash runs out ${monthLabel(m.zero_cash_month)} at the trailing 3-month average net burn` : "Needs 3 months of history"}
           </div>
-          <Sparkline values={upTo.map((x) => x.runway_months)} color={runwayRisk ? "var(--risk)" : "var(--accent)"} />
+          <Sparkline values={upTo.map((x) => x.runway_months)} months={upMonths} format={(v) => `${dec(v)} months`} color={runwayRisk ? "var(--risk)" : "var(--accent)"} />
         </div>
         <div className="card kpi">
           <div className="label">ARR</div>
@@ -102,7 +103,7 @@ export default function Dashboard() {
           <div className="sub">
             {m.arr_growth_12m !== null ? `${m.arr_growth_12m >= 0 ? "+" : ""}${pct(m.arr_growth_12m)} vs 12 months ago` : "Growth shown from Oct 2025 (needs 12 months)"}
           </div>
-          <Sparkline values={upTo.map((x) => x.arr)} />
+          <Sparkline values={upTo.map((x) => x.arr)} months={upMonths} format={eur} />
         </div>
       </section>
 

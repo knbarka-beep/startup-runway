@@ -12,13 +12,33 @@ const tooltipStyle = {
   background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, color: "var(--text)",
 };
 
-// Small trend line inside a KPI card. No axes: it only shows direction.
-export function Sparkline({ values, color = "var(--accent)" }: { values: (number | null)[]; color?: string }) {
-  const rows = values.map((v, i) => ({ i, v }));
+// Small trend line inside a KPI card. No axes. Hovering (or dragging a finger along it)
+// shows the month and the exact value just above the line, e.g. "Jul 2026: €1.785.615".
+export function Sparkline({ values, months, format, color = "var(--accent)" }: {
+  values: (number | null)[]; months: string[]; format: (v: number) => string; color?: string;
+}) {
+  const rows = values.map((v, i) => ({ month: months[i], v }));
   return (
-    <div style={{ height: 36 }} aria-hidden>
+    // touch-action pan-y: a sideways finger drag moves the tooltip, an up/down drag still scrolls the page
+    <div style={{ height: 36, touchAction: "pan-y" }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={rows} margin={{ top: 4, right: 2, bottom: 4, left: 2 }}>
+          <Tooltip
+            isAnimationActive={false}
+            cursor={{ stroke: "var(--border)" }}
+            position={{ y: -26 }}
+            allowEscapeViewBox={{ x: false, y: true }}
+            wrapperStyle={{ zIndex: 5, pointerEvents: "none" }}
+            content={({ active, payload }) => {
+              const p = payload?.[0];
+              if (!active || !p || p.value == null) return null;
+              return (
+                <div style={{ ...tooltipStyle, padding: "2px 7px", fontSize: 12, whiteSpace: "nowrap" }}>
+                  {monthLabel(p.payload.month)}: {format(Number(p.value))}
+                </div>
+              );
+            }}
+          />
           <Line type="monotone" dataKey="v" stroke={color} strokeWidth={1.5} dot={false} isAnimationActive={false} connectNulls />
         </LineChart>
       </ResponsiveContainer>
