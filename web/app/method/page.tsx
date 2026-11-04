@@ -36,12 +36,12 @@ export default function Method() {
           <tbody>
             <tr><td>Cash in bank</td><td>Closing bank balance at month end</td></tr>
             <tr><td>Net burn</td><td>Payments minus collections in the month (funding excluded)</td></tr>
-            <tr><td>Runway</td><td>Closing cash divided by the average net burn of the last 3 months</td></tr>
+            <tr><td>Runway at current burn</td><td>Closing cash divided by the average net burn of the last 3 months</td></tr>
             <tr><td>Zero-cash month</td><td>The month cash would run out at that burn: this month plus runway, rounded up</td></tr>
             <tr><td>MRR</td><td>Monthly recurring revenue: the sum of all new, expansion, contraction and churn movements to date</td></tr>
             <tr><td>ARR</td><td>MRR x 12. Growth is compared with 12 months earlier</td></tr>
             <tr><td>Net revenue retention</td><td>MRR today from customers active 12 months ago, divided by their MRR then</td></tr>
-            <tr><td>Burn multiple</td><td>Net burn over 3 months divided by net new ARR over the same 3 months. Left empty when ARR did not grow</td></tr>
+            <tr><td>Burn multiple</td><td>Net burn over 3 months divided by net new ARR over the same 3 months. Left empty when ARR did not grow. It is high in Aug and Sep 2026 (7,1 and 12,3) because the largest customer churned in Jul 2026 and cancelled out most of the new ARR in those 3 months</td></tr>
             <tr><td>Gross margin</td><td>Revenue minus cost of revenue (cloud hosting plus customer success payroll), divided by revenue</td></tr>
           </tbody>
         </table>
@@ -132,6 +132,19 @@ export default function Method() {
           </p>
         </>
       )}
+
+      <h2>Changes after the first run</h2>
+      <ul>
+        <li>
+          The number checker was revised once after the first run: it wrongly flagged 4 correct drafts that said
+          &quot;lost none&quot; or &quot;Nothing churned&quot;. The fix and a self-test are described in docs/decisions.md.
+        </li>
+        <li>
+          The update format was changed once after reviewing two v1 drafts (Apr and Jul 2026): they were too dense,
+          with 20 or more numbers in running prose, and had no ask. The v2 format is the five parts above. The v1
+          drafts are kept in data/ai/updates_v1.csv.
+        </li>
+      </ul>
 
       <h2>Limitations</h2>
       <ul>

@@ -10,10 +10,10 @@ A startup founder or finance lead needs to answer three questions every month: h
 
 ## What the dashboard shows
 
-- **Four KPIs** for the selected month: cash in bank, net burn, runway (months, and the month cash would run out), and ARR with growth versus 12 months earlier.
-- **Cash curve:** 24 months of actual cash (solid) and a 24-month projection (dashed) that moves live with sliders for hires, growth, churn, other costs and new funding. The projection is a set of assumptions, not a forecast.
+- **Four KPIs** for the selected month: cash in bank, net burn, runway at current burn (months, and the month cash would run out), and ARR with growth versus 12 months earlier. Hovering over (or dragging a finger along) the small trend lines shows the exact value for each month.
+- **Cash curve:** 24 months of actual cash (solid) and a 24-month projection (dashed) that moves live with sliders for full-time hires, student assistants, growth, churn, other costs and new funding. Three preset buttons (Current plan, Hiring push, Downside) set the sliders in one click. Payroll rises 3 % every January. A line under the chart says when cash runs out or where it bottoms out. The projection is a set of assumptions, not a forecast.
 - **MRR bridge** (waterfall) and **burn drivers** (payroll by team, costs by category) for the selected month.
-- **A draft investor update** for each month from Oct 2025 to Sep 2026, written by Claude from that month's numbers, with the result of an automatic number check.
+- **A draft investor update** for each month from Oct 2025 to Sep 2026: subject, a one-sentence TL;DR, a key metrics table, up to two highlights and two lowlights, and an ask for investors, with the result of an automatic check. The table comes from the data; the text parts were drafted by Claude. **These are drafts for a founder to finish:** where the data does not show a reason (why a customer left, what a fee was for), the draft has a placeholder such as "[Founder: add reason]".
 - **A "How this works" page** with definitions, method, check results and limitations.
 
 The data contains a planted story: a hiring push in spring 2026, the largest customer leaving in Jul 2026, a price increase on new contracts from Jun 2026, a strong expansion month in Nov 2025 and a one-off recruiting fee in Apr 2026. At Sep 2026 the company has €1,58m in the bank and about 14,3 months of runway: fine, but it needs a plan.
@@ -58,28 +58,29 @@ python scripts/check_updates.py
 python build_db.py                   # re-export so the site includes the drafts
 ```
 
-Screenshots: `powershell -File scripts/screenshots.ps1` (headless Microsoft Edge).
+Screenshots and a touch and preset check: `node scripts/screenshots.mjs` (headless Microsoft Edge, after `npm run build`).
 
 ## How the AI part works and how it is checked
 
 - For each month, the script builds a fact sheet from the SQL views using only that month and earlier months. A **look-ahead test** rebuilds the database with all later months deleted and checks the fact sheet is identical; the script stops if it is not.
-- Claude writes a 120 to 180 word founder-style update from the fact sheet, with rules: use only these numbers, name only causes visible in the data, plain language, British English.
-- **Cost control:** the script estimates the worst-case cost before calling (USD 0,99 for this run) and aborts above USD 2,00, and stops mid-run if actual spend passes USD 2,00. Actual spend was about USD 0,07 for 12 drafts, plus one earlier call that failed on a local decoding error (see `docs/decisions.md`).
-- **Number check without AI:** every number in each draft must match a value from that month's data within the rounding the text uses. Named causes (churn, hiring, expansion, one-off cost and so on) must be supported by the data; a short list of causes the data cannot show (seasonality, pipeline, market conditions) is always flagged. This keyword check is crude and documented as such.
-- **Result:** 10 of 12 drafts pass; 281 of 284 numbers match. The three misses are rounding errors by the model (for example €160.518 written as €160k). They are shown on the dashboard rather than regenerated away. The check covers numbers and named causes, not writing quality.
+- Each update has five parts. The **subject** and the **key metrics table** (cash, net burn, runway, MRR, ARR growth, customers, headcount, each with the change vs last month) are not AI; they come from `sql/09_update_metrics.sql`. Claude (prompt v2) writes the **TL;DR**, up to two **highlights** and two **lowlights**, and one **ask**, at most 110 words in total, in plain founder language, using only numbers and causes from the fact sheet. Where a cause is not in the data, it writes a placeholder in square brackets for the founder. The text is shown exactly as the model wrote it.
+- **Cost control:** the script estimates the worst-case cost before calling and aborts above USD 2,00, and stops mid-run if actual spend passes USD 2,00. v1 cost about USD 0,07 for 12 drafts (plus one earlier call that failed on a local decoding error, see `docs/decisions.md`); v2 cost USD 0,0689 for 12 drafts.
+- **Check without AI:** every number in the AI parts must match a value from that month's data within the rounding the text uses; named causes must be supported by the data (a crude keyword list); and the structure and style rules are checked (one TL;DR, one ask, at most two highlights and two lowlights, at least one lowlight when a key metric got worse, at most two numbers per highlight or lowlight, at most 110 words, no banned filler words, no em dashes, placeholders only in brackets).
+- **Result (v2, run once, not regenerated):** 0 of 12 drafts pass all checks; 137 of 145 numbers match. Four misses are rounding errors by the model (for example €128.684 written as €128k). Four are "100%", taken from the fact sheet line "net revenue retention below 100 %", which the checker cannot match (a limit of the checker). Most drafts break the "at most two numbers per highlight or lowlight" rule, and three are over 110 words. The check covers numbers, causes, structure and a few style rules, not writing quality.
+- **Changes after the first run:** the number checker was revised once after the first run: it wrongly flagged 4 correct drafts that said "lost none" or "Nothing churned". The fix and a self-test are described in `docs/decisions.md`. The update format was also changed once after reviewing two v1 drafts (too dense, no ask); v1 is kept in `data/ai/updates_v1.csv`.
 
 ## Limitations
 
 - Synthetic data: realistic only as far as the assumptions in `docs/assumptions.md` are.
 - Revenue equals MRR; no proration, VAT, tax, payables or receivables timing.
-- The projection keeps costs flat apart from the sliders and treats collections as equal to revenue.
+- The projection keeps other costs flat apart from the slider, treats collections as equal to revenue (annual upfront billing is ignored) and does not let new hires change the growth rate.
 - Gross margin counts cloud hosting and customer success payroll as cost of revenue, not third-party software.
-- The AI check verifies numbers and named causes, not whether the update emphasises the right things.
+- The AI check verifies numbers, named causes, structure and a few style rules, not whether the update emphasises the right things. The drafts need a founder to fill in the placeholders.
 
 ## Next version
 
 - Load real exports (billing, payroll, bank) instead of the generator, with prorated revenue and payment terms.
-- Scenario presets (for example "hire plan", "bridge round") and a downloadable scenario summary.
+- A "bridge round" preset and a downloadable scenario summary.
 - A minimum cash buffer line (for example 6 months of burn) instead of only €0.
 - Compare AI drafts across prompt versions and record a human review score per draft.
 

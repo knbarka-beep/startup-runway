@@ -86,7 +86,7 @@ export default function Dashboard() {
           <Sparkline values={upTo.map((x) => x.net_burn)} months={upMonths} format={eur} />
         </div>
         <div className="card kpi">
-          <div className="label">Runway</div>
+          <div className="label">Runway at current burn</div>
           <div className={`value ${runwayRisk ? "risk" : ""}`}>
             {m.runway_months !== null ? `${dec(m.runway_months)} months` : "n/a"}
           </div>
@@ -201,6 +201,9 @@ export default function Dashboard() {
             {m.new_customers} new and {m.churned_customers} churned customers, {m.active_customers} active.
             {m.nrr_12m !== null ? ` Net revenue retention (12 months): ${pct(m.nrr_12m)}.` : ""}
             {m.burn_multiple !== null ? ` Burn multiple (3 months): ${dec(m.burn_multiple)}.` : m.burn_multiple_note ? ` Burn multiple: ${m.burn_multiple_note.toLowerCase()}.` : ""}
+            {/* The 3-month windows ending Aug and Sep 2026 both contain the Jul 2026 churn of the largest customer. */}
+            {m.burn_multiple !== null && (m.month === "2026-08" || m.month === "2026-09") &&
+              " It is high because the largest customer (€9.400 MRR) churned in Jul 2026 and cancelled out most of the new ARR won in these 3 months."}
           </p>
         </div>
         <div className="card">
