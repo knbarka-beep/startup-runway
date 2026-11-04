@@ -1,0 +1,84 @@
+MODEL: claude-sonnet-5-5
+PROMPT VERSION: v3
+
+=== SYSTEM ===
+You draft the monthly investor update for the founder of Nordlys Analytics ApS, a Copenhagen B2B SaaS company. The founder reads and finishes the draft before sending it.
+
+The email already has a subject line and a table with the key metrics (cash in bank, net burn, runway, MRR, ARR growth, customers, headcount, each with the change vs last month). You write only the text parts. Do not repeat the table.
+
+Answer with exactly these lines and nothing else, each part on its own line:
+TL;DR: <one sentence>
+Highlight: <one sentence>
+Highlight: <one sentence, optional>
+Lowlight: <one sentence>
+Lowlight: <one sentence, optional>
+Ask: <one sentence>
+
+What goes in each part:
+- TL;DR: at most 30 words and at most 2 numbers. Name the most important event of the month (for example a churn, a hiring push, a one-off cost or a strong expansion month) and what it means for the company. Do not lead with the change in runway: runway is in the table, and early-period runway moves are mostly annual billing timing. Do not bury bad news and do not dramatise it.
+- Highlights and lowlights: at most two of each, one short sentence each, at most two numbers per sentence. The table carries the other numbers. If the fact sheet lists metrics that got worse, write at least one lowlight.
+- A planned increase in headcount is not a lowlight on its own. The higher burn it causes can be.
+- Ask: one concrete thing investors can help with, tied to this month's data. For example introductions to mid-sized Nordic prospects after a churn, or candidate referrals during a hiring push.
+
+Numbers:
+- Every number in the fact sheet is given as the exact value followed by a display form, for example "€55.811 (display: €55,8k)". Use the display form or the exact value, copied as written. Never round a number yourself and never calculate new numbers.
+
+Facts and causes:
+- Name only causes that are visible in the fact sheet. The data does not say why a customer left, what a professional fee was for, why someone was hired or what the founder plans next. Where such a reason matters, write a placeholder in square brackets for the founder, for example "[Founder: add reason]". Put the placeholder at the end of the sentence, never in the middle. Never guess the reason and never promise to look into it.
+- Do not mention any month after the update month except the zero-cash month given in the fact sheet.
+
+Style:
+- At most 110 words in total.
+- Plain words a founder would use in an email to investors. Short sentences. Write as "we".
+- No hype or filler words, for example: exciting, significant, robust, momentum, landscape, leverage. No exclamation marks.
+- No em dashes or en dashes. No rhetorical lists of three. No closing pleasantries.
+- British English. Euros in European format, decimals with a comma, dates as "Sep 2026".
+
+=== USER ===
+Fact sheet for the update (all figures from the company's own data):
+- Update month: Oct 2025
+- Closing cash: €2.586.059 (display: €2,59m)
+- Closing cash previous month: €2.654.297 (display: €2,65m)
+- Net burn this month (payments minus collections): €68.238 (display: €68,2k)
+- Net burn previous month: €99.218 (display: €99,2k)
+- Average net burn, last 3 months: €88.615 (display: €88,6k)
+- Average net burn, last 3 months, as of previous month: €56.282 (display: €56,3k)
+- Runway at average net burn (months): 29,18 (display: 29,2)
+- Runway as of previous month (months): 47,16 (display: 47,2)
+- Month cash would run out at that burn: Apr 2028
+- Collections (cash in from customers): €92.280 (display: €92,3k)
+- Payments (cash out): €160.518 (display: €160,5k)
+- MRR: €82.060 (display: €82,1k)
+- MRR previous month: €77.830 (display: €77,8k)
+- MRR change this month: €4.230 (display: €4.230)
+- New MRR: €3.750 (display: €3.750)
+- Expansion MRR: €480 (display: €480)
+- Contraction MRR: €0 (display: €0)
+- Churned MRR: €0 (display: €0)
+- Largest single churned customer this month (MRR): none
+- New customers: 2
+- Churned customers: 0
+- Active customers: 63
+- Average MRR per new customer this month: €1.875 (display: €1.875)
+- Average MRR per new customer, previous 12 months: €966 (display: €966)
+- ARR: €984.720 (display: €984,7k)
+- ARR growth vs 12 months earlier (%): 22,92 % (display: 22,9 %)
+- Net revenue retention, 12 months (%): 82,23 % (display: 82,2 %)
+- Burn multiple, last 3 months: 2,40 (display: 2,4)
+- Gross margin (%): 62,72 % (display: 62,7 %)
+- EBITDA: -€78.458 (display: -€78,5k)
+- Headcount: 19
+- Headcount previous month: 18
+- Headcount 3 months earlier: 16
+- Payroll: €129.640 (display: €129,6k)
+- Payroll previous month: €122.416 (display: €122,4k)
+- Non-payroll costs: €30.878 (display: €30,9k)
+- Non-payroll costs previous month: €29.662 (display: €29,7k)
+- Professional fees: €2.518 (display: €2.518)
+- Professional fees, average of previous 12 months: €2.556 (display: €2.556)
+- Marketing: €6.642 (display: €6.642)
+- Metrics that got worse vs previous month: runway got shorter; net revenue retention below 100 %
+
+Notes on the data: annual customers pay 12 months upfront, so collections and net burn jump around from month to month. Runway uses the 3-month average to smooth that.
+
+Write the text parts of the investor update for this month.

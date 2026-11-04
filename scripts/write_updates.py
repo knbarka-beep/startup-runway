@@ -1,16 +1,18 @@
 """Draft one investor update per month (Oct 2025 to Sep 2026) with the Claude API.
 
-Prompt v2 (review round 1): the AI writes only four parts of each update: a one-sentence
-TL;DR, up to two highlights, up to two lowlights and one ask. The subject line and the
-key metrics table are not AI; they come from the SQL views (sql/09_update_metrics.sql).
-Where a cause is not in the data, the AI writes a placeholder such as "[Founder: add reason]".
-The v1 drafts (120 to 180 words of prose) are kept in data/ai/updates_v1.csv.
+Prompt v3 (review round 2): the AI writes only four parts of each update: a TL;DR (at most
+30 words and 2 numbers, not led by runway), up to two highlights, up to two lowlights and
+one ask. The subject line and the key metrics table are not AI; they come from the SQL views
+(sql/09_update_metrics.sql). Every number in the fact sheet is given exact and in a display
+form computed here ("€55.811 (display: €55,8k)"), so the model does not round on its own.
+Where a cause is not in the data, the AI writes a placeholder such as "[Founder: add reason]"
+at the end of the sentence. Earlier drafts: data/ai/updates_v1.csv and updates_v2.csv.
 
 Steps:
   1. Look-ahead test: the fact sheet for month m must be identical whether the
      database holds all 24 months or only months up to m. If not, abort.
   2. Build a fact sheet per month from the SQL views (only months <= m).
-  3. Write every prompt to data/ai/prompts/v2/ (so they can be rerun or inspected).
+  3. Write every prompt to data/ai/prompts/v3/ (so they can be rerun or inspected).
   4. If PORTFOLIO_ANTHROPIC_KEY is missing: stop here, no calls.
   5. Estimate worst-case cost. Abort if above USD 2,00.
   6. Call the API month by month, stop if actual spend passes USD 2,00.
@@ -35,7 +37,7 @@ sys.path.insert(0, str(ROOT))
 from build_db import build  # noqa: E402
 
 AI_DIR = ROOT / "data" / "ai"
-PROMPT_VERSION = "v2"
+PROMPT_VERSION = "v3"
 PROMPT_DIR = AI_DIR / "prompts" / PROMPT_VERSION
 MODEL = "claude-sonnet-5-5"
 MAX_TOKENS = 8000                     # includes the model's internal thinking
@@ -65,6 +67,33 @@ def num(x, decimals=1):
     return f"{x:.{decimals}f}".replace(".", ",")
 
 
+def eur_display(x):
+    """Short form for running text: 1579630 -> '€1,58m', 55811 -> '€55,8k', 9400 -> '€9.400'."""
+    sign, a = ("-" if x < 0 else ""), abs(x)
+    if a >= 1e6:
+        return f"{sign}€{num(a / 1e6, 2)}m"
+    if a >= 1e4:
+        return f"{sign}€{num(a / 1e3, 1)}k"
+    return eur(x)
+
+
+# Prompt v3: every number is given in two forms, exact and a display form computed here,
+# so the model never has to round on its own (it rounded €55.811 to €55k in v1 and v2).
+def e2(x):
+    """Euro amount: '€55.811 (display: €55,8k)'."""
+    return f"{eur(x)} (display: {eur_display(x)})"
+
+
+def p2(x):
+    """Percentage (already x 100): '93,04 % (display: 93,0 %)'."""
+    return f"{num(x, 2)} % (display: {num(x, 1)} %)"
+
+
+def d2(x):
+    """Decimal such as months or a multiple: '19,68 (display: 19,7)'."""
+    return f"{num(x, 2)} (display: {num(x, 1)})"
+
+
 # ------------------------------------------------------------------ fact sheet
 SYSTEM_PROMPT = """You draft the monthly investor update for the founder of Nordlys Analytics ApS, a Copenhagen B2B SaaS company. The founder reads and finishes the draft before sending it.
 
@@ -79,13 +108,16 @@ Lowlight: <one sentence, optional>
 Ask: <one sentence>
 
 What goes in each part:
-- TL;DR: the single most important thing this month, good or bad, and what it means for the company. Do not bury bad news and do not dramatise it. Example of the tone: "We lost our largest customer (€9.400 MRR), runway is still 16 months, and the focus now is replacing it with larger new contracts."
+- TL;DR: at most 30 words and at most 2 numbers. Name the most important event of the month (for example a churn, a hiring push, a one-off cost or a strong expansion month) and what it means for the company. Do not lead with the change in runway: runway is in the table, and early-period runway moves are mostly annual billing timing. Do not bury bad news and do not dramatise it.
 - Highlights and lowlights: at most two of each, one short sentence each, at most two numbers per sentence. The table carries the other numbers. If the fact sheet lists metrics that got worse, write at least one lowlight.
+- A planned increase in headcount is not a lowlight on its own. The higher burn it causes can be.
 - Ask: one concrete thing investors can help with, tied to this month's data. For example introductions to mid-sized Nordic prospects after a churn, or candidate referrals during a hiring push.
 
+Numbers:
+- Every number in the fact sheet is given as the exact value followed by a display form, for example "€55.811 (display: €55,8k)". Use the display form or the exact value, copied as written. Never round a number yourself and never calculate new numbers.
+
 Facts and causes:
-- Use only numbers from the fact sheet. You may round them (€1.579.630 as €1,58m, €110.316 as €110k) but never calculate new numbers.
-- Name only causes that are visible in the fact sheet. The data does not say why a customer left, what a professional fee was for, why someone was hired or what the founder plans next. Where such a reason matters, write a placeholder in square brackets for the founder, for example "[Founder: add reason]". Never guess the reason and never promise to look into it.
+- Name only causes that are visible in the fact sheet. The data does not say why a customer left, what a professional fee was for, why someone was hired or what the founder plans next. Where such a reason matters, write a placeholder in square brackets for the founder, for example "[Founder: add reason]". Put the placeholder at the end of the sentence, never in the middle. Never guess the reason and never promise to look into it.
 - Do not mention any month after the update month except the zero-cash month given in the fact sheet.
 
 Style:
@@ -93,7 +125,7 @@ Style:
 - Plain words a founder would use in an email to investors. Short sentences. Write as "we".
 - No hype or filler words, for example: exciting, significant, robust, momentum, landscape, leverage. No exclamation marks.
 - No em dashes or en dashes. No rhetorical lists of three. No closing pleasantries.
-- British English. Euros in European format (€1.234.567, €1,23m, €110k), decimals with a comma (14,3 months), dates as "Sep 2026"."""
+- British English. Euros in European format, decimals with a comma, dates as "Sep 2026"."""
 
 
 def worsened(con, month):
@@ -140,48 +172,48 @@ def build_facts(con, month):
     # (label, value shown to the model, raw number used by the number check)
     f = [
         ("Update month", label(month), None),
-        ("Closing cash", eur(cur["closing_cash"]), cur["closing_cash"]),
-        ("Closing cash previous month", eur(prev["closing_cash"]), prev["closing_cash"]),
-        ("Net burn this month (payments minus collections)", eur(cur["net_burn"]), cur["net_burn"]),
-        ("Net burn previous month", eur(prev["net_burn"]), prev["net_burn"]),
-        ("Average net burn, last 3 months", eur(cur["avg_net_burn_3m"]), cur["avg_net_burn_3m"]),
-        ("Average net burn, last 3 months, as of previous month", eur(prev["avg_net_burn_3m"]), prev["avg_net_burn_3m"]),
-        ("Runway at average net burn (months)", num(cur["runway_months"]), cur["runway_months"]),
-        ("Runway as of previous month (months)", num(prev["runway_months"]), prev["runway_months"]),
+        ("Closing cash", e2(cur["closing_cash"]), cur["closing_cash"]),
+        ("Closing cash previous month", e2(prev["closing_cash"]), prev["closing_cash"]),
+        ("Net burn this month (payments minus collections)", e2(cur["net_burn"]), cur["net_burn"]),
+        ("Net burn previous month", e2(prev["net_burn"]), prev["net_burn"]),
+        ("Average net burn, last 3 months", e2(cur["avg_net_burn_3m"]), cur["avg_net_burn_3m"]),
+        ("Average net burn, last 3 months, as of previous month", e2(prev["avg_net_burn_3m"]), prev["avg_net_burn_3m"]),
+        ("Runway at average net burn (months)", d2(cur["runway_months"]), cur["runway_months"]),
+        ("Runway as of previous month (months)", d2(prev["runway_months"]), prev["runway_months"]),
         ("Month cash would run out at that burn", label(cur["zero_cash_month"]), None),
-        ("Collections (cash in from customers)", eur(cur["collections"]), cur["collections"]),
-        ("Payments (cash out)", eur(cur["payments"]), cur["payments"]),
-        ("MRR", eur(cur["closing_mrr"]), cur["closing_mrr"]),
-        ("MRR previous month", eur(cur["opening_mrr"]), cur["opening_mrr"]),
-        ("MRR change this month", eur(cur["closing_mrr"] - cur["opening_mrr"]), cur["closing_mrr"] - cur["opening_mrr"]),
-        ("New MRR", eur(cur["new_mrr"]), cur["new_mrr"]),
-        ("Expansion MRR", eur(cur["expansion_mrr"]), cur["expansion_mrr"]),
-        ("Contraction MRR", eur(cur["contraction_mrr"]), cur["contraction_mrr"]),
-        ("Churned MRR", eur(cur["churn_mrr"]), cur["churn_mrr"]),
-        ("Largest single churned customer this month (MRR)", eur(biggest_churn) if biggest_churn else "none", biggest_churn),
+        ("Collections (cash in from customers)", e2(cur["collections"]), cur["collections"]),
+        ("Payments (cash out)", e2(cur["payments"]), cur["payments"]),
+        ("MRR", e2(cur["closing_mrr"]), cur["closing_mrr"]),
+        ("MRR previous month", e2(cur["opening_mrr"]), cur["opening_mrr"]),
+        ("MRR change this month", e2(cur["closing_mrr"] - cur["opening_mrr"]), cur["closing_mrr"] - cur["opening_mrr"]),
+        ("New MRR", e2(cur["new_mrr"]), cur["new_mrr"]),
+        ("Expansion MRR", e2(cur["expansion_mrr"]), cur["expansion_mrr"]),
+        ("Contraction MRR", e2(cur["contraction_mrr"]), cur["contraction_mrr"]),
+        ("Churned MRR", e2(cur["churn_mrr"]), cur["churn_mrr"]),
+        ("Largest single churned customer this month (MRR)", e2(biggest_churn) if biggest_churn else "none", biggest_churn),
         ("New customers", str(cur["new_customers"]), cur["new_customers"]),
         ("Churned customers", str(cur["churned_customers"]), cur["churned_customers"]),
         ("Active customers", str(cur["active_customers"]), cur["active_customers"]),
-        ("Average MRR per new customer this month", eur(new_avg) if new_avg else "none", new_avg),
-        ("Average MRR per new customer, previous 12 months", eur(new_avg12), new_avg12),
-        ("ARR", eur(cur["arr"]), cur["arr"]),
-        ("ARR growth vs 12 months earlier (%)", num(cur["arr_growth_12m"] * 100), cur["arr_growth_12m"] * 100),
-        ("Net revenue retention, 12 months (%)", num(cur["nrr_12m"] * 100), cur["nrr_12m"] * 100),
+        ("Average MRR per new customer this month", e2(new_avg) if new_avg else "none", new_avg),
+        ("Average MRR per new customer, previous 12 months", e2(new_avg12), new_avg12),
+        ("ARR", e2(cur["arr"]), cur["arr"]),
+        ("ARR growth vs 12 months earlier (%)", p2(cur["arr_growth_12m"] * 100), cur["arr_growth_12m"] * 100),
+        ("Net revenue retention, 12 months (%)", p2(cur["nrr_12m"] * 100), cur["nrr_12m"] * 100),
         ("Burn multiple, last 3 months",
-         num(cur["burn_multiple"]) if cur["burn_multiple"] is not None else cur["burn_multiple_note"],
+         d2(cur["burn_multiple"]) if cur["burn_multiple"] is not None else cur["burn_multiple_note"],
          cur["burn_multiple"]),
-        ("Gross margin (%)", num(cur["gross_margin_pct"] * 100), cur["gross_margin_pct"] * 100),
-        ("EBITDA", eur(cur["ebitda"]), cur["ebitda"]),
+        ("Gross margin (%)", p2(cur["gross_margin_pct"] * 100), cur["gross_margin_pct"] * 100),
+        ("EBITDA", e2(cur["ebitda"]), cur["ebitda"]),
         ("Headcount", str(cur["headcount"]), cur["headcount"]),
         ("Headcount previous month", str(prev["headcount"]), prev["headcount"]),
         ("Headcount 3 months earlier", str(hc3["headcount"]), hc3["headcount"]),
-        ("Payroll", eur(cur["payroll"]), cur["payroll"]),
-        ("Payroll previous month", eur(prev["payroll"]), prev["payroll"]),
-        ("Non-payroll costs", eur(cur["opex_total"]), cur["opex_total"]),
-        ("Non-payroll costs previous month", eur(prev["opex_total"]), prev["opex_total"]),
-        ("Professional fees", eur(cur["opex_professional_fees"]), cur["opex_professional_fees"]),
-        ("Professional fees, average of previous 12 months", eur(fees12), fees12),
-        ("Marketing", eur(cur["opex_marketing"]), cur["opex_marketing"]),
+        ("Payroll", e2(cur["payroll"]), cur["payroll"]),
+        ("Payroll previous month", e2(prev["payroll"]), prev["payroll"]),
+        ("Non-payroll costs", e2(cur["opex_total"]), cur["opex_total"]),
+        ("Non-payroll costs previous month", e2(prev["opex_total"]), prev["opex_total"]),
+        ("Professional fees", e2(cur["opex_professional_fees"]), cur["opex_professional_fees"]),
+        ("Professional fees, average of previous 12 months", e2(fees12), fees12),
+        ("Marketing", e2(cur["opex_marketing"]), cur["opex_marketing"]),
         ("Metrics that got worse vs previous month", "; ".join(worsened(con, month)) or "none", None),
     ]
     return f
