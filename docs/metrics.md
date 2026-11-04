@@ -27,7 +27,7 @@ Every metric is defined once, here. Each one is calculated in exactly one SQL vi
 |---|---|---|---|---|
 | Net burn | payments - collections (funding excluded) | `03_monthly_summary.sql` | Cash is what runs out, not profit. Annual upfront billing makes cash and revenue differ a lot | Gross burn (payments only) or EBITDA-based burn |
 | Average net burn (3m) | average of net burn this month and the two before | `04_runway.sql` | Annual invoices make single months lumpy (some months even show negative burn). Three months smooths that but still reacts to recent changes like the hiring push | Single latest month (too noisy), 6 or 12 months (too slow to show the hiring push) |
-| Runway (months) | closing cash / average net burn (3m). Empty if average burn is zero or negative | `04_runway.sql` | Simple and widely understood: "how long at today's pace" | Projection-based runway that includes expected growth (that is what the scenario chart does) |
+| Runway at current burn (months) | closing cash / average net burn (3m). Empty if average burn is zero or negative | `04_runway.sql` | Simple and widely understood: "how long at today's pace" | Projection-based runway that includes expected growth (that is what the scenario chart does) |
 | Zero-cash month | this month + runway rounded up to whole months | `04_runway.sql` | Turns runway into a date people can plan around | Month in which projected cash goes below a minimum buffer, not zero |
 
 The dashboard KPI uses this trailing 3-month runway and says so. The scenario chart is a separate projection with its own assumptions (see below), so the two dates can differ.

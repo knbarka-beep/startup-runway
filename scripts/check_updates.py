@@ -148,7 +148,7 @@ def structure_and_style(u, worse):
     banned = sorted({m.group(0).lower() for m in BANNED_RE.finditer(ai_text)})
     if banned:
         problems.append("banned words: " + ", ".join(banned))
-    if "—" in ai_text or "–" in ai_text:   # em dash or en dash
+    if "\u2014" in ai_text or "\u2013" in ai_text:   # em dash or en dash
         problems.append("dash")
     outside = PLACEHOLDER.sub("", ai_text)
     if "[" in outside or "]" in outside or LOOSE_PLACEHOLDER.search(outside):

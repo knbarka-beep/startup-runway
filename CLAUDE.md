@@ -23,6 +23,7 @@ Portfolio project: runway dashboard for **Nordlys Analytics ApS (fictional)**. A
 4. `python scripts/check_scenario.py` and `cd web && npm test` must both pass (TypeScript scenario equals Python within €1 per month).
 5. `python scripts/write_updates.py` drafts investor updates (Claude API, cost cap USD 2,00), then `python scripts/check_updates.py`, then `python build_db.py` again to export them.
 6. `cd web && npm run build` produces the static site in `web/out/`.
+7. `node scripts/screenshots.mjs` retakes the screenshots in headless Edge and runs a touch check (sparkline tooltip at 375 px) and a preset check.
 
 All calculations live in SQL views. The website only reads exported JSON and never calls an API.
 
@@ -31,3 +32,4 @@ All calculations live in SQL views. The website only reads exported JSON and nev
 - Key lives in env var `PORTFOLIO_ANTHROPIC_KEY` (not `ANTHROPIC_API_KEY`). Pass it explicitly to `anthropic.Anthropic(api_key=...)`. Never print it, write it to a file or commit it.
 - Model: `claude-sonnet-5-5`. Text is generated once and stored in `data/ai/`.
 - Input for month m may only contain data up to and including m (look-ahead test in `write_updates.py`).
+- Prompt v2: the AI writes only TL;DR, highlights, lowlights and ask; subject and key metrics table come from SQL. Causes not in the data become "[Founder: add reason]" placeholders. Never regenerate drafts just to make checks pass. v1 is kept in `data/ai/updates_v1.csv`.

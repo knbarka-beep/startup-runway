@@ -54,7 +54,9 @@ async function connect() {
   throw new Error("Could not connect to Edge");
 }
 
+let current = { width: 1440, mobile: false };
 async function open(path, width, mobile = false) {
+  current = { width, mobile };
   await send("Emulation.setDeviceMetricsOverride", { width, height: mobile ? 900 : 2400, deviceScaleFactor: 1, mobile });
   await send("Emulation.setTouchEmulationEnabled", { enabled: mobile, maxTouchPoints: 5 });
   await send("Page.navigate", { url: SITE + path });
@@ -72,11 +74,14 @@ async function shoot(file, selector) {
     clip = await js(`(() => { const r = document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();
       return { x: r.x + scrollX - 8, y: r.y + scrollY - 8, width: r.width + 16, height: r.height + 16, scale: 1 }; })()`);
   } else {
+    // Make the screen as tall as the page first, so the charts draw once at their final size.
     const h = await js("document.documentElement.scrollHeight");
+    await send("Emulation.setDeviceMetricsOverride", { width: current.width, height: h, deviceScaleFactor: 1, mobile: current.mobile });
+    await wait(800);
     const w = await js("document.documentElement.clientWidth");
-    clip = { x: 0, y: 0, width: w, height: h, scale: 1 };
+    clip = { x: 0, y: 0, width: w, height: await js("document.documentElement.scrollHeight"), scale: 1 };
   }
-  const { data } = await send("Page.captureScreenshot", { format: "png", clip, captureBeyondViewport: !selector });
+  const { data } = await send("Page.captureScreenshot", { format: "png", clip, captureBeyondViewport: false });
   writeFileSync(join(shots, file), Buffer.from(data, "base64"));
   console.log(`  saved docs/screenshots/${file}`);
 }

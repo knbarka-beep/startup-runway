@@ -58,9 +58,15 @@ export default function Method() {
       <p>
         The dashed line starts from {monthLabel(base.start_month)} with {eur(base.start_cash)} in the bank and projects
         24 months. Each month: MRR grows by the growth rate and shrinks by the churn rate; cash changes by MRR minus
-        payroll minus other costs plus any funding. Defaults are recent trends: growth {pct(base.default_growth_rate, 2)} and
-        churn {pct(base.default_churn_rate, 2)} of MRR per month (12-month averages), other costs {eur(base.monthly_opex)} a
-        month (3-month average), payroll {eur(base.monthly_payroll)} a month, and no new hires. A new hire costs{" "}
+        payroll minus other costs plus any funding. Payroll starts at {eur(base.monthly_payroll)} a month and rises{" "}
+        {pct(base.annual_salary_increase, 0)} every January (own assumption, for everyone including new hires). The page
+        opens on the Current plan preset: growth {pct(base.default_growth_rate, 2)} and churn{" "}
+        {pct(base.default_churn_rate, 2)} of MRR per month (12-month averages), other costs {eur(base.monthly_opex)} a
+        month (3-month average), 2 full-time hires and 2 student assistants. Hiring push has 6 full-time hires; Downside
+        has half the growth and 1,5 times the churn. A student assistant (part-time, about 15 hours a week) costs{" "}
+        {eur(base.student_assistant_cost)} a month including holiday pay and starts in the first projected month. New
+        hires add cost but do not change the growth rate, and customers are assumed to pay in the month revenue is
+        earned. A full-time hire costs{" "}
         {eur(base.cost_per_hire)} a month: the average loaded cost per team, weighted by an assumed hiring mix of 40 %
         engineering, 35 % sales, 15 % customer success and 10 % G&amp;A. This is a tool for asking &quot;what if&quot;, not a
         forecast. A test checks that the browser calculation equals an independent Python version to within €1 a month.
@@ -150,9 +156,9 @@ export default function Method() {
       <ul>
         <li>All data is synthetic, so the patterns are only as realistic as the assumptions behind them.</li>
         <li>Revenue equals MRR. No proration, VAT, tax, payables or receivables timing.</li>
-        <li>The projection keeps costs flat apart from the sliders and treats collections as equal to revenue.</li>
+        <li>The projection keeps other costs flat apart from the slider, treats collections as equal to revenue (annual upfront billing is ignored) and does not let new hires change the growth rate.</li>
         <li>Gross margin counts cloud hosting and customer success payroll as cost of revenue. Third-party software stays in operating costs because the data does not say which part serves customers.</li>
-        <li>The AI check verifies numbers and named causes only. A draft can pass and still be badly written or emphasise the wrong thing.</li>
+        <li>The AI check verifies numbers, named causes, structure and a few style rules. A draft could pass and still be badly written or emphasise the wrong thing, and every draft needs a founder to fill in the placeholders.</li>
       </ul>
     </main>
   );
