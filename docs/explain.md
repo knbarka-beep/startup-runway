@@ -113,8 +113,8 @@ With 24 months of synthetic data, a statistical forecast would look precise but 
 **6. What would change with real data?**
 The generator would be replaced by exports from the billing system, payroll and the bank. Revenue recognition would need proration and deferred revenue. Collections would have payment terms and late payers. The SQL views and the dashboard would mostly stay the same, which is the point of keeping the calculations in one place.
 
-**7. Why is gross margin so high (about 91 %)?**
-Because I only count cloud hosting as cost of revenue. Many SaaS companies also include customer success and support. Here that would bring it to about 63 %. I chose the simple version and wrote down the alternative.
+**7. How do you define gross margin, and why is it about 63 %?**
+Cost of revenue is cloud hosting plus the payroll of the customer success team, because those are the costs of serving the customers we already have. Sep 2026: 63,4 %. The first version counted hosting only and showed about 91 %, which flattered the business, so I changed it. Third-party software could also go in, but the data does not say which tools serve customers, so it stays in operating costs.
 
 **8. What is the burn multiple and why is it 12,3 in Sep 2026?**
 Net burn divided by net new ARR, over 3 months. It says how many euros we burned for each euro of new ARR. It is high because the largest customer left in July, so net new ARR over those 3 months was small. Lower is better. When ARR shrinks, the ratio is not meaningful, and the dashboard says so instead of showing a number.

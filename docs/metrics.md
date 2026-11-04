@@ -16,8 +16,9 @@ Every metric is defined once, here. Each one is calculated in exactly one SQL vi
 
 | Metric | Formula | Where | Why | Alternative |
 |---|---|---|---|---|
-| Gross profit | revenue - cloud hosting | `03_monthly_summary.sql` | Hosting is the only cost that scales directly with customers in this data | Also include customer success payroll and third-party software in cost of revenue (customer success payroll alone is about 27 % of revenue in Sep 2026, so gross margin would drop from about 91 % to about 63 %) |
-| Gross margin % | gross profit / revenue | `03_monthly_summary.sql` | | |
+| Cost of revenue | cloud hosting + payroll of the customer success team | `03_monthly_summary.sql` | These are the costs of serving existing customers: the servers they use and the people who onboard and support them. Customer success grows with the customer base, so leaving it out made margin look better than it is (about 91 % instead of about 63 % in Sep 2026) | Also include third-party software (part of it serves customers, but the data does not say which part, so it is left in operating costs) |
+| Gross profit | revenue - cost of revenue | `03_monthly_summary.sql` | | |
+| Gross margin % | gross profit / revenue | `03_monthly_summary.sql` | 63,4 % in Sep 2026 | |
 | EBITDA | revenue - payroll - all opex | `03_monthly_summary.sql` | No depreciation, interest or tax in this data, so EBITDA is operating profit on an accrual basis | EBIT, or "adjusted EBITDA" excluding one-offs (not used: it hides the one-off) |
 
 ## Cash, burn and runway

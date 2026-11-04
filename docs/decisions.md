@@ -28,7 +28,7 @@ Every choice made during the unattended first build, as a list: what, why, and t
 ## Metrics
 
 16. **Revenue = closing MRR of the month.** No proration. Alternative: daily proration.
-17. **Gross margin counts only cloud hosting as cost of revenue.** Flatters margin; the alternative (adding customer success payroll) is described in `docs/metrics.md`.
+17. **Gross margin counts only cloud hosting as cost of revenue.** Flatters margin; the alternative (adding customer success payroll) is described in `docs/metrics.md`. *Replaced in review round 1, see decision 51.*
 18. **Net burn is cash-based (payments minus collections).** Cash is what runs out. Alternative: EBITDA-based burn.
 19. **Runway and the 3-month burn average are empty until 3 months of history exist** (Oct and Nov 2024). Alternative: average whatever months exist.
 20. **Burn multiple uses the same trailing 3 months and is empty, with a note, when net new ARR is zero or negative.**
@@ -74,3 +74,4 @@ Every choice made during the unattended first build, as a list: what, why, and t
 
 49. **Sparkline tooltip sits just above the line and follows the cursor or finger.** It shows the month and the exact value ("Jul 2026: €1.785.615", runway as "14,3 months"), in the same style as the other chart tooltips. The sparkline area uses `touch-action: pan-y`, so a sideways drag moves the tooltip and an up or down drag still scrolls the page. A tap without any movement shows nothing, because the chart library reacts to a moving finger. Alternative: a fixed label under the line (always visible, but takes space in a small card).
 50. **Screenshots are now taken by `scripts/screenshots.mjs`, which drives headless Edge through its built-in DevTools protocol** (a WebSocket that Node already has). This gives a true 375 px phone screen, can simulate a finger dragging along a sparkline (an automated touch check that prints PASS or FAIL), and can click preset buttons. It replaces `scripts/screenshots.ps1` and its 375 px iframe workaround (decision 46). Alternative: Playwright or Puppeteer (a large extra dependency for a few screenshots).
+51. **Cost of revenue = cloud hosting + customer success payroll** (as requested in the review). Customer success payroll is taken from the headcount table by team in the same SQL view, so the number has one source. Gross margin in Sep 2026 goes from about 91 % to 63,4 %. Third-party software stays out because the data does not split it between customer-facing and internal tools. Alternative: also include a fixed share of software (would need an invented split).

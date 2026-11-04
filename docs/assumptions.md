@@ -52,7 +52,7 @@ Everything here is an **own assumption** made to build a believable fictional co
 - Revenue = MRR. No proration, no deferred revenue table.
 - Everything is paid or collected in the month it occurs. No VAT, no corporate tax, no interest on cash.
 - Annual customers pay 12 months upfront.
-- Gross margin counts only cloud hosting as cost of revenue (see `docs/metrics.md`).
+- Cost of revenue is cloud hosting plus customer success payroll. Third-party software is left in operating costs (see `docs/metrics.md`).
 
 ## Scenario projection (sliders)
 

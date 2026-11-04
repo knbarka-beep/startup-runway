@@ -73,7 +73,7 @@ Screenshots: `powershell -File scripts/screenshots.ps1` (headless Microsoft Edge
 - Synthetic data: realistic only as far as the assumptions in `docs/assumptions.md` are.
 - Revenue equals MRR; no proration, VAT, tax, payables or receivables timing.
 - The projection keeps costs flat apart from the sliders and treats collections as equal to revenue.
-- Gross margin counts only cloud hosting as cost of revenue, which flatters it.
+- Gross margin counts cloud hosting and customer success payroll as cost of revenue, not third-party software.
 - The AI check verifies numbers and named causes, not whether the update emphasises the right things.
 
 ## Next version

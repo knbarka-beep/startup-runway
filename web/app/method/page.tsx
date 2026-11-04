@@ -42,7 +42,7 @@ export default function Method() {
             <tr><td>ARR</td><td>MRR x 12. Growth is compared with 12 months earlier</td></tr>
             <tr><td>Net revenue retention</td><td>MRR today from customers active 12 months ago, divided by their MRR then</td></tr>
             <tr><td>Burn multiple</td><td>Net burn over 3 months divided by net new ARR over the same 3 months. Left empty when ARR did not grow</td></tr>
-            <tr><td>Gross margin</td><td>Revenue minus cloud hosting, divided by revenue</td></tr>
+            <tr><td>Gross margin</td><td>Revenue minus cost of revenue (cloud hosting plus customer success payroll), divided by revenue</td></tr>
           </tbody>
         </table>
       </div>
@@ -120,7 +120,7 @@ export default function Method() {
         <li>All data is synthetic, so the patterns are only as realistic as the assumptions behind them.</li>
         <li>Revenue equals MRR. No proration, VAT, tax, payables or receivables timing.</li>
         <li>The projection keeps costs flat apart from the sliders and treats collections as equal to revenue.</li>
-        <li>Gross margin counts only cloud hosting as cost of revenue, which flatters it.</li>
+        <li>Gross margin counts cloud hosting and customer success payroll as cost of revenue. Third-party software stays in operating costs because the data does not say which part serves customers.</li>
         <li>The AI check verifies numbers and named causes only. A draft can pass and still be badly written or emphasise the wrong thing.</li>
       </ul>
     </main>
