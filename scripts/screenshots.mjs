@@ -153,26 +153,24 @@ try {
     `after moving a slider "${afterSlider}", after Reset "${afterReset}"`);
   failed ||= !presetOk;
 
-  // Photograph the first preset whose projection shows the red "cash runs out" line.
+  // Photograph Current plan (the default) and Hiring push, and print the line under the chart for all three.
   for (const preset of ["Current plan", "Hiring push", "Downside"]) {
     await click(preset);
     await wait(300);
     const line = await js("document.querySelector('.projection-line').textContent");
-    const runsOut = await js("!!document.querySelector('.projection-line.risk')");
     console.log(`  ${preset}: ${line}`);
-    if (runsOut && preset !== "Current plan" && !globalThis.shotTaken) {
-      await shoot(`preset-${preset.toLowerCase().replace(" ", "-")}.png`, ".main");
-      globalThis.shotTaken = true;
-    }
+    if (preset !== "Downside") await shoot(`preset-${preset.toLowerCase().replace(" ", "-")}.png`, ".main");
   }
 
-  // Investor update card for Jul 2026.
-  await js(`(() => { const s = document.getElementById('month');
-    const i = [...s.options].findIndex(o => o.text === 'Jul 2026');
-    Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(s, String(i));
-    s.dispatchEvent(new Event('change', { bubbles: true })); })()`);
-  await wait(400);
-  await shoot("update-jul-2026.png", ".update");
+  // Investor update cards for Apr and Jul 2026.
+  for (const month of ["Apr 2026", "Jul 2026"]) {
+    await js(`(() => { const s = document.getElementById('month');
+      const i = [...s.options].findIndex(o => o.text === '${month}');
+      Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(s, String(i));
+      s.dispatchEvent(new Event('change', { bubbles: true })); })()`);
+    await wait(400);
+    await shoot(`update-${month.toLowerCase().replace(" ", "-")}.png`, ".update");
+  }
 } finally {
   ws?.close();
   edge.kill();

@@ -87,22 +87,25 @@ The small lines under each KPI (sparklines) show the same number for every month
 ### Draft investor update
 - **Shows:** a draft for the selected month (Oct 2025 to Sep 2026) in five parts, then the check result:
   1. Subject: "Nordlys Analytics: Mon YYYY update". Not AI.
-  2. TL;DR: one sentence with the most important thing this month and what it means. AI.
+  2. TL;DR: one sentence, at most 30 words and two numbers, naming the main event of the month (a churn, a hiring push, a one-off cost, a strong expansion month) and what it means. It must not lead with the change in runway: runway is in the table, and early runway moves are mostly annual billing timing. AI.
   3. Key metrics table: cash, net burn, runway at current burn, MRR, ARR growth, customers, headcount, each with the change vs last month. Not AI: from `sql/09_update_metrics.sql`.
   4. Up to two highlights and two lowlights, one short sentence each. AI.
   5. Ask: one concrete thing investors can help with. AI.
-- **Placeholders:** the data shows what happened, not why. Where a reason matters (why a customer left, what a fee was for, why someone was hired), the AI writes "[Founder: add reason]" instead of guessing. The dashboard highlights these. The drafts are for a founder to finish.
-- **Computed in:** `scripts/write_updates.py` (draft, prompt v2) and `scripts/check_updates.py` (check). Card: `web/components/UpdateCard.tsx`.
-- **History:** v1 was 120 to 180 words of prose. After reviewing two v1 drafts (Apr and Jul 2026) they were too dense (20 or more numbers in running text), had no ask, and wrote as the founder about causes the founder would know but the data does not. v1 is kept in `data/ai/updates_v1.csv`.
+- **Placeholders:** the data shows what happened, not why. Where a reason matters (why a customer left, what a fee was for, why someone was hired), the AI writes "[Founder: add reason]" instead of guessing, at the end of the sentence. The dashboard highlights these. The drafts are for a founder to finish.
+- **Pre-formatted numbers:** every number in the fact sheet is given twice, exact and in a display form computed in Python: "€55.811 (display: €55,8k)", "€1.579.630 (display: €1,58m)", "93,04 % (display: 93,0 %)". The model must copy one of the two and never round on its own.
+- **Validate and retry:** the model does not follow format rules reliably, so the pipeline checks every draft and asks for one or two corrections. Both the first-attempt and final results are shown. Right after each draft, `write_updates.py` runs the same checks as `check_updates.py`. If it fails, one follow-up message in the same conversation lists the failed checks with the offending sentence or number, and asks for a corrected full draft. At most two retries (three attempts); the last attempt is kept, pass or fail. Every attempt is in `data/ai/update_attempts.csv`. The card shows which attempt was kept and its check result.
+- **Result (v3, run once):** 6 of 12 first drafts passed; 12 of 12 after retries; 94 of 94 numbers in the kept drafts match. 6 months needed one retry each (Dec 2025 to May 2026). Most common first-attempt failure: three or four numbers in one highlight or lowlight (3 months). Two first-attempt failures were false flags by my cause check ("Contraction MRR was €0", "churn was zero"); I did not change the checker after the run. 18 API calls, USD 0,1393.
+- **Computed in:** `scripts/write_updates.py` (draft, prompt v3, check and retry) and `scripts/check_updates.py` (check). Card: `web/components/UpdateCard.tsx`.
+- **History:** v1 was 120 to 180 words of prose. After reviewing two v1 drafts (Apr and Jul 2026) they were too dense (20 or more numbers in running text), had no ask, and wrote as the founder about causes the founder would know but the data does not. v2 (the five parts) passed 0 of 12 checks: mostly too many numbers per sentence, and three numbers rounded wrongly by the model (€55k for €55.811). v3 added the pre-formatted numbers, the TL;DR rules and validate and retry. v1 and v2 are kept in `data/ai/updates_v1.csv` and `updates_v2.csv`. v3 is the last prompt change for this project.
 
 ## Main design choices and why
 
 1. **All maths in SQL views, one per file.** One place the numbers come from. Anyone can open a `.sql` file and read the formula.
 2. **A static website.** No server and no database online. Cheap, fast and nothing to break. The trade-off: new data means rebuilding.
 3. **Sliders run in the browser in one small file.** The logic is readable top to bottom, and a test proves it matches an independent Python version to within €1 every month.
-4. **AI text generated once and stored.** Repeatable, cheap (about USD 0,07 for all 12 drafts, each time) and reviewable. Visitors never trigger an API call.
+4. **AI text generated once and stored.** Repeatable, cheap (about USD 0,07 for 12 drafts in v1 and v2; USD 0,14 for v3 with its 6 retries) and reviewable. Visitors never trigger an API call.
 5. **The AI gets a prepared fact sheet, not raw data.** It can only use numbers we gave it, and a script can check them. The numbers investors need most sit in a table built from SQL, so the AI text only has to carry the story.
-6. **Honest check results.** The v2 check was run once: 0 of 12 drafts pass every rule. The results are shown, not regenerated away.
+6. **Honest check results.** Each AI run was done once. The v3 page shows both the first-attempt result (6 of 12) and the final result after retries (12 of 12), and the retry rule and its limit were fixed before the run.
 7. **Planted story.** The data has a hiring push, a big churn, a price increase, a strong expansion month and a one-off fee, so the dashboard and the updates have something to explain.
 
 ## Checks you can run
@@ -113,10 +116,10 @@ The small lines under each KPI (sparklines) show the same number for every month
 | `python scripts/check_scenario.py` | Sanity checks on the projection (month 1 cash, hiring spread, 3 % raise every January, presets) | 8 of 8 pass |
 | `cd web && npm test` | Python and TypeScript projections are equal within €1, for each of the three presets and a stress case; preset buttons set the same values as Python | 5 of 5 pass |
 | `python scripts/write_updates.py` (first lines) | Look-ahead test: the input for each month uses no later data | pass |
-| `python scripts/check_updates.py` | Numbers, named causes, structure and style of the AI parts (v2) | 0 of 12 drafts pass, 137 of 145 numbers match |
+| `python scripts/check_updates.py` | Numbers, named causes, structure and style of the AI parts (v3); self-test of the checker first | 12 of 12 kept drafts pass (6 of 12 on the first attempt), 94 of 94 numbers match |
 | `node scripts/screenshots.mjs` | A finger dragged along a sparkline at 375 px moves the tooltip; presets highlight and clear correctly | both pass |
 
-## 13 likely interview questions
+## 15 likely interview questions
 
 **1. Why trailing 3 months for burn?**
 Annual customers pay upfront, so one month's burn can be very high or even negative. Three months smooths that but still reacts fast. When we hired six people in spring 2026, the 3-month average showed it within one or two months. A 12-month average would still be showing last year's lower costs.
@@ -125,7 +128,7 @@ Annual customers pay upfront, so one month's burn can be very high or even negat
 They answer different questions. The KPI says: if nothing changes, burn stays at the trailing 3-month average. Current plan assumes revenue keeps growing at the past year's pace, and also adds 2 hires, 2 student assistants and a 3 % raise every January. Growth wins by about two months. Hiring push and Downside both run out in Nov 2027, one month before the KPI date. So the KPI is a reasonable middle, and the presets show the range.
 
 **3. How do you know the AI text is right?**
-I do not trust it by default. The model only gets a fact sheet built from the SQL views, and the key numbers sit in a table that does not come from the AI at all. Then a separate script, without AI, checks every number in the AI text against that fact sheet, flags causes the data does not support, and checks the format rules. In v2, 137 of 145 numbers matched. Four misses are real rounding errors (€128.684 written as €128k). Four are "100%", the threshold from the fact sheet, which the checker cannot match: that is a weakness of my checker. No draft passed every rule, mostly because the model put three or four numbers in one sentence where I asked for two. I left that visible. The check does not judge writing quality; the founder still reads and finishes each draft.
+I do not trust it by default. The model only gets a fact sheet built from the SQL views, and the key numbers sit in a table that does not come from the AI at all. Then a separate script, without AI, checks every number in the AI text against that fact sheet, flags causes the data does not support, and checks the format rules. In v2, the model rounded three numbers wrongly (€128.684 written as €128k), and no draft passed every rule. In v3 the model gets every number pre-formatted, and the script checks each draft and asks for a correction when it fails. Half the first drafts failed; after at most one retry each, all 12 pass and all 94 numbers match. Both results are on the page. The checker itself has known weaknesses: it was revised twice for false flags, and in the v3 run it flagged two correct sentences ("churn was zero") as unsupported causes. The check does not judge writing quality; the founder still reads and finishes each draft.
 
 **4. How do you know the AI did not see the future?**
 For each month I rebuild the database with every later month deleted, build the input again and check it is identical. If it is not, the script stops before calling the API. My previous project had a look-ahead bug, so this test is there on purpose.
@@ -149,18 +152,24 @@ A reconciliation script checks the raw data before anything else runs: cash roll
 Be honest and specific. Claude Code wrote the code from a detailed brief I wrote: the company, the planted story, the metric definitions, the checks and the rules (no invented sources, fictional data, look-ahead test, cost cap). My job was to review the output, the decisions log and the check results (only say this once you have done it). I can explain every formula because they are written down in `docs/metrics.md` and each lives in one SQL file.
 
 **11. Why does the projection never hit zero in Current plan, or does it?**
-It does: Current plan runs out of cash in Feb 2028. The first version of the dashboard opened on "no hires, no changes", and there cash never reached zero within 24 months (lowest point about €42k in Sep 2028), because MRR keeps growing at the past year's trend. Current plan is more realistic: it adds 2 full-time hires, 2 student assistants and a 3 % raise every January. Together those extra costs are enough to push the line below zero in Feb 2028, before revenue growth can catch up. The line under the chart says this in words, and it turns red when cash runs out.
+It does: Current plan runs out of cash in Feb 2028 (lowest point -€475.864 in Sep 2028, the last projected month). The first version of the dashboard opened on "no hires, no changes", and there cash never reached zero within 24 months (lowest point about €42k in Sep 2028), because MRR keeps growing at the past year's trend. Current plan is more realistic: it adds 2 full-time hires, 2 student assistants and a 3 % raise every January. Together those extra costs are enough to push the line below zero in Feb 2028, before revenue growth can catch up. The line under the chart says this in words, and it turns red when cash runs out.
 
 **12. Why are student assistants a separate slider?**
-Because they cost very differently. A student assistant works about 15 hours a week and costs about €1.420 a month including holiday pay (65 hours x DKK 145, plus 12,5 % holiday pay, at 7,46 DKK per EUR), against about €6.700 for a full-time hire. If I counted them as hires, two students would look like €13.400 a month instead of €2.840. They also start straight away, while full-time hires are spread over 12 months. The calculation is in `docs/assumptions.md` and is my own assumption, not a published rate.
+Because they cost very differently. A student assistant works about 15 hours a week and costs €1.420 a month including holiday pay (65 hours x DKK 145, plus 12,5 % holiday pay, at 7,46 DKK per EUR), against about €6.700 for a full-time hire. If I counted them as hires, two students would look like €13.400 a month instead of €2.840. They also start straight away, while full-time hires are spread over 12 months. The calculation is in `docs/assumptions.md` and is my own assumption, not a published rate. The first version used €1.900, which had been set backwards (an hourly wage chosen to hit a target number); it now starts from the wage and works forwards.
 
 **13. Why does the AI leave placeholders instead of writing the causes?**
 Because the data only shows what happened, not why. The data shows that the largest customer left in July, but not why it left. It shows €26.668 of professional fees in April, about ten times the usual level, but not what they were for. The first version of the prompt made the model write as the founder, and it filled those gaps with vague phrases like "understanding why that customer left". An investor would read that as the founder not knowing their own business. Now the model writes "[Founder: add reason]" and the founder fills it in. That makes it an honest draft: the AI does the numbers and the structure, the human adds what only the human knows.
+
+**14. Isn't retrying until it passes a form of cheating?**
+It would be if I kept retrying until I liked the result, or quietly showed only the final drafts. Three things stop that. The rule and the cap were set and committed before the run: at most two retries per month, the last attempt kept, pass or fail, and the run done once. Both results are shown: 6 of 12 drafts passed on the first attempt and 12 of 12 after retries, and every attempt is stored. And the retry only gets the checker's output, which checks failed and the offending sentence or number, never the correct values. So the model has to fix its own draft from its own fact sheet. This is also how a founder would use it: a draft that fails a rule goes back for a correction before anyone reads it. What it does not prove is that the model follows the rules on its own; the first-attempt rate says it does about half the time. One honest caveat: two of the six retries were caused by false flags in my cause check, so those two months did not need a retry.
+
+**15. Why give the model pre-formatted numbers?**
+Because it rounded wrongly on its own. In v1 and v2 it wrote €55k for €55.811 three times, and also €99k for €99.519 and €128k for €128.684: it cut numbers off instead of rounding them. Rounding is easy for Python and unreliable for a language model, so Python does it. Every number now comes as "€55.811 (display: €55,8k)", and the model copies one form. In the v3 run no draft had a wrongly rounded number. It also makes the text consistent with the dashboard, and the checker accepts both forms because it allows the rounding the text uses.
 
 ## Where to look first in the code
 
 1. `sql/04_runway.sql`: the runway formula, 20 lines.
 2. `web/lib/scenario.ts`: the slider logic and the three presets, with comments.
-3. `scripts/write_updates.py` (the v2 prompt, near the top) and `scripts/check_updates.py` (how the AI text is checked).
+3. `scripts/write_updates.py` (the v3 prompt near the top, the retry loop in `main()`) and `scripts/check_updates.py` (how the AI text is checked).
 4. `scripts/generate.py`: the planted story is at the top.
 5. `docs/decisions.md`: every choice made without you.
