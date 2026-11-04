@@ -29,6 +29,6 @@ SELECT
     (SELECT AVG((new_mrr + expansion_mrr) / opening_mrr) FROM last12)      AS default_growth_rate,
     (SELECT AVG(-(churn_mrr + contraction_mrr) / opening_mrr) FROM last12) AS default_churn_rate,
     (SELECT SUM(avg_loaded_cost * hiring_share) FROM hire_cost_by_team)    AS cost_per_hire,
-    1900                                                                   AS student_assistant_cost,
+    1420                                                                   AS student_assistant_cost,
     0.03                                                                   AS annual_salary_increase
 FROM last;

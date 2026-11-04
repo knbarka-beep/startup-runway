@@ -2535,8 +2535,8 @@
   "monthly_opex": 36437.0,
   "default_growth_rate": 0.037749582549397497,
   "default_churn_rate": 0.01347206407118186,
-  "cost_per_hire": 6718.625454545455,
-  "student_assistant_cost": 1900,
+  "cost_per_hire": 6718.625454545454,
+  "student_assistant_cost": 1420,
   "annual_salary_increase": 0.03
  },
  "update_metrics": [

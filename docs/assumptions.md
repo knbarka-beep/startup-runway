@@ -58,16 +58,18 @@ Everything here is an **own assumption** made to build a believable fictional co
 
 - Default growth and churn rates are trailing 12-month averages from the actuals.
 - **Salary increase: all payroll (existing staff, new hires and student assistants) rises 3 % once a year, every January.** Own assumption. Fixed, not a slider. In the projection from Sep 2026 this applies in Jan 2027 (x 1,03) and Jan 2028 (x 1,0609 compared with today). Set in `sql/08_scenario_base.sql` (`annual_salary_increase`).
-- **Student assistant: €1.900 loaded cost a month each.** Own assumption, no named source. Calculation:
+- **Student assistant: €1.420 loaded cost a month each.** Own assumption, no named source. The calculation starts from the hourly wage and works forwards:
 
   | Step | Value |
   |---|---|
-  | Hours a week | 15 |
-  | Hours a month | 15 x 52 / 12 = 65 |
-  | Hourly wage | €26 (about DKK 194 at 7,46 DKK per EUR), own assumption for a typical Danish student wage in a business or tech role |
-  | Wage a month | 65 x €26 = €1.690 |
-  | Holiday pay 12,5 % | €1.690 x 1,125 = €1.901 |
-  | Rounded | **€1.900** |
+  | Hours a month | 65 (about 15 a week: 15 x 52 / 12 = 65) |
+  | Hourly wage | DKK 145, own assumption for a Danish student job |
+  | Wage a month | 65 x DKK 145 = DKK 9.425 |
+  | Holiday pay 12,5 % | DKK 9.425 x 1,125 = DKK 10.603 |
+  | In EUR at 7,46 DKK per EUR | DKK 10.603 / 7,46 = €1.421 |
+  | Rounded to the nearest €10 | **€1.420** |
+
+  Review round 2 correction: the earlier figure (€1.900) was set backwards, by choosing an hourly wage (€26) that landed on a target. It has been replaced by this forward calculation (see `docs/decisions.md`, decision 71).
 
   No pension or other employer costs are added (smaller for part-time student jobs; left out to keep it simple). Student assistants start in projected month 1 and do not change the growth rate. Set in `sql/08_scenario_base.sql` (`student_assistant_cost`).
 - **Presets** (own assumptions, buttons above the sliders):
