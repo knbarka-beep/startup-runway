@@ -1,14 +1,20 @@
 """Draft one investor update per month (Oct 2025 to Sep 2026) with the Claude API.
 
+Prompt v2 (review round 1): the AI writes only four parts of each update: a one-sentence
+TL;DR, up to two highlights, up to two lowlights and one ask. The subject line and the
+key metrics table are not AI; they come from the SQL views (sql/09_update_metrics.sql).
+Where a cause is not in the data, the AI writes a placeholder such as "[Founder: add reason]".
+The v1 drafts (120 to 180 words of prose) are kept in data/ai/updates_v1.csv.
+
 Steps:
   1. Look-ahead test: the fact sheet for month m must be identical whether the
      database holds all 24 months or only months up to m. If not, abort.
   2. Build a fact sheet per month from the SQL views (only months <= m).
-  3. Write every prompt to data/ai/prompts/ (so they can be rerun or inspected).
+  3. Write every prompt to data/ai/prompts/v2/ (so they can be rerun or inspected).
   4. If PORTFOLIO_ANTHROPIC_KEY is missing: stop here, no calls.
   5. Estimate worst-case cost. Abort if above USD 2,00.
   6. Call the API month by month, stop if actual spend passes USD 2,00.
-  7. Save data/ai/updates.csv and append to data/ai/spend_log.csv.
+  7. Split each answer into its parts, save data/ai/updates.csv and append to data/ai/spend_log.csv.
 
 The key is read from the environment and passed directly to the client.
 It is never printed or written anywhere.
@@ -17,6 +23,7 @@ It is never printed or written anywhere.
 import csv
 import hashlib
 import os
+import re
 import sys
 from datetime import date, datetime
 from pathlib import Path
@@ -28,9 +35,9 @@ sys.path.insert(0, str(ROOT))
 from build_db import build  # noqa: E402
 
 AI_DIR = ROOT / "data" / "ai"
-PROMPT_DIR = AI_DIR / "prompts"
+PROMPT_VERSION = "v2"
+PROMPT_DIR = AI_DIR / "prompts" / PROMPT_VERSION
 MODEL = "claude-sonnet-5-5"
-PROMPT_VERSION = "v1"
 MAX_TOKENS = 8000                     # includes the model's internal thinking
 PRICE_IN, PRICE_OUT = 2.00 / 1e6, 10.00 / 1e6   # USD per token, Sonnet 5.5
 COST_CAP_USD = 2.00
@@ -59,17 +66,51 @@ def num(x, decimals=1):
 
 
 # ------------------------------------------------------------------ fact sheet
-SYSTEM_PROMPT = """You write short monthly investor updates for the founder of Nordlys Analytics ApS, a Copenhagen B2B SaaS company.
+SYSTEM_PROMPT = """You draft the monthly investor update for the founder of Nordlys Analytics ApS, a Copenhagen B2B SaaS company. The founder reads and finishes the draft before sending it.
 
-Rules:
-- 120 to 180 words. Plain text, short paragraphs, no headings, no bullet points, no markdown.
-- Founder voice, plain language, calm and factual. No hype, no exclamation marks.
-- Structure: headline numbers; what changed and why; runway; one ask or focus for next month.
-- Use only numbers that appear in the fact sheet. You may round them (for example €1.579.630 as €1,58m, €110.316 as €110k) but never calculate new numbers.
-- Explain changes only with causes visible in the fact sheet. Do not invent reasons such as seasonality, market conditions, pipeline or product launches.
-- British English. Money in euros in European format (€1.234.567, €1,23m, €110k). Decimals with a comma (14,3 months). Dates as "Sep 2026".
-- Never use em dashes or en dashes.
-- Do not mention anything about months after the update month except the zero-cash month given in the fact sheet."""
+The email already has a subject line and a table with the key metrics (cash in bank, net burn, runway, MRR, ARR growth, customers, headcount, each with the change vs last month). You write only the text parts. Do not repeat the table.
+
+Answer with exactly these lines and nothing else, each part on its own line:
+TL;DR: <one sentence>
+Highlight: <one sentence>
+Highlight: <one sentence, optional>
+Lowlight: <one sentence>
+Lowlight: <one sentence, optional>
+Ask: <one sentence>
+
+What goes in each part:
+- TL;DR: the single most important thing this month, good or bad, and what it means for the company. Do not bury bad news and do not dramatise it. Example of the tone: "We lost our largest customer (€9.400 MRR), runway is still 16 months, and the focus now is replacing it with larger new contracts."
+- Highlights and lowlights: at most two of each, one short sentence each, at most two numbers per sentence. The table carries the other numbers. If the fact sheet lists metrics that got worse, write at least one lowlight.
+- Ask: one concrete thing investors can help with, tied to this month's data. For example introductions to mid-sized Nordic prospects after a churn, or candidate referrals during a hiring push.
+
+Facts and causes:
+- Use only numbers from the fact sheet. You may round them (€1.579.630 as €1,58m, €110.316 as €110k) but never calculate new numbers.
+- Name only causes that are visible in the fact sheet. The data does not say why a customer left, what a professional fee was for, why someone was hired or what the founder plans next. Where such a reason matters, write a placeholder in square brackets for the founder, for example "[Founder: add reason]". Never guess the reason and never promise to look into it.
+- Do not mention any month after the update month except the zero-cash month given in the fact sheet.
+
+Style:
+- At most 110 words in total.
+- Plain words a founder would use in an email to investors. Short sentences. Write as "we".
+- No hype or filler words, for example: exciting, significant, robust, momentum, landscape, leverage. No exclamation marks.
+- No em dashes or en dashes. No rhetorical lists of three. No closing pleasantries.
+- British English. Euros in European format (€1.234.567, €1,23m, €110k), decimals with a comma (14,3 months), dates as "Sep 2026"."""
+
+
+def worsened(con, month):
+    """Which key metrics got worse vs the previous month (from sql/09_update_metrics.sql).
+    Falling cash is not listed: it falls every month while the company burns cash."""
+    cur = con.execute(f"SELECT * FROM update_metrics WHERE month = DATE '{month}'")
+    # A missing change (no previous value, e.g. ARR growth in Oct 2025) counts as "not worse".
+    r = {k: (0 if v is None else v) for k, v in zip([d[0] for d in cur.description], cur.fetchone())}
+    rules = [
+        ("net burn went up", r["net_burn_change"] > 0),
+        ("runway got shorter", r["runway_change"] < 0),
+        ("MRR went down", r["mrr_change"] < 0),
+        ("ARR growth vs 12 months ago slowed", r["arr_growth_change"] < 0),
+        ("fewer active customers", r["customers_change"] < 0),
+        ("net revenue retention below 100 %", 0 < r["nrr_12m"] < 1),
+    ]
+    return [name for name, hit in rules if hit]
 
 
 def build_facts(con, month):
@@ -141,6 +182,7 @@ def build_facts(con, month):
         ("Professional fees", eur(cur["opex_professional_fees"]), cur["opex_professional_fees"]),
         ("Professional fees, average of previous 12 months", eur(fees12), fees12),
         ("Marketing", eur(cur["opex_marketing"]), cur["opex_marketing"]),
+        ("Metrics that got worse vs previous month", "; ".join(worsened(con, month)) or "none", None),
     ]
     return f
 
@@ -153,7 +195,27 @@ def make_prompt(facts):
     return (f"Fact sheet for the update (all figures from the company's own data):\n{facts_text(facts)}\n\n"
             "Notes on the data: annual customers pay 12 months upfront, so collections and net burn "
             "jump around from month to month. Runway uses the 3-month average to smooth that.\n\n"
-            "Write the investor update for this month.")
+            "Write the text parts of the investor update for this month.")
+
+
+LABELS = {"TL;DR": "tldr", "Highlight": "highlights", "Lowlight": "lowlights", "Ask": "ask"}
+
+
+def split_parts(text):
+    """Split the model's answer into its parts by the line labels. Several highlights or
+    lowlights are joined with a newline. Lines without a known label go to 'unparsed',
+    which the checker flags. Nothing is rewritten."""
+    parts = {"tldr": [], "highlights": [], "lowlights": [], "ask": [], "unparsed": []}
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        m = re.match(r"^\**(TL;DR|Highlight|Lowlight|Ask)\**\s*:\**\s*(.+)$", line)
+        if m:
+            parts[LABELS[m.group(1)]].append(m.group(2).strip())
+        else:
+            parts["unparsed"].append(line)
+    return {k: "\n".join(v) for k, v in parts.items()}
 
 
 # ------------------------------------------------------------- look-ahead test
@@ -228,15 +290,17 @@ def main():
         text = "\n".join(b.text for b in resp.content if b.type == "text").strip()
         if resp.stop_reason != "end_turn":
             print(f"  {label(month)}: stop_reason={resp.stop_reason}, text kept as returned")
-        rows.append([month[:7], text, MODEL, PROMPT_VERSION, h,
+        parts = split_parts(text)
+        rows.append([month[:7], parts["tldr"], parts["highlights"], parts["lowlights"], parts["ask"],
+                     parts["unparsed"], text, MODEL, PROMPT_VERSION, h,
                      resp.usage.input_tokens, resp.usage.output_tokens, round(cost, 6)])
         print(f"  {label(month)}: {resp.usage.input_tokens} in / {resp.usage.output_tokens} out, "
               f"USD {cost:.4f} (total {spent:.4f})")
 
     with open(AI_DIR / "updates.csv", "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
-        w.writerow(["month", "text", "model", "prompt_version", "input_hash",
-                    "tokens_in", "tokens_out", "cost_usd"])
+        w.writerow(["month", "tldr", "highlights", "lowlights", "ask", "unparsed", "raw_text",
+                    "model", "prompt_version", "input_hash", "tokens_in", "tokens_out", "cost_usd"])
         w.writerows(rows)
     log = AI_DIR / "spend_log.csv"
     new_log = not log.exists()

@@ -7,6 +7,7 @@ import { data } from "@/lib/data";
 import { activePreset, presetSettings, project, zeroCashMonth, PRESETS, type Settings } from "@/lib/scenario";
 import { dec, eur, eurShort, monthLabel, pct } from "@/lib/format";
 import { BurnDrivers, CashChart, MrrBridge, Sparkline } from "./charts";
+import UpdateCard from "./UpdateCard";
 
 const months = data.monthly;
 const base = data.scenario_base;
@@ -36,11 +37,6 @@ export default function Dashboard() {
   const set = (k: keyof Settings) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setS({ ...s, [k]: Number(e.target.value) });
 
-  const update = data.updates.find((u) => u.month === m.month);
-  const check = data.update_checks.find((c) => c.month === m.month);
-  const nPass = data.update_checks.filter((c) => c.passed).length;
-  const numFound = data.update_checks.reduce((a, c) => a + c.numbers_found, 0);
-  const numOk = data.update_checks.reduce((a, c) => a + c.numbers_matched, 0);
   const runwayRisk = m.runway_months !== null && m.runway_months < 12;
   const drivers = data.burn_drivers.filter((d) => d.month === m.month);
 
@@ -221,36 +217,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <section className="card update">
-        <div className="card-head">
-          <h2>Draft investor update, {monthLabel(m.month)}</h2>
-          {check && <span className={`pill ${check.passed ? "pass" : "fail"}`}>{check.passed ? "Number check passed" : "Number check flagged"}</span>}
-        </div>
-        {data.updates.length === 0 ? (
-          <p className="muted">AI drafts were not generated in this build (no API key was set). The prompts are saved in data/ai/prompts/ and can be run later.</p>
-        ) : update ? (
-          <>
-            {update.text.split(/\n+/).map((p, i) => <p key={i}>{p}</p>)}
-            {check && (
-              <p className="muted small">
-                {check.numbers_matched} of {check.numbers_found} numbers match the data for this month
-                {check.unmatched_numbers ? ` (not matched: ${check.unmatched_numbers})` : ""}.
-                {check.unsupported_causes ? ` Cause without support in the data: ${check.unsupported_causes}.` : ""}
-                {" "}{check.words} words.
-              </p>
-            )}
-          </>
-        ) : (
-          <p className="muted">AI drafts cover Oct 2025 to Sep 2026. Pick one of those months to read one.</p>
-        )}
-        {data.update_checks.length > 0 && (
-          <p className="muted small" style={{ marginBottom: 0 }}>
-            Drafted by {data.updates[0]?.model} from that month&apos;s numbers only, then checked by a script without AI:{" "}
-            {nPass} of {data.update_checks.length} drafts pass, {numOk} of {numFound} numbers match the data. The check
-            covers numbers and named causes, not writing quality. <a href="method/">How this works</a>
-          </p>
-        )}
-      </section>
+      <UpdateCard month={m.month} />
     </main>
   );
 }

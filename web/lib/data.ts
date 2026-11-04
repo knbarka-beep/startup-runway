@@ -36,17 +36,34 @@ export type Month = {
 };
 
 export type BurnDriver = { month: string; driver_type: "team" | "category"; driver: string; amount: number };
-export type Update = { month: string; text: string; model: string; prompt_version: string };
+export type Update = {
+  month: string; tldr: string; highlights: string; lowlights: string; ask: string;
+  model: string; prompt_version: string;
+};
 export type UpdateCheck = {
   month: string;
   words: number;
+  placeholders: number;
   numbers_found: number;
   numbers_matched: number;
   unmatched_numbers: string | null;
   causes_named: string | null;
   unsupported_causes: string | null;
-  dash_found: boolean;
+  banned_words: string | null;
+  metrics_worse: string | null;
+  problems: string | null;
   passed: boolean;
+};
+// Key metrics table of the investor update (sql/09_update_metrics.sql). Changes are vs the previous month.
+export type UpdateMetrics = {
+  month: string;
+  cash: number; cash_change: number | null;
+  net_burn: number; net_burn_change: number | null;
+  runway_months: number | null; runway_change: number | null;
+  mrr: number; mrr_change: number | null;
+  arr_growth_12m: number | null; arr_growth_change: number | null;
+  customers: number; customers_change: number | null;
+  headcount: number; headcount_change: number | null;
 };
 
 type Dashboard = {
@@ -57,6 +74,7 @@ type Dashboard = {
   scenario_base: ScenarioBase;
   updates: Update[];
   update_checks: UpdateCheck[];
+  update_metrics: UpdateMetrics[];
   reconciliation: { check: string; passed: boolean }[];
 };
 

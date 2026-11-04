@@ -86,6 +86,17 @@ button:hover, select:hover { border-color: var(--accent); }
 
 /* Investor update */
 .update p { margin: 0 0 10px; max-width: 75ch; }
+.update-body { max-width: 75ch; }
+.update-body .subject { font-weight: 600; }
+.update-body h3 { font-size: 0.9rem; margin: 14px 0 4px; }
+.update-body ul { margin: 0 0 6px; padding-left: 20px; }
+.update-body li { margin-bottom: 4px; }
+.metrics { border-collapse: collapse; font-size: 0.86rem; margin: 4px 0 6px; width: 100%; max-width: 460px; }
+.metrics th, .metrics td { text-align: left; padding: 4px 10px 4px 0; border-bottom: 1px solid var(--border); }
+.metrics th { color: var(--muted); font-weight: 500; }
+.metrics td:nth-child(n+2), .metrics th:nth-child(n+2) { text-align: right; }
+mark.ph { background: var(--accent-soft); color: var(--text); border-radius: 3px; padding: 0 3px; }
+.check { border-top: 1px solid var(--border); margin: 12px 0 10px; padding-top: 10px; font-size: 0.86rem; }
 .pill { display: inline-block; border-radius: 999px; padding: 1px 10px; font-size: 0.78rem; font-weight: 600; border: 1px solid currentColor; }
 .pill.pass { color: var(--ok); }
 .pill.fail { color: var(--risk); }

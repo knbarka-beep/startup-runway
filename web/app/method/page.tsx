@@ -68,15 +68,28 @@ export default function Method() {
 
       <h2>What the AI does and does not do</h2>
       <p>
-        For each month from Oct 2025 to Sep 2026, Claude (model claude-sonnet-5-5) drafted a short investor update from
-        a fact sheet of that month&apos;s numbers. The fact sheet is built from the SQL views and only contains data up
-        to that month; a test rebuilds the database without the later months and confirms the input is identical. The
-        text was generated once and stored. The website never calls the AI, and the sliders do not get AI text.
+        For each month from Oct 2025 to Sep 2026 there is a draft investor update in five parts. The subject line and
+        the key metrics table (cash, net burn, runway, MRR, ARR growth, customers and headcount, each with the change
+        vs last month) are not written by AI: they come straight from the SQL views. Claude (model claude-sonnet-5-5,
+        prompt v2) wrote the other three parts from a fact sheet of that month&apos;s numbers: a one-sentence TL;DR, up
+        to two highlights and two lowlights, and one ask for investors. The fact sheet only contains data up to that
+        month; a test rebuilds the database without the later months and confirms the input is identical. The text
+        was generated once and stored. The website never calls the AI, and the sliders do not get AI text.
       </p>
       <p>
-        A script without AI then checks every draft: each number must match a value in that month&apos;s data within the
-        rounding the text uses, and causes the text names (for example churn or hiring) must be visible in the data. The
-        cause check is a crude keyword list. Neither check says anything about writing quality.
+        <strong>These are drafts for a founder to finish.</strong> The data shows what happened, not why: it does not
+        say why a customer left, what a professional fee was for or why someone was hired. Where such a reason
+        matters, the AI was told to leave a placeholder such as &quot;[Founder: add reason]&quot; instead of guessing.
+        The text is shown exactly as the model wrote it; there is no separate rewriting step.
+      </p>
+      <p>
+        A script without AI then checks every draft. Each number must match a value in that month&apos;s data within
+        the rounding the text uses. Causes the text names (for example churn or hiring) must be visible in the data;
+        this is a crude keyword list. It also checks the structure (one TL;DR, one ask, at most two highlights and two
+        lowlights, at least one lowlight when a key metric got worse, at most two numbers per highlight or lowlight)
+        and a few style rules (at most 110 words, no banned filler words such as &quot;significant&quot; or
+        &quot;robust&quot;, no em dashes, placeholders only in square brackets). None of this says anything about
+        writing quality.
       </p>
 
       <h2>Check results</h2>
@@ -91,10 +104,11 @@ export default function Method() {
         <p className="muted">No AI drafts in this build.</p>
       ) : (
         <>
-          <p>{nPass} of {checks.length} drafts pass all checks.</p>
+          <p>{nPass} of {checks.length} drafts pass all checks. The results are shown as the checker produced them;
+            the drafts were not regenerated to make them pass.</p>
           <div className="table-scroll">
             <table>
-              <thead><tr><th>Month</th><th>Numbers matched</th><th>Not matched</th><th>Words</th><th>Result</th></tr></thead>
+              <thead><tr><th>Month</th><th>Numbers matched</th><th>Not matched</th><th>Words</th><th>Other problems</th><th>Result</th></tr></thead>
               <tbody>
                 {checks.map((c) => (
                   <tr key={c.month}>
@@ -102,6 +116,7 @@ export default function Method() {
                     <td>{c.numbers_matched} / {c.numbers_found}</td>
                     <td>{[c.unmatched_numbers, c.unsupported_causes].filter(Boolean).join("; ") || "none"}</td>
                     <td>{c.words}</td>
+                    <td>{c.problems || "none"}</td>
                     <td className={c.passed ? "" : "risk"}>{c.passed ? "Pass" : "Flagged"}</td>
                   </tr>
                 ))}
@@ -109,8 +124,11 @@ export default function Method() {
             </table>
           </div>
           <p className="muted small">
-            The flagged numbers are rounding errors by the model (for example €160.518 written as €160k instead of
-            €161k). They were left as generated rather than regenerated until they pass.
+            How to read the flags: &quot;€128k&quot; for €128.684, &quot;€99k&quot; for €99.519 and &quot;€55k&quot; for
+            €55.811 are rounding errors by the model (it cut the number off instead of rounding). &quot;100%&quot; is
+            flagged because the checker only compares against data values, while 100 % appears in the fact sheet as the
+            threshold (&quot;net revenue retention below 100 %&quot;); that is a limit of the checker, not a model error. The
+            most common problem is three or four numbers in one highlight or lowlight, where the prompt asked for at most two.
           </p>
         </>
       )}

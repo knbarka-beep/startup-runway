@@ -1,22 +1,29 @@
-"""Check the AI investor updates without using AI.
+"""Check the AI investor updates (prompt v2) without using AI.
+
+Only the AI-written parts are checked: TL;DR, highlights, lowlights and ask.
+The key metrics table comes straight from the SQL views, so there is nothing to check there.
+Text inside square brackets is a placeholder for the founder and is left out of the
+number and cause checks.
 
 For each update:
-  1. Numbers: every number in the text must match a number in that month's
-     fact sheet (built from the SQL views) within rounding. Tolerance = half a
-     unit of the precision the text uses: "€1,58m" may be 1.575.000 to
-     1.585.000, "€110k" may be 109.500 to 110.500, "14,3" may be 14,25 to 14,35.
-     Signs are ignored ("fell by €6.870" vs -6.870).
-     Skipped: years (2020 to 2030) and the method constants 3 and 12 when
-     followed by "month" ("3-month average", "previous 12 months").
-  2. Causes: a crude keyword list. If the text names a cause, the data for that
-     month must support it (for example "churn" needs churned MRR < 0). Some
-     words are never supported because the data has no such column
-     ("seasonal", "pipeline", ...). A keyword right after "no", "not",
-     "without", "zero", "none" or "nothing", or right before "none"/"no"
-     ("lost none") is ignored. This is deliberately simple and will miss
-     things; it checks numbers and named causes, not writing quality.
-  3. Format: 120 to 180 words, no em or en dashes.
+  1. Numbers: every number must match a number in that month's fact sheet (built from
+     the SQL views) within rounding. Tolerance = half a unit of the precision the text
+     uses: "€1,58m" may be 1.575.000 to 1.585.000, "€110k" may be 109.500 to 110.500,
+     "14,3" may be 14,25 to 14,35. Signs are ignored ("fell by €6.870" vs -6.870).
+     Skipped: years (2020 to 2039) and the method constants 3 and 12 when followed
+     by "month" ("3-month average", "12 months ago").
+  2. Causes: a crude keyword list. If the text names a cause, the data for that month
+     must support it (for example "churn" needs churned MRR < 0). Some words are never
+     supported because the data has no such column ("seasonal", "pipeline", ...). A
+     keyword right after "no", "not", "without", "zero", "none" or "nothing", or right
+     before "none"/"no" ("lost none"), is ignored. Deliberately simple; it will miss things.
+  3. Structure: exactly one TL;DR and one ask, at most two highlights and two lowlights,
+     at least one lowlight when a key metric got worse (same list the AI was given),
+     at most two numbers in each highlight or lowlight, no unlabelled lines.
+  4. Style: at most 110 words in the AI parts, none of the banned filler words, no em or
+     en dashes, placeholders only inside square brackets.
 
+This checks numbers, causes, structure and a few style rules, not writing quality.
 Writes data/check/update_checks.csv and prints a summary.
 """
 
@@ -31,14 +38,21 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 from build_db import build  # noqa: E402
-from write_updates import build_facts  # noqa: E402
+from write_updates import build_facts, worsened  # noqa: E402
 
 UPDATES = ROOT / "data" / "ai" / "updates.csv"
 OUT = ROOT / "data" / "check" / "update_checks.csv"
 
+MAX_WORDS = 110
 NUMBER = re.compile(r"(€)?(\d+(?:[.,]\d+)*)(\s?[km]\b)?(\s?%)?")
 NEGATION = re.compile(r"\b(no|not|without|zero|none|nothing)\b[\w\s]{0,15}$")
 NEGATION_AFTER = re.compile(r"^\w*\s+(none|no)\b")   # "lost none", "lost no customers"
+# Filler words from the v2 prompt. A word counts if it starts with one of these stems,
+# so "significantly" and "leveraging" are caught too.
+BANNED = ["exciting", "excited", "significant", "robust", "momentum", "landscape", "leverag"]
+BANNED_RE = re.compile(r"\b(" + "|".join(BANNED) + r")\w*", re.IGNORECASE)
+PLACEHOLDER = re.compile(r"\[[^\[\]]*\]")
+LOOSE_PLACEHOLDER = re.compile(r"founder\s*:|add reason|\btbd\b|placeholder", re.IGNORECASE)
 
 
 def parse(match):
@@ -54,6 +68,7 @@ def parse(match):
 
 
 def check_numbers(text, facts):
+    """Return (numbers found, numbers that match nothing in the fact sheet)."""
     values = [abs(v) for _, _, v in facts if isinstance(v, (int, float)) and v is not None]
     found, unmatched = 0, []
     for m in NUMBER.finditer(text):
@@ -102,8 +117,47 @@ def causes(text, f, month):
     return named, unsupported
 
 
+def lines(part):
+    return [x for x in (part or "").split("\n") if x.strip()]
+
+
+def structure_and_style(u, worse):
+    """Return a list of problems with structure and style (empty list = fine)."""
+    problems = []
+    tldr, highs, lows, ask = lines(u["tldr"]), lines(u["highlights"]), lines(u["lowlights"]), lines(u["ask"])
+    ai_text = " ".join(tldr + highs + lows + ask)
+    if len(tldr) != 1:
+        problems.append(f"{len(tldr)} TL;DR lines (need 1)")
+    if len(ask) != 1:
+        problems.append(f"{len(ask)} ask lines (need 1)")
+    if len(highs) > 2:
+        problems.append(f"{len(highs)} highlights (max 2)")
+    if len(lows) > 2:
+        problems.append(f"{len(lows)} lowlights (max 2)")
+    if worse and not lows:
+        problems.append("no lowlight although a metric got worse")
+    for sentence in highs + lows:
+        n, _ = check_numbers(PLACEHOLDER.sub("", sentence), [])
+        if n > 2:
+            problems.append(f"{n} numbers in one highlight or lowlight (max 2)")
+    if (u.get("unparsed") or "").strip():
+        problems.append("text outside the labelled parts")
+    words = len(ai_text.split())
+    if words > MAX_WORDS:
+        problems.append(f"{words} words (max {MAX_WORDS})")
+    banned = sorted({m.group(0).lower() for m in BANNED_RE.finditer(ai_text)})
+    if banned:
+        problems.append("banned words: " + ", ".join(banned))
+    if "—" in ai_text or "–" in ai_text:   # em dash or en dash
+        problems.append("dash")
+    outside = PLACEHOLDER.sub("", ai_text)
+    if "[" in outside or "]" in outside or LOOSE_PLACEHOLDER.search(outside):
+        problems.append("placeholder not in square brackets")
+    return problems, words, len(PLACEHOLDER.findall(ai_text)), banned
+
+
 def self_test():
-    """The checker must accept correct rounding and catch a wrong number."""
+    """The checker must accept correct text and catch each kind of mistake."""
     facts = [("Closing cash", "", 1_579_630), ("Runway", "", 14.32), ("Churned MRR", "", -9_400)]
     found, bad = check_numbers("Cash €1,58m (€1.579.630), runway 14,3 months, "
                                "churn €9.400 in Sep 2026 on a 3-month view. Wrong: €1,70m and 15,1.", facts)
@@ -113,7 +167,16 @@ def self_test():
         "Churned MRR": 0, "Expansion MRR": 0, "Contraction MRR": 0, "Professional fees": 1,
         "Professional fees, average of previous 12 months": 1}, "2026-09")
     assert unsupported == ["not in data"] and "churn" not in named, (named, unsupported)
-    print("PASS  Checker self-test: accepts correct rounding, catches wrong numbers and unsupported causes")
+    good = {"tldr": "We lost our largest customer [Founder: add reason].", "highlights": "MRR is €103k.",
+            "lowlights": "Runway is 14,3 months.", "ask": "Intros to Nordic prospects.", "unparsed": ""}
+    assert structure_and_style(good, ["runway got shorter"])[0] == []
+    bad = dict(good, lowlights="", highlights="A significant month: €1k, €2k and €3k.",
+               ask="Founder: add reason here.")
+    problems = structure_and_style(bad, ["runway got shorter"])[0]
+    assert problems == ["no lowlight although a metric got worse", "3 numbers in one highlight or lowlight (max 2)",
+                        "banned words: significant", "placeholder not in square brackets"], problems
+    print("PASS  Checker self-test: accepts correct text, catches wrong numbers, unsupported causes, "
+          "missing lowlight, dense sentences, banned words and loose placeholders")
 
 
 def main():
@@ -130,27 +193,30 @@ def main():
         month = u["month"]
         facts = build_facts(con, f"{month}-01")
         fdict = {k: v for k, _, v in facts}
-        text = u["text"]
-        words = len(text.split())
-        n_found, unmatched = check_numbers(text, facts)
-        named, unsupported = causes(text, fdict, month)
-        dash = "\u2014" in text or "\u2013" in text   # em dash or en dash
-        passed = not unmatched and not unsupported and 120 <= words <= 180 and not dash
-        rows.append([month, words, n_found, n_found - len(unmatched), "; ".join(unmatched),
-                     "; ".join(named), "; ".join(unsupported), dash, passed])
-        print(f"{'PASS' if passed else 'FAIL'}  {month}: {words} words, "
+        worse = worsened(con, f"{month}-01")
+        ai_text = " ".join(lines(u["tldr"]) + lines(u["highlights"]) + lines(u["lowlights"]) + lines(u["ask"]))
+        no_placeholders = PLACEHOLDER.sub("", ai_text)
+        n_found, unmatched = check_numbers(no_placeholders, facts)
+        named, unsupported = causes(no_placeholders, fdict, month)
+        problems, words, n_placeholders, banned = structure_and_style(u, worse)
+        passed = not unmatched and not unsupported and not problems
+        rows.append([month, words, n_placeholders, n_found, n_found - len(unmatched), "; ".join(unmatched),
+                     "; ".join(named), "; ".join(unsupported), "; ".join(banned), "; ".join(worse),
+                     "; ".join(problems), passed])
+        print(f"{'PASS' if passed else 'FAIL'}  {month}: {words} words, {n_placeholders} placeholders, "
               f"{n_found - len(unmatched)}/{n_found} numbers matched"
               + (f", unmatched: {unmatched}" if unmatched else "")
-              + (f", unsupported causes: {unsupported}" if unsupported else ""))
+              + (f", unsupported causes: {unsupported}" if unsupported else "")
+              + (f", problems: {problems}" if problems else ""))
     OUT.parent.mkdir(parents=True, exist_ok=True)
     with open(OUT, "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
-        w.writerow(["month", "words", "numbers_found", "numbers_matched", "unmatched_numbers",
-                    "causes_named", "unsupported_causes", "dash_found", "passed"])
+        w.writerow(["month", "words", "placeholders", "numbers_found", "numbers_matched", "unmatched_numbers",
+                    "causes_named", "unsupported_causes", "banned_words", "metrics_worse", "problems", "passed"])
         w.writerows(rows)
     n_pass = sum(r[-1] for r in rows)
-    total_n = sum(r[2] for r in rows)
-    total_ok = sum(r[3] for r in rows)
+    total_n = sum(r[3] for r in rows)
+    total_ok = sum(r[4] for r in rows)
     print(f"\n{n_pass}/{len(rows)} updates passed. {total_ok}/{total_n} numbers matched the views.")
 
 

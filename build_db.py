@@ -76,13 +76,15 @@ def export(con):
         "burn_drivers": rows(con, "SELECT * FROM burn_drivers ORDER BY month, driver_type, driver"),
         "hire_cost_by_team": rows(con, "SELECT * FROM hire_cost_by_team ORDER BY team"),
         "scenario_base": rows(con, "SELECT * FROM scenario_base")[0],
+        "update_metrics": rows(con, "SELECT * FROM update_metrics ORDER BY month"),
         "updates": [],
         "update_checks": [],
         "reconciliation": json.loads(RECON.read_text(encoding="utf-8")) if RECON.exists() else [],
     }
     tables = {r[0] for r in con.execute("SHOW TABLES").fetchall()}
     if "updates" in tables:
-        data["updates"] = rows(con, "SELECT month, text, model, prompt_version FROM updates ORDER BY month")
+        data["updates"] = rows(con, """SELECT month, tldr, highlights, lowlights, ask, model, prompt_version
+                                        FROM updates ORDER BY month""")
     if "update_checks" in tables:
         data["update_checks"] = rows(con, "SELECT * FROM update_checks ORDER BY month")
     EXPORT.parent.mkdir(parents=True, exist_ok=True)

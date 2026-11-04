@@ -1,0 +1,13 @@
+month,words,numbers_found,numbers_matched,unmatched_numbers,causes_named,unsupported_causes,dash_found,passed
+2025-10,161,26,25,€160k,expansion; annual billing timing,,False,False
+2025-11,168,23,21,€55k; €160k,expansion; contraction; annual billing timing,,False,False
+2025-12,165,24,24,,churn; expansion; annual billing timing,,False,True
+2026-01,170,25,25,,churn; expansion; contraction; annual billing timing,,False,True
+2026-02,151,24,24,,expansion; contraction; annual billing timing,,False,True
+2026-03,164,24,24,,hiring; expansion; annual billing timing,,False,True
+2026-04,171,27,27,,hiring; annual billing timing,,False,True
+2026-05,160,25,25,,hiring; churn; expansion,,False,True
+2026-06,170,21,21,,expansion; contraction; annual billing timing,,False,True
+2026-07,160,23,23,,churn; expansion; annual billing timing,,False,True
+2026-08,161,20,20,,expansion; annual billing timing,,False,True
+2026-09,166,22,22,,churn; expansion; contraction; annual billing timing,,False,True
