@@ -14,9 +14,14 @@ Steps:
   2. Build a fact sheet per month from the SQL views (only months <= m).
   3. Write every prompt to data/ai/prompts/v3/ (so they can be rerun or inspected).
   4. If PORTFOLIO_ANTHROPIC_KEY is missing: stop here, no calls.
-  5. Estimate worst-case cost. Abort if above USD 2,00.
+  5. Estimate worst-case cost for 3 attempts x 12 months. Abort if above USD 2,00.
   6. Call the API month by month, stop if actual spend passes USD 2,00.
-  7. Split each answer into its parts, save data/ai/updates.csv and append to data/ai/spend_log.csv.
+  7. Split each answer into its parts and run the same checks as scripts/check_updates.py.
+     If a draft fails, send one follow-up in the same conversation listing exactly which
+     checks failed (with the offending sentence or number) and ask for a corrected full
+     draft. At most 2 retries per month (3 attempts). The last attempt is kept, pass or fail.
+  8. Save every attempt to data/ai/update_attempts.csv, the kept drafts to
+     data/ai/updates.csv, and append the spend to data/ai/spend_log.csv.
 
 The key is read from the environment and passed directly to the client.
 It is never printed or written anywhere.
@@ -40,7 +45,8 @@ AI_DIR = ROOT / "data" / "ai"
 PROMPT_VERSION = "v3"
 PROMPT_DIR = AI_DIR / "prompts" / PROMPT_VERSION
 MODEL = "claude-sonnet-5-5"
-MAX_TOKENS = 8000                     # includes the model's internal thinking
+MAX_TOKENS = 2000                     # includes any internal thinking; v2 answers used at most 275
+MAX_ATTEMPTS = 3                      # first draft + at most 2 corrections, decided before the run
 PRICE_IN, PRICE_OUT = 2.00 / 1e6, 10.00 / 1e6   # USD per token, Sonnet 5.5
 COST_CAP_USD = 2.00
 MONTHS = [f"{y}-{m:02d}-01" for y, m in
@@ -230,6 +236,15 @@ def make_prompt(facts):
             "Write the text parts of the investor update for this month.")
 
 
+def feedback_message(failures):
+    """The follow-up sent after a failed draft: exactly which checks failed and the offending
+    sentence or number, as the checker reports them. No correct values are added."""
+    listed = "\n".join(f"- {name}: {detail}" for name, detail in failures)
+    return ("An automatic check found these problems in your draft:\n" + listed + "\n\n"
+            "Write a corrected full draft in the same format, with all the labelled lines. "
+            "All the rules in the instructions still apply.")
+
+
 LABELS = {"TL;DR": "tldr", "Highlight": "highlights", "Lowlight": "lowlights", "Ask": "ask"}
 
 
@@ -297,42 +312,77 @@ def main():
     # gzip only: on this machine the HTTP library's brotli/zstd decoder crashed (see docs/decisions.md).
     client = anthropic.Anthropic(api_key=key, default_headers={"Accept-Encoding": "gzip, deflate"})
 
-    # Worst-case estimate: exact input tokens (count_tokens is free) + full MAX_TOKENS output.
+    # Worst-case estimate for MAX_ATTEMPTS attempts per month (decided before the run, see
+    # docs/decisions.md). Attempt k resends the prompt plus every earlier draft and feedback
+    # message, so its input grows. Assume each earlier draft and each feedback message is as
+    # long as MAX_TOKENS, and every attempt uses all MAX_TOKENS of output.
     est = 0.0
     for _, prompt, _ in jobs:
         n_in = client.messages.count_tokens(model=MODEL, system=SYSTEM_PROMPT,
                                             messages=[{"role": "user", "content": prompt}]).input_tokens
-        est += n_in * PRICE_IN + MAX_TOKENS * PRICE_OUT
-    print(f"Worst-case cost estimate: USD {est:.4f} (cap USD {COST_CAP_USD:.2f})")
+        for k in range(MAX_ATTEMPTS):
+            est += (n_in + k * 2 * MAX_TOKENS) * PRICE_IN + MAX_TOKENS * PRICE_OUT
+    print(f"Worst-case cost estimate ({MAX_ATTEMPTS} attempts x {len(jobs)} months): "
+          f"USD {est:.4f} (cap USD {COST_CAP_USD:.2f})")
     if est > COST_CAP_USD:
         print("ABORT: estimate above cap.")
         sys.exit(1)
 
-    spent, rows = 0.0, []
+    from check_updates import check_draft, failed_checks   # same checks as scripts/check_updates.py
+
+    # Every attempt is written as soon as it comes back, so nothing is lost if the run stops.
+    attempts_file = AI_DIR / "update_attempts.csv"
+    with open(attempts_file, "w", newline="", encoding="utf-8") as fh:
+        csv.writer(fh).writerow(["month", "attempt", "text", "passed", "checks_failed", "failure_details",
+                                 "tokens_in", "tokens_out", "cost_usd"])
+
+    spent, rows, calls = 0.0, [], 0
     for month, prompt, h in jobs:
+        messages = [{"role": "user", "content": prompt}]
+        tokens_in = tokens_out = 0
+        month_cost = 0.0
+        for attempt in range(1, MAX_ATTEMPTS + 1):
+            resp = client.messages.create(
+                model=MODEL, max_tokens=MAX_TOKENS, system=SYSTEM_PROMPT,
+                output_config={"effort": "medium"}, messages=messages)
+            calls += 1
+            cost = resp.usage.input_tokens * PRICE_IN + resp.usage.output_tokens * PRICE_OUT
+            spent += cost
+            month_cost += cost
+            tokens_in += resp.usage.input_tokens
+            tokens_out += resp.usage.output_tokens
+            text = "\n".join(b.text for b in resp.content if b.type == "text").strip()
+            if resp.stop_reason != "end_turn":
+                print(f"  {label(month)} attempt {attempt}: stop_reason={resp.stop_reason}, text kept as returned")
+            parts = split_parts(text)
+            result = check_draft(parts, con, month[:7])
+            fails = result["failures"]
+            with open(attempts_file, "a", newline="", encoding="utf-8") as fh:
+                csv.writer(fh).writerow([month[:7], attempt, text, result["passed"], failed_checks(fails),
+                                         "; ".join(f"{n}: {d}" for n, d in fails),
+                                         resp.usage.input_tokens, resp.usage.output_tokens, round(cost, 6)])
+            print(f"  {label(month)} attempt {attempt}: {'PASS' if result['passed'] else 'FAIL'}"
+                  + (f" ({failed_checks(fails)})" if fails else "")
+                  + f", {resp.usage.input_tokens} in / {resp.usage.output_tokens} out, "
+                  f"USD {cost:.4f} (total {spent:.4f})")
+            if result["passed"] or attempt == MAX_ATTEMPTS or spent >= COST_CAP_USD:
+                break
+            # One follow-up in the same conversation: only the checker's own output, no correct values.
+            messages += [{"role": "assistant", "content": resp.content},
+                         {"role": "user", "content": feedback_message(fails)}]
+        # The last attempt is kept, pass or fail.
+        rows.append([month[:7], parts["tldr"], parts["highlights"], parts["lowlights"], parts["ask"],
+                     parts["unparsed"], text, MODEL, PROMPT_VERSION, attempt, h,
+                     tokens_in, tokens_out, round(month_cost, 6)])
         if spent >= COST_CAP_USD:
             print(f"STOP: spend USD {spent:.4f} reached the cap.")
             break
-        resp = client.messages.create(
-            model=MODEL, max_tokens=MAX_TOKENS, system=SYSTEM_PROMPT,
-            output_config={"effort": "medium"},
-            messages=[{"role": "user", "content": prompt}])
-        cost = resp.usage.input_tokens * PRICE_IN + resp.usage.output_tokens * PRICE_OUT
-        spent += cost
-        text = "\n".join(b.text for b in resp.content if b.type == "text").strip()
-        if resp.stop_reason != "end_turn":
-            print(f"  {label(month)}: stop_reason={resp.stop_reason}, text kept as returned")
-        parts = split_parts(text)
-        rows.append([month[:7], parts["tldr"], parts["highlights"], parts["lowlights"], parts["ask"],
-                     parts["unparsed"], text, MODEL, PROMPT_VERSION, h,
-                     resp.usage.input_tokens, resp.usage.output_tokens, round(cost, 6)])
-        print(f"  {label(month)}: {resp.usage.input_tokens} in / {resp.usage.output_tokens} out, "
-              f"USD {cost:.4f} (total {spent:.4f})")
 
     with open(AI_DIR / "updates.csv", "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
         w.writerow(["month", "tldr", "highlights", "lowlights", "ask", "unparsed", "raw_text",
-                    "model", "prompt_version", "input_hash", "tokens_in", "tokens_out", "cost_usd"])
+                    "model", "prompt_version", "attempt", "input_hash",
+                    "tokens_in_all_attempts", "tokens_out_all_attempts", "cost_usd_all_attempts"])
         w.writerows(rows)
     log = AI_DIR / "spend_log.csv"
     new_log = not log.exists()
@@ -340,8 +390,8 @@ def main():
         w = csv.writer(fh)
         if new_log:
             w.writerow(["run_at", "model", "prompt_version", "calls", "spend_usd"])
-        w.writerow([datetime.now().isoformat(timespec="seconds"), MODEL, PROMPT_VERSION, len(rows), round(spent, 6)])
-    print(f"Saved {len(rows)} updates. Total spend USD {spent:.4f}")
+        w.writerow([datetime.now().isoformat(timespec="seconds"), MODEL, PROMPT_VERSION, calls, round(spent, 6)])
+    print(f"Saved {len(rows)} updates from {calls} calls. Total spend USD {spent:.4f}")
 
 
 if __name__ == "__main__":
