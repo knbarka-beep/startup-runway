@@ -8,6 +8,8 @@
 --   default_growth_rate average of (new + expansion) / opening MRR, last 12 months
 --   default_churn_rate  average of -(churn + contraction) / opening MRR, last 12 months
 --   cost_per_hire       average loaded cost by team, weighted by the hiring mix
+--   student_assistant_cost  loaded monthly cost of one part-time student assistant (own assumption, docs/assumptions.md)
+--   annual_salary_increase  all payroll rises by this share every January (own assumption, docs/assumptions.md)
 CREATE OR REPLACE VIEW scenario_base AS
 WITH last AS (
     SELECT * FROM monthly_summary ORDER BY month DESC LIMIT 1
@@ -26,5 +28,7 @@ SELECT
     (SELECT AVG(opex_total) FROM last3)                                    AS monthly_opex,
     (SELECT AVG((new_mrr + expansion_mrr) / opening_mrr) FROM last12)      AS default_growth_rate,
     (SELECT AVG(-(churn_mrr + contraction_mrr) / opening_mrr) FROM last12) AS default_churn_rate,
-    (SELECT SUM(avg_loaded_cost * hiring_share) FROM hire_cost_by_team)    AS cost_per_hire
+    (SELECT SUM(avg_loaded_cost * hiring_share) FROM hire_cost_by_team)    AS cost_per_hire,
+    1900                                                                   AS student_assistant_cost,
+    0.03                                                                   AS annual_salary_increase
 FROM last;

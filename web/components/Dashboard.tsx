@@ -4,7 +4,7 @@
 //   2. the slider settings (only the dashed projection line follows them)
 import { useEffect, useMemo, useState } from "react";
 import { data } from "@/lib/data";
-import { defaultSettings, project, zeroCashMonth, MONTHS_AHEAD, type Settings } from "@/lib/scenario";
+import { activePreset, presetSettings, project, zeroCashMonth, PRESETS, type Settings } from "@/lib/scenario";
 import { dec, eur, eurShort, monthLabel, pct } from "@/lib/format";
 import { BurnDrivers, CashChart, MrrBridge, Sparkline } from "./charts";
 
@@ -13,7 +13,7 @@ const base = data.scenario_base;
 
 export default function Dashboard() {
   const [idx, setIdx] = useState(months.length - 1);
-  const [s, setS] = useState<Settings>(defaultSettings(base));
+  const [s, setS] = useState<Settings>(presetSettings(base, "Current plan"));
   const [theme, setTheme] = useState("light");
   useEffect(() => setTheme(document.documentElement.dataset.theme || "light"), []);
 
@@ -23,6 +23,8 @@ export default function Dashboard() {
   const projection = useMemo(() => project(base, s), [s]);
   const zero = zeroCashMonth(projection);
   const lowest = projection.reduce((a, b) => (b.cash < a.cash ? b : a));
+  const lastProjected = projection[projection.length - 1];
+  const active = activePreset(base, s);
 
   function toggleTheme() {
     const next = theme === "dark" ? "light" : "dark";
@@ -114,23 +116,47 @@ export default function Dashboard() {
             <span className="muted small">Solid: actual. Dashed: projection from the sliders.</span>
           </div>
           <CashChart actuals={months} projection={projection} selected={m.month} zeroMonth={zero} />
-          <p className="muted small" style={{ margin: "8px 0 0" }}>
-            The projection is a set of assumptions you can change, not a forecast. It assumes customers pay in the
-            month revenue is earned and costs stay flat apart from the sliders. The runway KPI above uses a different,
-            simpler method (cash divided by the trailing 3-month average net burn), so the two dates can differ.
+          {zero ? (
+            <p className="projection-line risk"><strong>With these settings cash runs out in {monthLabel(zero)}.</strong></p>
+          ) : (
+            <p className="projection-line">
+              With these settings cash bottoms out at <strong>{eurShort(lowest.cash)}</strong> in {monthLabel(lowest.month)}
+              {lowest.month === lastProjected.month ? ", the last projected month" : ""}.
+            </p>
+          )}
+          <p className="muted small" style={{ margin: "4px 0 0" }}>
+            Simplified: new hires add cost but do not change the growth slider, and customers are assumed to pay in the
+            month revenue is earned (annual upfront billing is ignored in the projection). It is a set of assumptions,
+            not a forecast.
           </p>
         </div>
 
         <div className="card">
           <div className="card-head">
             <h2>Scenario from {monthLabel(base.start_month)}</h2>
-            <button onClick={() => setS(defaultSettings(base))}>Reset</button>
+            <button onClick={() => setS(presetSettings(base, "Current plan"))}>Reset</button>
+          </div>
+
+          <div className="presets" role="group" aria-label="Scenario presets">
+            {PRESETS.map((p) => (
+              <button key={p} className={active === p ? "active" : ""} aria-pressed={active === p}
+                      onClick={() => setS(presetSettings(base, p))}>{p}</button>
+            ))}
           </div>
 
           <div className="slider">
-            <label htmlFor="hires"><span>Planned hires, next 12 months</span><strong>{s.hires}</strong></label>
+            <label htmlFor="hires"><span>Full-time hires, next 12 months</span><strong>{s.hires}</strong></label>
             <input id="hires" type="range" min={0} max={15} step={1} value={s.hires} onChange={set("hires")} />
             <div className="hint">{eur(base.cost_per_hire)} loaded cost per hire per month, spread evenly over 12 months</div>
+          </div>
+
+          <div className="slider">
+            <label htmlFor="students"><span>Student assistants (part-time)</span><strong>{s.students}</strong></label>
+            <input id="students" type="range" min={0} max={6} step={1} value={s.students} onChange={set("students")} />
+            <div className="hint">
+              {eur(base.student_assistant_cost)} a month each, from {monthLabel(projection[0].month)}. All payroll rises{" "}
+              {pct(base.annual_salary_increase, 0)} every January.
+            </div>
           </div>
 
           <div className="slider">
@@ -165,14 +191,6 @@ export default function Dashboard() {
             )}
           </div>
 
-          <div className="result">
-            {zero ? (
-              <span className="risk"><strong>Cash runs out in {monthLabel(zero)}</strong> in this scenario.</span>
-            ) : (
-              <span>Cash stays above zero for all {MONTHS_AHEAD} projected months. Lowest point:{" "}
-                <strong>{eurShort(lowest.cash)}</strong> in {monthLabel(lowest.month)}.</span>
-            )}
-          </div>
         </div>
       </section>
 

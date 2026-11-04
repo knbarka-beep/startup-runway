@@ -55,7 +55,7 @@ async function connect() {
 }
 
 async function open(path, width, mobile = false) {
-  await send("Emulation.setDeviceMetricsOverride", { width, height: 900, deviceScaleFactor: 1, mobile });
+  await send("Emulation.setDeviceMetricsOverride", { width, height: mobile ? 900 : 2400, deviceScaleFactor: 1, mobile });
   await send("Emulation.setTouchEmulationEnabled", { enabled: mobile, maxTouchPoints: 5 });
   await send("Page.navigate", { url: SITE + path });
   for (let i = 0; i < 100; i++) {
@@ -128,14 +128,37 @@ try {
   await open("/method/?theme=light", 1200);
   await shoot("method-light.png");
 
-  // Presets: photograph any preset whose projection shows the red "cash runs out" label.
+  // Presets: clicking one highlights it; moving a slider afterwards clears the highlight.
   await open("/?theme=light", 1440);
-  for (const preset of ["Hiring push", "Downside"]) {
+  const activeText = () => js("document.querySelector('.presets button.active')?.textContent ?? 'none'");
+  const onLoad = await activeText();
+  await click("Hiring push");
+  await wait(200);
+  const afterClick = await activeText();
+  await js(`(() => { const el = document.getElementById('students');
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(el, '5');
+    el.dispatchEvent(new Event('input', { bubbles: true })); })()`);
+  await wait(200);
+  const afterSlider = await activeText();
+  await click("Reset");
+  await wait(200);
+  const afterReset = await activeText();
+  const presetOk = onLoad === "Current plan" && afterClick === "Hiring push" && afterSlider === "none" && afterReset === "Current plan";
+  console.log(`  ${presetOk ? "PASS" : "FAIL"}  presets: on load "${onLoad}", after click "${afterClick}", ` +
+    `after moving a slider "${afterSlider}", after Reset "${afterReset}"`);
+  failed ||= !presetOk;
+
+  // Photograph the first preset whose projection shows the red "cash runs out" line.
+  for (const preset of ["Current plan", "Hiring push", "Downside"]) {
     await click(preset);
     await wait(300);
+    const line = await js("document.querySelector('.projection-line').textContent");
     const runsOut = await js("!!document.querySelector('.projection-line.risk')");
-    console.log(`  ${preset}: cash runs out within 24 months = ${runsOut}`);
-    if (runsOut) await shoot(`preset-${preset.toLowerCase().replace(" ", "-")}.png`, ".main");
+    console.log(`  ${preset}: ${line}`);
+    if (runsOut && preset !== "Current plan" && !globalThis.shotTaken) {
+      await shoot(`preset-${preset.toLowerCase().replace(" ", "-")}.png`, ".main");
+      globalThis.shotTaken = true;
+    }
   }
 
   // Investor update card for Jul 2026.

@@ -57,6 +57,23 @@ Everything here is an **own assumption** made to build a believable fictional co
 ## Scenario projection (sliders)
 
 - Default growth and churn rates are trailing 12-month averages from the actuals.
+- **Salary increase: all payroll (existing staff, new hires and student assistants) rises 3 % once a year, every January.** Own assumption. Fixed, not a slider. In the projection from Sep 2026 this applies in Jan 2027 (x 1,03) and Jan 2028 (x 1,0609 compared with today). Set in `sql/08_scenario_base.sql` (`annual_salary_increase`).
+- **Student assistant: €1.900 loaded cost a month each.** Own assumption, no named source. Calculation:
+
+  | Step | Value |
+  |---|---|
+  | Hours a week | 15 |
+  | Hours a month | 15 x 52 / 12 = 65 |
+  | Hourly wage | €26 (about DKK 194 at 7,46 DKK per EUR), own assumption for a typical Danish student wage in a business or tech role |
+  | Wage a month | 65 x €26 = €1.690 |
+  | Holiday pay 12,5 % | €1.690 x 1,125 = €1.901 |
+  | Rounded | **€1.900** |
+
+  No pension or other employer costs are added (smaller for part-time student jobs; left out to keep it simple). Student assistants start in projected month 1 and do not change the growth rate. Set in `sql/08_scenario_base.sql` (`student_assistant_cost`).
+- **Presets** (own assumptions, buttons above the sliders):
+  - *Current plan* (on load, and what Reset returns to): 2 full-time hires, 2 student assistants, growth and churn at their 12-month trend, no change in other costs, no funding.
+  - *Hiring push*: as Current plan, but 6 full-time hires.
+  - *Downside*: as Current plan, but growth at half the trend and churn at 1,5 times the trend.
 - Collections in the projection equal revenue (no annual upfront timing).
 - Other opex stays flat at its trailing 3-month average unless the slider changes it.
 - New hires are spread evenly over the first 12 months and cost the mix-weighted average loaded cost.
