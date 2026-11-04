@@ -142,8 +142,12 @@ export default function Method() {
       <h2>Changes after the first run</h2>
       <ul>
         <li>
-          The number checker was revised once after the first run: it wrongly flagged 4 correct drafts that said
-          &quot;lost none&quot; or &quot;Nothing churned&quot;. The fix and a self-test are described in docs/decisions.md.
+          The checker has been revised twice, both times for false flags, and both changes are listed in
+          docs/decisions.md. First, after the first run, it wrongly flagged 4 correct drafts that said &quot;lost
+          none&quot; or &quot;Nothing churned&quot;. Second, in review round 2, it flagged &quot;100 %&quot; four times in
+          the v2 drafts: that number comes from our own rule about net revenue retention below 100 %, not from the
+          data, so 100 followed by % is now skipped like the constants 3 and 12. Each fix has a case in the
+          checker&apos;s self-test.
         </li>
         <li>
           The update format was changed once after reviewing two v1 drafts (Apr and Jul 2026): they were too dense,

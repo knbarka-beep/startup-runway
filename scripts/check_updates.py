@@ -10,8 +10,9 @@ For each update:
      the SQL views) within rounding. Tolerance = half a unit of the precision the text
      uses: "€1,58m" may be 1.575.000 to 1.585.000, "€110k" may be 109.500 to 110.500,
      "14,3" may be 14,25 to 14,35. Signs are ignored ("fell by €6.870" vs -6.870).
-     Skipped: years (2020 to 2039) and the method constants 3 and 12 when followed
-     by "month" ("3-month average", "12 months ago").
+     Skipped: years (2020 to 2039), the method constants 3 and 12 when followed
+     by "month" ("3-month average", "12 months ago"), and 100 when followed by "%"
+     (our own rule "net revenue retention below 100 %", not a data value).
   2. Causes: a crude keyword list. If the text names a cause, the data for that month
      must support it (for example "churn" needs churned MRR < 0). Some words are never
      supported because the data has no such column ("seasonal", "pipeline", ...). A
@@ -78,6 +79,8 @@ def check_numbers(text, facts):
             continue                                    # a year
         if digits in ("3", "12") and re.match(r"[\s-]month", after):
             continue                                    # method constant
+        if digits == "100" and pct:
+            continue                                    # the 100 % NRR threshold from our own rule
         found += 1
         value, tol = parse(m)
         if not any(abs(value - v) <= tol + 1e-9 for v in values):
@@ -162,6 +165,9 @@ def self_test():
     found, bad = check_numbers("Cash €1,58m (€1.579.630), runway 14,3 months, "
                                "churn €9.400 in Sep 2026 on a 3-month view. Wrong: €1,70m and 15,1.", facts)
     assert (found, bad) == (6, ["€1,70m", "15,1"]), (found, bad)
+    found, bad = check_numbers("Net revenue retention is below 100% (100 % is the line). Not a percent: 100 customers.",
+                               facts)
+    assert (found, bad) == (1, ["100"]), (found, bad)  # "100%" is skipped, a bare 100 is still checked
     named, unsupported = causes("We lost none. Pipeline is strong.", {
         "Headcount": 25, "Headcount 3 months earlier": 25, "Payroll": 1, "Payroll previous month": 1,
         "Churned MRR": 0, "Expansion MRR": 0, "Contraction MRR": 0, "Professional fees": 1,
@@ -176,7 +182,7 @@ def self_test():
     assert problems == ["no lowlight although a metric got worse", "3 numbers in one highlight or lowlight (max 2)",
                         "banned words: significant", "placeholder not in square brackets"], problems
     print("PASS  Checker self-test: accepts correct text, catches wrong numbers, unsupported causes, "
-          "missing lowlight, dense sentences, banned words and loose placeholders")
+          "the 100 % threshold, missing lowlight, dense sentences, banned words and loose placeholders")
 
 
 def main():
