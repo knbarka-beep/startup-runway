@@ -21,6 +21,7 @@ DB_PATH = ROOT / "data" / "runway.duckdb"
 EXPORT = ROOT / "data" / "export" / "dashboard.json"
 UPDATES = ROOT / "data" / "ai" / "updates.csv"
 CHECKS = ROOT / "data" / "check" / "update_checks.csv"
+ATTEMPTS = ROOT / "data" / "ai" / "update_attempts.csv"
 RECON = ROOT / "data" / "check" / "reconciliation.json"
 
 RAW_TABLES = ["customers", "mrr_movements", "headcount", "opex", "cash"]
@@ -79,14 +80,19 @@ def export(con):
         "update_metrics": rows(con, "SELECT * FROM update_metrics ORDER BY month"),
         "updates": [],
         "update_checks": [],
+        "update_attempts": [],
         "reconciliation": json.loads(RECON.read_text(encoding="utf-8")) if RECON.exists() else [],
     }
     tables = {r[0] for r in con.execute("SHOW TABLES").fetchall()}
     if "updates" in tables:
-        data["updates"] = rows(con, """SELECT month, tldr, highlights, lowlights, ask, model, prompt_version
+        data["updates"] = rows(con, """SELECT month, tldr, highlights, lowlights, ask, model, prompt_version,
+                                               CAST(attempt AS INTEGER) AS attempt
                                         FROM updates ORDER BY month""")
     if "update_checks" in tables:
         data["update_checks"] = rows(con, "SELECT * FROM update_checks ORDER BY month")
+    if "update_attempts" in tables:
+        data["update_attempts"] = rows(con, """SELECT month, attempt, passed, checks_failed
+                                                FROM update_attempts ORDER BY month, attempt""")
     EXPORT.parent.mkdir(parents=True, exist_ok=True)
     EXPORT.write_text(json.dumps(data, indent=1, ensure_ascii=False), encoding="utf-8")
     print(f"Exported {EXPORT.relative_to(ROOT)}: {len(monthly)} months, "
@@ -103,6 +109,8 @@ def main():
         con.execute(f"CREATE TABLE updates AS SELECT * FROM read_csv('{UPDATES.as_posix()}', header=true, all_varchar=true)")
     if CHECKS.exists():
         con.execute(f"CREATE TABLE update_checks AS SELECT * FROM read_csv_auto('{CHECKS.as_posix()}')")
+    if ATTEMPTS.exists():
+        con.execute(f"CREATE TABLE update_attempts AS SELECT * FROM read_csv_auto('{ATTEMPTS.as_posix()}')")
     views = [r[0] for r in con.execute(
         "SELECT view_name FROM duckdb_views() WHERE NOT internal ORDER BY view_name").fetchall()]
     print("Views:", ", ".join(views))

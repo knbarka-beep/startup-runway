@@ -39,9 +39,14 @@ export type BurnDriver = { month: string; driver_type: "team" | "category"; driv
 export type Update = {
   month: string; tldr: string; highlights: string; lowlights: string; ask: string;
   model: string; prompt_version: string;
+  attempt: number;  // which attempt was kept (1 = first draft, up to 3)
 };
+// One row per API call in the v3 run: data/ai/update_attempts.csv
+export type UpdateAttempt = { month: string; attempt: number; passed: boolean; checks_failed: string | null };
 export type UpdateCheck = {
   month: string;
+  attempt: number;
+  checks_failed: string | null;
   words: number;
   placeholders: number;
   numbers_found: number;
@@ -74,8 +79,35 @@ type Dashboard = {
   scenario_base: ScenarioBase;
   updates: Update[];
   update_checks: UpdateCheck[];
+  update_attempts: UpdateAttempt[];
   update_metrics: UpdateMetrics[];
   reconciliation: { check: string; passed: boolean }[];
 };
 
 export const data = raw as unknown as Dashboard;
+
+// Summary of the v3 run with retries, shown on the update card and the How this works page.
+export function attemptSummary() {
+  const attempts = data.update_attempts;
+  const first = attempts.filter((a) => a.attempt === 1);
+  const counts = new Map<string, number>();
+  for (const a of first) {
+    for (const name of (a.checks_failed ?? "").split("; ").filter(Boolean)) counts.set(name, (counts.get(name) ?? 0) + 1);
+  }
+  const checks = data.update_checks;
+  return {
+    months: first.length,
+    firstPass: first.filter((a) => a.passed).length,
+    finalPass: checks.filter((c) => c.passed).length,
+    retried: data.updates.filter((u) => u.attempt > 1).map((u) => u.month),
+    calls: attempts.length,
+    numbersFound: checks.reduce((sum, c) => sum + c.numbers_found, 0),
+    numbersMatched: checks.reduce((sum, c) => sum + c.numbers_matched, 0),
+    // [check name, months that failed it on the first attempt], most common first
+    firstFailures: [...counts.entries()].sort((a, b) => b[1] - a[1]),
+  };
+}
+
+export const RETRY_SENTENCE =
+  "The model does not follow format rules reliably, so the pipeline checks every draft and asks for one or two " +
+  "corrections. Both the first-attempt and final results are shown.";

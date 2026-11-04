@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { data } from "@/lib/data";
+import { attemptSummary, data, RETRY_SENTENCE } from "@/lib/data";
 import { eur, monthLabel, pct } from "@/lib/format";
 
 export const metadata = { title: "How this works: Nordlys Analytics (fictional)" };
 
 export default function Method() {
   const checks = data.update_checks;
-  const nPass = checks.filter((c) => c.passed).length;
+  const sum = attemptSummary();
   const base = data.scenario_base;
   return (
     <main className="wrap method">
@@ -77,9 +77,12 @@ export default function Method() {
         For each month from Oct 2025 to Sep 2026 there is a draft investor update in five parts. The subject line and
         the key metrics table (cash, net burn, runway, MRR, ARR growth, customers and headcount, each with the change
         vs last month) are not written by AI: they come straight from the SQL views. Claude (model claude-sonnet-5-5,
-        prompt v2) wrote the other three parts from a fact sheet of that month&apos;s numbers: a one-sentence TL;DR, up
-        to two highlights and two lowlights, and one ask for investors. The fact sheet only contains data up to that
-        month; a test rebuilds the database without the later months and confirms the input is identical. The text
+        prompt v3) wrote the other three parts from a fact sheet of that month&apos;s numbers: a TL;DR of at most 30
+        words and two numbers that names the main event of the month, up to two highlights and two lowlights, and one
+        ask for investors. Every number in the fact sheet is given twice, exact and in a display form computed in
+        Python (for example &quot;€55.811 (display: €55,8k)&quot;), and the model is told to copy one of them and never
+        round on its own: in earlier versions it wrote &quot;€55k&quot; for €55.811. The fact sheet only contains data
+        up to that month; a test rebuilds the database without the later months and confirms the input is identical. The text
         was generated once and stored. The website never calls the AI, and the sliders do not get AI text.
       </p>
       <p>
@@ -92,10 +95,20 @@ export default function Method() {
         A script without AI then checks every draft. Each number must match a value in that month&apos;s data within
         the rounding the text uses. Causes the text names (for example churn or hiring) must be visible in the data;
         this is a crude keyword list. It also checks the structure (one TL;DR, one ask, at most two highlights and two
-        lowlights, at least one lowlight when a key metric got worse, at most two numbers per highlight or lowlight)
-        and a few style rules (at most 110 words, no banned filler words such as &quot;significant&quot; or
-        &quot;robust&quot;, no em dashes, placeholders only in square brackets). None of this says anything about
-        writing quality.
+        lowlights, at least one lowlight when a key metric got worse, at most two numbers per highlight or lowlight,
+        a TL;DR of at most 30 words and two numbers that does not lead with runway) and a few style rules (at most 110
+        words, no banned filler words such as &quot;significant&quot; or &quot;robust&quot;, no em dashes,
+        placeholders only in square brackets and at the end of a sentence). None of this says anything about writing
+        quality.
+      </p>
+      <p>
+        <strong>Validate and retry.</strong> {RETRY_SENTENCE} The same checks run inside the drafting script right
+        after each draft. If a draft fails, the script sends one follow-up message in the same conversation listing
+        exactly which checks failed and the offending sentence or number, and asks for a corrected full draft. The
+        follow-up contains only the checker&apos;s output, no correct values. At most two retries per month (three
+        attempts); the last attempt is kept, pass or fail. This rule, the limit and the cost cap of USD 2,00 for the
+        whole run were set and committed before the run, and the run was done once. Every attempt is stored in
+        data/ai/update_attempts.csv.
       </p>
 
       <h2>Check results</h2>
@@ -110,15 +123,24 @@ export default function Method() {
         <p className="muted">No AI drafts in this build.</p>
       ) : (
         <>
-          <p>{nPass} of {checks.length} drafts pass all checks. The results are shown as the checker produced them;
-            the drafts were not regenerated to make them pass.</p>
+          <ul>
+            <li>First attempt: {sum.firstPass} of {sum.months} drafts passed all checks.</li>
+            <li>Final, after retries: {sum.finalPass} of {checks.length} drafts pass. In the kept drafts{" "}
+              {sum.numbersMatched} of {sum.numbersFound} numbers match the data.</li>
+            <li>{sum.retried.length} months needed a retry ({sum.retried.map(monthLabel).join(", ")}), each only
+              one; {sum.calls} API calls in total.</li>
+            <li>Checks failed most on the first attempt (months):{" "}
+              {sum.firstFailures.map(([name, n]) => `${name} ${n}`).join(", ")}.</li>
+          </ul>
+          <p>The results are shown as the checker produced them, and the run was not repeated to improve them.</p>
           <div className="table-scroll">
             <table>
-              <thead><tr><th>Month</th><th>Numbers matched</th><th>Not matched</th><th>Words</th><th>Other problems</th><th>Result</th></tr></thead>
+              <thead><tr><th>Month</th><th>Attempt kept</th><th>Numbers matched</th><th>Not matched</th><th>Words</th><th>Other problems</th><th>Result</th></tr></thead>
               <tbody>
                 {checks.map((c) => (
                   <tr key={c.month}>
                     <td>{monthLabel(c.month)}</td>
+                    <td>{c.attempt}</td>
                     <td>{c.numbers_matched} / {c.numbers_found}</td>
                     <td>{[c.unmatched_numbers, c.unsupported_causes].filter(Boolean).join("; ") || "none"}</td>
                     <td>{c.words}</td>
@@ -130,11 +152,13 @@ export default function Method() {
             </table>
           </div>
           <p className="muted small">
-            How to read the flags: &quot;€128k&quot; for €128.684, &quot;€99k&quot; for €99.519 and &quot;€55k&quot; for
-            €55.811 are rounding errors by the model (it cut the number off instead of rounding). &quot;100%&quot; is
-            flagged because the checker only compares against data values, while 100 % appears in the fact sheet as the
-            threshold (&quot;net revenue retention below 100 %&quot;); that is a limit of the checker, not a model error. The
-            most common problem is three or four numbers in one highlight or lowlight, where the prompt asked for at most two.
+            How to read the first-attempt flags: two of them were false flags by the cause check, not model errors.
+            Dec 2025 wrote &quot;Contraction MRR was €0&quot; and Feb 2026 wrote &quot;churn was zero&quot;; the keyword
+            list only ignores a cause after words such as &quot;no&quot; or &quot;not&quot;, so it read both as naming a
+            cause the data does not support. Those two months used a retry they did not need. The checker was not
+            changed after the run. The real first-attempt errors were three or four numbers in one highlight or
+            lowlight (3 months), a TL;DR with three numbers (2) and one draft with 31 words in the TL;DR and 112 in
+            total. No draft had a wrongly rounded number.
           </p>
         </>
       )}
@@ -154,6 +178,11 @@ export default function Method() {
           with 20 or more numbers in running prose, and had no ask. The v2 format is the five parts above. The v1
           drafts are kept in data/ai/updates_v1.csv.
         </li>
+        <li>
+          Prompt v3 (review round 2) gives the model pre-formatted numbers, adds the TL;DR rules and the rule that
+          placeholders go at the end of a sentence, and adds validate and retry (above). The v2 drafts are kept in
+          data/ai/updates_v2.csv. This is the last prompt change for this project.
+        </li>
       </ul>
 
       <h2>Limitations</h2>
@@ -162,7 +191,8 @@ export default function Method() {
         <li>Revenue equals MRR. No proration, VAT, tax, payables or receivables timing.</li>
         <li>The projection keeps other costs flat apart from the slider, treats collections as equal to revenue (annual upfront billing is ignored) and does not let new hires change the growth rate.</li>
         <li>Gross margin counts cloud hosting and customer success payroll as cost of revenue. Third-party software stays in operating costs because the data does not say which part serves customers.</li>
-        <li>The AI check verifies numbers, named causes, structure and a few style rules. A draft could pass and still be badly written or emphasise the wrong thing, and every draft needs a founder to fill in the placeholders.</li>
+        <li>The AI check verifies numbers, named causes, structure and a few style rules. A draft could pass and still be badly written or emphasise the wrong thing, and every draft needs a founder to fill in the placeholders. Passing after a retry shows the draft meets
+          the rules, not that the model follows them reliably: half the first drafts did not.</li>
       </ul>
     </main>
   );

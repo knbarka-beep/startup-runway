@@ -1,0 +1,107 @@
+month,attempt,text,passed,checks_failed,failure_details,tokens_in,tokens_out,cost_usd
+2025-10,1,"TL;DR: We added two new customers at a higher average MRR than usual, and the team grew by one to 19, while expansion was small and no one churned.
+Highlight: New customers came in at €1.875 average MRR, against €966 over the previous 12 months.
+Highlight: Net burn fell to €68,2k from €99,2k, though annual billing timing moves this around.
+Lowlight: Net revenue retention over 12 months is 82,2 %, below 100 %, and [Founder: add reason].
+Lowlight: Runway on the 3-month average burn is shorter at 29,2 months, with cash running out in Apr 2028.
+Ask: Please introduce us to mid-sized Nordic companies that could match the size of this month's new customers.",True,,,1992,244,0.006424
+2025-11,1,"TL;DR: We added 3 customers and had no churn in Nov 2025, but expansion is carrying growth while new customers start smaller than usual.
+Highlight: MRR grew by €3.890 with no churned customers.
+Highlight: Expansion MRR was €2.280, almost level with new MRR of €2.290.
+Lowlight: New customers brought €763 MRR each against €1.007 on average over the previous 12 months [Founder: add reason].
+Lowlight: Net revenue retention is 84,2 % and ARR growth slowed to 19,2 % [Founder: add reason].
+Ask: Please introduce us to mid-sized Nordic companies that could be customers at our usual contract size.",True,,,2010,233,0.00635
+2025-12,1,"TL;DR: We lost one customer and added three, so MRR grew modestly, while net burn rose on lower collections. [Founder: add reason for the churn]
+
+Highlight: We added 3 new customers and €760 of expansion MRR.
+Highlight: Contraction MRR was €0 and headcount stayed at 19.
+Lowlight: Net revenue retention is 84,2 %, below 100 %.
+Lowlight: Net burn rose to €99,5k as collections were only €61,6k.
+Ask: Please introduce us to mid-sized Nordic prospects, as new customers came in at €733 MRR each against €905 on average over the previous 12 months.",False,cause not in the data,cause not in the data: contraction,2016,219,0.006222
+2025-12,2,"TL;DR: We lost one customer and added three, so MRR still grew, while net burn rose on the month. [Founder: add reason for the churn]
+Highlight: We added 3 new customers and €760 of expansion MRR.
+Highlight: MRR grew by €1.670 to €87,6k.
+Lowlight: Net revenue retention is 84,2 %, below 100 %.
+Lowlight: Net burn rose to €99,5k from €55,8k.
+Ask: Please introduce us to mid-sized Nordic prospects, as new customers came in at €733 MRR each against €905 before.",True,,,2300,1016,0.01476
+2026-01,1,"TL;DR: We added 3 customers and lost 1, so MRR grew slightly, but retention is weak and we need to understand why.
+Highlight: Cash came in at €171,8k against €161,6k paid out, so net burn was negative at -€10,2k.
+Highlight: We signed 3 new customers and MRR rose by €1.360.
+Lowlight: Net revenue retention over 12 months is 84,3 %, and ARR growth slowed to 17,9 %. [Founder: add reason]
+Lowlight: We lost one customer worth €1.210 of MRR. [Founder: add reason]
+Ask: Please introduce us to mid-sized Nordic companies that could fit our product, so new MRR outpaces churn.",False,numbers per sentence,"numbers per sentence: 3 numbers (max 2) in ""Cash came in at €171,8k against €161,6k paid out, so net burn was negative at -€10,2k.""",2024,243,0.006478
+2026-01,2,"TL;DR: We added 3 customers and lost 1, so MRR grew slightly, but retention is weak and we need to understand why.
+Highlight: Cash collected was €171,8k against €161,6k paid out.
+Highlight: We signed 3 new customers and MRR rose by €1.360.
+Lowlight: Net revenue retention over 12 months is 84,3 %, and ARR growth slowed to 17,9 %. [Founder: add reason]
+Lowlight: We lost one customer worth €1.210 of MRR. [Founder: add reason]
+Ask: Please introduce us to mid-sized Nordic companies that could fit our product, so new MRR outpaces churn.",True,,,2379,228,0.007038
+2026-02,1,"TL;DR: Net burn rose to €76,9k as collections fell, while MRR grew only slightly and churn was zero, so this was a quiet month.
+Highlight: We had no churned customers or churned MRR in the month.
+Highlight: Gross margin was 65,4 % and ARR growth was 21,4 % year on year.
+Lowlight: Net revenue retention is 89,2 %, below 100 %, and new customers came in at €505 average MRR against €863 over the previous 12 months [Founder: add reason].
+Ask: We would value introductions to mid-sized Nordic prospects, to lift the average MRR of new customers.",False,cause not in the data; numbers per sentence,"cause not in the data: churn; numbers per sentence: 3 numbers (max 2) in ""Net revenue retention is 89,2 %, below 100 %, and new customers came in at €505 average MRR against €863 over the previous 12 months [Founder: add reason].""",2000,211,0.00611
+2026-02,2,"TL;DR: Net burn was €76,9k and MRR grew by only €1.020, a quiet month with no customers lost.
+Highlight: We lost no customers this month.
+Highlight: Gross margin was 65,4 % and ARR growth was 21,4 % year on year.
+Lowlight: Net revenue retention over 12 months is 89,2 %, below 100 %.
+Lowlight: New customers averaged €505 MRR against €863 over the previous 12 months [Founder: add reason].
+Ask: Please introduce us to mid-sized Nordic prospects, since larger new customers would help most right now.",True,,,2355,1010,0.01481
+2026-03,1,"TL;DR: We hired three people in March, taking the team from 19 to 22, and payroll rose accordingly.
+Highlight: We added 3 new customers and no one churned.
+Highlight: Average MRR per new customer was €813, in line with the €812 of the previous 12 months.
+Lowlight: Net burn rose to €128,7k from €76,9k, with collections of only €55,9k against payments of €184,6k.
+Lowlight: Net revenue retention over 12 months is 94,1 %, below 100 %. [Founder: add reason]
+Ask: Please send us candidate referrals for the roles we are still hiring for. [Founder: add roles]",False,numbers per sentence,"numbers per sentence: 4 numbers (max 2) in ""Net burn rose to €128,7k from €76,9k, with collections of only €55,9k against payments of €184,6k.""",1996,218,0.006172
+2026-03,2,"TL;DR: We hired three people in March, taking the team from 19 to 22, and payroll rose accordingly.
+Highlight: We added 3 new customers and no one churned.
+Highlight: Average MRR per new customer was €813, in line with the €812 of the previous 12 months.
+Lowlight: Net burn rose to €128,7k from €76,9k, as payments were well above collections.
+Lowlight: Net revenue retention over 12 months is 94,1 %, below 100 %. [Founder: add reason]
+Ask: Please send us candidate referrals for the roles we are still hiring for. [Founder: add roles]",True,,,2329,207,0.006728
+2026-04,1,"TL;DR: We added 3 customers and grew headcount from 22 to 24, so costs are rising faster than revenue.
+Highlight: New customers brought in an average of €1.453 MRR each, against €833 over the previous 12 months.
+Highlight: We had no churned customers this month.
+Lowlight: Professional fees were €26,7k against a 12-month average of €2.458 [Founder: add what the fees were for].
+Lowlight: Net revenue retention is 93,0 %, below 100 %.
+Ask: Please send us referrals for candidates and introductions to mid-sized Nordic prospects.",False,TL;DR numbers,"TL;DR numbers: 3 numbers (max 2) in ""We added 3 customers and grew headcount from 22 to 24, so costs are rising faster than revenue.""",1997,202,0.006014
+2026-04,2,"TL;DR: We grew headcount from 22 to 24, so costs are rising faster than revenue.
+Highlight: New customers brought in an average of €1.453 MRR each, against €833 over the previous 12 months.
+Highlight: We had no churned customers this month.
+Lowlight: Professional fees were €26,7k against a 12-month average of €2.458 [Founder: add what the fees were for].
+Lowlight: Net revenue retention is 93,0 %, below 100 %.
+Ask: Please send us referrals for candidates and introductions to mid-sized Nordic prospects.",True,,,2310,195,0.00657
+2026-05,1,"TL;DR: We added 3 customers and lost 1, and a hiring push since Feb 2026 has taken the team to 25 people, so payroll is now the main driver of our burn.
+
+Highlight: New MRR of €1.660 outweighed churned MRR of -€590.
+Highlight: Non-payroll costs fell to €35,6k from €60,4k last month.
+Lowlight: Net burn rose to €136,5k and net revenue retention is 98,0 %, so we lose slightly more from existing customers than we gain.
+Lowlight: New customers brought in €553 MRR on average against €908 over the previous 12 months [Founder: add reason].
+Ask: Please introduce us to mid-sized Nordic companies that could be customers at our usual deal size, and send referrals for open roles.",False,TL;DR length; TL;DR numbers; word limit,"TL;DR length: 31 words (max 30) in ""We added 3 customers and lost 1, and a hiring push since Feb 2026 has taken the team to 25 people, so payroll is now the main driver of our burn.""; TL;DR numbers: 3 numbers (max 2) in ""We added 3 customers and lost 1, and a hiring push since Feb 2026 has taken the team to 25 people, so payroll is now the main driver of our burn.""; word limit: 112 words (max 110)",2006,262,0.006632
+2026-05,2,"TL;DR: A hiring push took the team to 25 people, and payroll is now our largest cost.
+Highlight: New MRR of €1.660 outweighed churned MRR of -€590.
+Highlight: Non-payroll costs fell to €35,6k from €60,4k last month.
+Lowlight: Net burn rose to €136,5k, and net revenue retention is 98,0 %.
+Lowlight: New customers averaged €553 MRR against €908 over the previous 12 months [Founder: add reason].
+Ask: Please introduce us to mid-sized Nordic prospects and send referrals for our open roles.",True,,,2486,965,0.014622
+2026-06,1,"TL;DR: We added 3 new customers and no one churned, but new deals were smaller than usual, so growth is slowing.
+Highlight: We had no churned customers in Jun 2026, and expansion MRR was €680.
+Highlight: Net burn fell to €71,2k as collections came in at €133,5k.
+Lowlight: New customers brought in €603 MRR on average, against €898 over the previous 12 months [Founder: add reason].
+Lowlight: ARR growth slowed to 38,2 % and net revenue retention is 99,9 %.
+Ask: Please introduce us to mid-sized Nordic companies that could be larger customers than our recent wins.",True,,,2002,221,0.006214
+2026-07,1,"TL;DR: We lost one customer worth €9.400 MRR, so MRR fell to €94,0k, and new sales did not cover it.
+Highlight: We added 3 new customers and €990 of expansion MRR.
+Highlight: Non-payroll costs fell to €35,0k from €36,1k.
+Lowlight: Net revenue retention over 12 months is 90,5 %, and the churned customer's reason is [Founder: add reason]
+Lowlight: New customers averaged €513 MRR against €870 over the previous 12 months, because [Founder: add reason]
+Ask: Please introduce us to mid-sized Nordic companies that could be a fit for our product.",True,,,2049,224,0.006338
+2026-08,1,"TL;DR: We added 4 new customers and no one churned, with new customers coming in at a much higher average MRR than usual.
+Highlight: Average MRR per new customer was €1.835, against €846 over the previous 12 months.
+Highlight: Net burn fell to €79,1k from €125,0k, which is mostly annual billing timing.
+Lowlight: Net revenue retention over 12 months is 90,6 %, below 100 %, and expansion this month was only €310.
+Ask: Please introduce us to mid-sized Nordic companies that could be a fit, so we can repeat this new customer size.",True,,,1987,199,0.005964
+2026-09,1,"TL;DR: Net burn rose to €126,8k because collections were low at €78,7k, while payments stayed near normal; we think this is annual billing timing. [Founder: confirm]
+Highlight: We added 3 new customers and MRR grew by €1.460.
+Lowlight: We lost one customer worth -€1.520 of MRR, and net revenue retention is 88,7 %. [Founder: add reason for the churn]
+Ask: We would value introductions to mid-sized Nordic prospects who could replace the lost MRR.",True,,,2035,177,0.00584

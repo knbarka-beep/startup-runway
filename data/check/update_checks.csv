@@ -1,13 +1,13 @@
-month,words,placeholders,numbers_found,numbers_matched,unmatched_numbers,causes_named,unsupported_causes,banned_words,metrics_worse,problems,passed
-2025-10,118,1,9,9,,,,,runway got shorter; net revenue retention below 100 %,118 words (max 110),False
-2025-11,104,2,12,11,€55k,,,,ARR growth vs 12 months ago slowed; net revenue retention below 100 %,,False
-2025-12,108,1,11,10,€99k,churn,,,net burn went up; runway got shorter; net revenue retention below 100 %,3 numbers in one highlight or lowlight (max 2),False
-2026-01,113,1,12,12,,churn; expansion; annual billing timing,,,ARR growth vs 12 months ago slowed; net revenue retention below 100 %,3 numbers in one highlight or lowlight (max 2); 113 words (max 110),False
-2026-02,107,1,11,11,,annual billing timing,,,net burn went up; runway got shorter; net revenue retention below 100 %,3 numbers in one highlight or lowlight (max 2),False
-2026-03,96,2,13,11,€128k; €128k,hiring,,,net burn went up; runway got shorter; net revenue retention below 100 %,4 numbers in one highlight or lowlight (max 2),False
-2026-04,100,2,13,13,,hiring,,,runway got shorter; net revenue retention below 100 %,3 numbers in one highlight or lowlight (max 2); 3 numbers in one highlight or lowlight (max 2),False
-2026-05,112,1,17,17,,churn,,,net burn went up; runway got shorter; net revenue retention below 100 %,3 numbers in one highlight or lowlight (max 2); 3 numbers in one highlight or lowlight (max 2); 3 numbers in one highlight or lowlight (max 2); 112 words (max 110),False
-2026-06,103,1,10,10,,annual billing timing,,,ARR growth vs 12 months ago slowed; net revenue retention below 100 %,,True
-2026-07,100,1,12,12,,churn; expansion,,,net burn went up; runway got shorter; MRR went down; ARR growth vs 12 months ago slowed; net revenue retention below 100 %,3 numbers in one highlight or lowlight (max 2); 3 numbers in one highlight or lowlight (max 2),False
-2026-08,92,1,9,9,,,,,net revenue retention below 100 %,3 numbers in one highlight or lowlight (max 2); 3 numbers in one highlight or lowlight (max 2),False
-2026-09,101,1,11,11,,churn,,,net burn went up; runway got shorter; ARR growth vs 12 months ago slowed; net revenue retention below 100 %,3 numbers in one highlight or lowlight (max 2),False
+month,attempt,words,placeholders,numbers_found,numbers_matched,unmatched_numbers,causes_named,unsupported_causes,banned_words,metrics_worse,checks_failed,problems,passed
+2025-10,1,108,1,7,7,,hiring; expansion; annual billing timing,,,runway got shorter; net revenue retention below 100 %,,,True
+2025-11,1,92,2,8,8,,expansion,,,ARR growth vs 12 months ago slowed; net revenue retention below 100 %,,,True
+2025-12,2,75,1,9,9,,churn; expansion,,,net burn went up; runway got shorter; net revenue retention below 100 %,,,True
+2026-01,2,86,2,9,9,,churn,,,ARR growth vs 12 months ago slowed; net revenue retention below 100 %,,,True
+2026-02,2,80,1,7,7,,,,,net burn went up; runway got shorter; net revenue retention below 100 %,,,True
+2026-03,2,87,2,8,8,,hiring,,,net burn went up; runway got shorter; net revenue retention below 100 %,,,True
+2026-04,2,76,1,7,7,,,,,runway got shorter; net revenue retention below 100 %,,,True
+2026-05,2,75,1,9,9,,hiring; churn,,,net burn went up; runway got shorter; net revenue retention below 100 %,,,True
+2026-06,1,91,1,8,8,,expansion,,,ARR growth vs 12 months ago slowed; net revenue retention below 100 %,,,True
+2026-07,1,85,2,9,9,,churn; expansion,,,net burn went up; runway got shorter; MRR went down; ARR growth vs 12 months ago slowed; net revenue retention below 100 %,,,True
+2026-08,1,88,0,7,7,,expansion; annual billing timing,,,net revenue retention below 100 %,,,True
+2026-09,1,70,2,6,6,,churn; annual billing timing,,,net burn went up; runway got shorter; ARR growth vs 12 months ago slowed; net revenue retention below 100 %,,,True

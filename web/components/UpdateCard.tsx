@@ -3,7 +3,7 @@
 //   4. Highlights and lowlights (AI)   5. Ask (AI)
 // then the result of the automatic check. Text in [square brackets] is a placeholder
 // the AI left for the founder, shown highlighted.
-import { data, type UpdateMetrics } from "@/lib/data";
+import { attemptSummary, data, RETRY_SENTENCE, type UpdateMetrics } from "@/lib/data";
 import { dec, eur, eurShort, monthLabel, pct } from "@/lib/format";
 
 // "+€12k", "-€125k" or "no change"
@@ -47,9 +47,7 @@ export default function UpdateCard({ month }: { month: string }) {
   const check = data.update_checks.find((c) => c.month === month);
   const metrics = data.update_metrics.find((r) => r.month === month);
   const checks = data.update_checks;
-  const nPass = checks.filter((c) => c.passed).length;
-  const numFound = checks.reduce((a, c) => a + c.numbers_found, 0);
-  const numOk = checks.reduce((a, c) => a + c.numbers_matched, 0);
+  const sum = attemptSummary();
 
   return (
     <section className="card update">
@@ -78,7 +76,9 @@ export default function UpdateCard({ month }: { month: string }) {
 
           {check && (
             <div className="check">
-              <strong>Check:</strong> {check.numbers_matched} of {check.numbers_found} numbers match this month&apos;s data
+              <strong>Kept attempt {update.attempt} of at most 3</strong>
+              {update.attempt > 1 ? ` (attempt 1 failed: ${data.update_attempts.find((a) => a.month === month && a.attempt === 1)?.checks_failed})` : ""}.{" "}
+              <strong>Check:</strong> {check.passed ? "passed" : "flagged"}. {check.numbers_matched} of {check.numbers_found} numbers match this month&apos;s data
               {check.unmatched_numbers ? ` (not matched: ${check.unmatched_numbers})` : ""}. {check.words} words
               (max 110). {check.placeholders} placeholder{check.placeholders === 1 ? "" : "s"} for the founder.
               {check.unsupported_causes ? ` Cause without support in the data: ${check.unsupported_causes}.` : ""}
@@ -93,9 +93,10 @@ export default function UpdateCard({ month }: { month: string }) {
           A draft for the founder to finish, not a finished email. TL;DR, highlights, lowlights and ask were drafted by{" "}
           {data.updates[0]?.model} (prompt {data.updates[0]?.prompt_version}) from that month&apos;s numbers only; the
           subject and the table come straight from the data. Highlighted text in [brackets] marks a reason only the
-          founder knows. A script without AI checked every draft: {nPass} of {checks.length} pass all checks,{" "}
-          {numOk} of {numFound} numbers match the data. It checks numbers, causes, structure and a few style rules, not
-          writing quality. <a href="method/">How this works</a>
+          founder knows. {RETRY_SENTENCE} A script without AI checks numbers, causes, structure and a few style rules,
+          not writing quality: {sum.firstPass} of {sum.months} drafts passed on the first attempt,{" "}
+          {sum.finalPass} of {checks.length} after retries; {sum.retried.length} months needed a retry. In the kept
+          drafts {sum.numbersMatched} of {sum.numbersFound} numbers match the data. <a href="method/">How this works</a>
         </p>
       )}
     </section>

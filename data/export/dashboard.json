@@ -2976,281 +2976,427 @@
  "updates": [
   {
    "month": "2025-10",
-   "tldr": "MRR grew to €82k with two new customers and no churn, but runway fell to 29,2 months because the 3-month average burn rose, and net revenue retention is 82,2%.",
-   "highlights": "Both new customers came in at an average of €1.875 MRR, against €966 over the previous 12 months.\nWe had no churn this month and MRR rose by €4.230.",
-   "lowlights": "Runway is now 29,2 months, down from 47,2, with cash running out in Apr 2028 at the current average burn.\nNet revenue retention is 82,2%, and [Founder: add reason and what we are doing about it].",
-   "ask": "Please introduce us to companies that could sign contracts of this larger size, so we keep new MRR per customer above the old level.",
+   "tldr": "We added two new customers at a higher average MRR than usual, and the team grew by one to 19, while expansion was small and no one churned.",
+   "highlights": "New customers came in at €1.875 average MRR, against €966 over the previous 12 months.\nNet burn fell to €68,2k from €99,2k, though annual billing timing moves this around.",
+   "lowlights": "Net revenue retention over 12 months is 82,2 %, below 100 %, and [Founder: add reason].\nRunway on the 3-month average burn is shorter at 29,2 months, with cash running out in Apr 2028.",
+   "ask": "Please introduce us to mid-sized Nordic companies that could match the size of this month's new customers.",
    "model": "claude-sonnet-5-5",
-   "prompt_version": "v2"
+   "prompt_version": "v3",
+   "attempt": 1
   },
   {
    "month": "2025-11",
-   "tldr": "Net burn fell to €55k, runway is 34,0 months, and MRR grew by €3.890 with no churn, but net revenue retention is 84,2% and new customers are smaller than usual.",
-   "highlights": "We added 3 new customers and lost none, and MRR reached €85.950.\nRunway rose from 29,2 to 34,0 months, with cash lasting to Sep 2028 at the current burn.",
-   "lowlights": "Net revenue retention is 84,2%, and ARR growth slowed to 19,2% [Founder: add reason].\nNew customers averaged €763 MRR against €1.007 over the previous 12 months [Founder: add reason].",
-   "ask": "Please introduce us to Nordic prospects who could sign larger contracts than our recent new customers.",
+   "tldr": "We added 3 customers and had no churn in Nov 2025, but expansion is carrying growth while new customers start smaller than usual.",
+   "highlights": "MRR grew by €3.890 with no churned customers.\nExpansion MRR was €2.280, almost level with new MRR of €2.290.",
+   "lowlights": "New customers brought €763 MRR each against €1.007 on average over the previous 12 months [Founder: add reason].\nNet revenue retention is 84,2 % and ARR growth slowed to 19,2 % [Founder: add reason].",
+   "ask": "Please introduce us to mid-sized Nordic companies that could be customers at our usual contract size.",
    "model": "claude-sonnet-5-5",
-   "prompt_version": "v2"
+   "prompt_version": "v3",
+   "attempt": 1
   },
   {
    "month": "2025-12",
-   "tldr": "Net burn rose to €99k in Dec 2025, but runway is still 32,6 months and MRR grew to €87.620 with three new customers.",
-   "highlights": "We added 3 new customers and MRR grew by €1.670, with one customer lost (€1.290 MRR).\nARR is up 19,7% on a year ago and the 3-month average burn is stable at €74k.",
-   "lowlights": "Net revenue retention is 84,2%, below 100%, so existing customers are shrinking in value faster than they expand.\nNew customers came in at €733 MRR each, below our usual €905, [Founder: add reason].",
-   "ask": "Please introduce us to Nordic companies similar to our best customers, so we can lift contract size and retention.",
+   "tldr": "We lost one customer and added three, so MRR still grew, while net burn rose on the month. [Founder: add reason for the churn]",
+   "highlights": "We added 3 new customers and €760 of expansion MRR.\nMRR grew by €1.670 to €87,6k.",
+   "lowlights": "Net revenue retention is 84,2 %, below 100 %.\nNet burn rose to €99,5k from €55,8k.",
+   "ask": "Please introduce us to mid-sized Nordic prospects, as new customers came in at €733 MRR each against €905 before.",
    "model": "claude-sonnet-5-5",
-   "prompt_version": "v2"
+   "prompt_version": "v3",
+   "attempt": 2
   },
   {
    "month": "2026-01",
-   "tldr": "Cash grew slightly to €2,44m in Jan 2026 and runway is 50,4 months, but net revenue retention is 84,3% and we need to fix churn and expansion.",
-   "highlights": "Net burn was negative at -€10.178 because annual customers pay upfront, so collections vary from month to month.\nWe added 3 new customers and new MRR of €2.460, which more than covered the €1.210 we lost.",
-   "lowlights": "Net revenue retention is 84,3%, and ARR growth slowed to 17,9% against 12 months earlier.\nWe lost 1 customer (€1.210 MRR), and [Founder: add reason].",
-   "ask": "Please introduce us to Nordic companies similar to our best customers, so we can add larger contracts than the €820 average new customer this month.",
+   "tldr": "We added 3 customers and lost 1, so MRR grew slightly, but retention is weak and we need to understand why.",
+   "highlights": "Cash collected was €171,8k against €161,6k paid out.\nWe signed 3 new customers and MRR rose by €1.360.",
+   "lowlights": "Net revenue retention over 12 months is 84,3 %, and ARR growth slowed to 17,9 %. [Founder: add reason]\nWe lost one customer worth €1.210 of MRR. [Founder: add reason]",
+   "ask": "Please introduce us to mid-sized Nordic companies that could fit our product, so new MRR outpaces churn.",
    "model": "claude-sonnet-5-5",
-   "prompt_version": "v2"
+   "prompt_version": "v3",
+   "attempt": 2
   },
   {
    "month": "2026-02",
-   "tldr": "Net burn rose to €76.906 this month, runway is still 42,7 months, and growth is slow with only €1.020 of net new MRR.",
-   "highlights": "We added 2 new customers and had no churn, so MRR reached €90.000.\nARR is up 21,4% on a year ago and headcount and payroll held flat.",
-   "lowlights": "Net revenue retention is 89,2%, below 100%, and new customers came in smaller at €505 average MRR against €863 before.\nRunway shortened from 50,4 to 42,7 months, partly because annual customers pay upfront and collections vary [Founder: confirm timing of annual renewals].",
-   "ask": "Please introduce us to Nordic companies that could be larger customers than our recent wins.",
+   "tldr": "Net burn was €76,9k and MRR grew by only €1.020, a quiet month with no customers lost.",
+   "highlights": "We lost no customers this month.\nGross margin was 65,4 % and ARR growth was 21,4 % year on year.",
+   "lowlights": "Net revenue retention over 12 months is 89,2 %, below 100 %.\nNew customers averaged €505 MRR against €863 over the previous 12 months [Founder: add reason].",
+   "ask": "Please introduce us to mid-sized Nordic prospects, since larger new customers would help most right now.",
    "model": "claude-sonnet-5-5",
-   "prompt_version": "v2"
+   "prompt_version": "v3",
+   "attempt": 2
   },
   {
    "month": "2026-03",
-   "tldr": "Net burn rose to €128k in March and runway is now 34,3 months, while MRR grew by €2.900 with 3 new customers and no churn.",
-   "highlights": "We added 3 customers and lost none, taking MRR to €92.900.\nHeadcount rose from 19 to 22, [Founder: add roles and why we hired].",
-   "lowlights": "Net burn rose from €77k to €128k and runway fell from 42,7 to 34,3 months.\nNet revenue retention is 94,1%, below 100%, and [Founder: add reason].",
-   "ask": "Please introduce us to Nordic companies that fit our new customer profile, so we can keep adding customers at this pace.",
+   "tldr": "We hired three people in March, taking the team from 19 to 22, and payroll rose accordingly.",
+   "highlights": "We added 3 new customers and no one churned.\nAverage MRR per new customer was €813, in line with the €812 of the previous 12 months.",
+   "lowlights": "Net burn rose to €128,7k from €76,9k, as payments were well above collections.\nNet revenue retention over 12 months is 94,1 %, below 100 %. [Founder: add reason]",
+   "ask": "Please send us candidate referrals for the roles we are still hiring for. [Founder: add roles]",
    "model": "claude-sonnet-5-5",
-   "prompt_version": "v2"
+   "prompt_version": "v3",
+   "attempt": 2
   },
   {
    "month": "2026-04",
-   "tldr": "Runway shortened to 19,7 months (from 34,3) as the 3-month average burn rose, though we added 3 customers and lost none.",
-   "highlights": "We signed 3 new customers at an average of €1.453 MRR each, against €833 over the previous 12 months.\nNo customers churned, and MRR grew by €4.180 to €97.080.",
-   "lowlights": "Professional fees were €26.668, against a 12-month average of €2.458 [Founder: add what this was for].\nHeadcount rose to 24 from 22 [Founder: add reason for the hires], and net revenue retention is 93,0%.",
-   "ask": "Please introduce us to Nordic prospects who could match the size of this month's new contracts.",
+   "tldr": "We grew headcount from 22 to 24, so costs are rising faster than revenue.",
+   "highlights": "New customers brought in an average of €1.453 MRR each, against €833 over the previous 12 months.\nWe had no churned customers this month.",
+   "lowlights": "Professional fees were €26,7k against a 12-month average of €2.458 [Founder: add what the fees were for].\nNet revenue retention is 93,0 %, below 100 %.",
+   "ask": "Please send us referrals for candidates and introductions to mid-sized Nordic prospects.",
    "model": "claude-sonnet-5-5",
-   "prompt_version": "v2"
+   "prompt_version": "v3",
+   "attempt": 2
   },
   {
    "month": "2026-05",
-   "tldr": "Runway fell to 15,6 months from 19,7 as net burn rose to €137k, while MRR grew slightly to €98k and we added 3 customers.",
-   "highlights": "We added 3 new customers and lost 1, and ARR is up 38,7% on a year ago.\nNon-payroll costs came down to €36k from €60k last month.",
-   "lowlights": "Net burn rose to €137k, and collections of €68k covered only a third of payments, so runway is now 15,6 months.\nNew customers average €553 MRR against €908 over the past year, and net revenue retention is 98,0%.",
-   "ask": "[Founder: add ask] Introductions to prospects that can sign larger contracts than the €553 average of this month's new customers would help most.",
+   "tldr": "A hiring push took the team to 25 people, and payroll is now our largest cost.",
+   "highlights": "New MRR of €1.660 outweighed churned MRR of -€590.\nNon-payroll costs fell to €35,6k from €60,4k last month.",
+   "lowlights": "Net burn rose to €136,5k, and net revenue retention is 98,0 %.\nNew customers averaged €553 MRR against €908 over the previous 12 months [Founder: add reason].",
+   "ask": "Please introduce us to mid-sized Nordic prospects and send referrals for our open roles.",
    "model": "claude-sonnet-5-5",
-   "prompt_version": "v2"
+   "prompt_version": "v3",
+   "attempt": 2
   },
   {
    "month": "2026-06",
-   "tldr": "Net burn fell to €71k, runway is now 17,7 months, and MRR grew with no churn, though new customers are signing at smaller contract sizes.",
-   "highlights": "We added 3 new customers and lost none, so MRR reached €100.830.\nRunway improved from 15,6 to 17,7 months, partly because annual customers paid upfront this month.",
-   "lowlights": "ARR growth slowed to 38,2% and net revenue retention is 99,9%, just below 100%.\nNew customers brought €603 MRR each against €898 over the previous 12 months, and [Founder: add reason].",
-   "ask": "Please introduce us to mid-sized Nordic companies that fit our product, so we can lift the size of new contracts.",
+   "tldr": "We added 3 new customers and no one churned, but new deals were smaller than usual, so growth is slowing.",
+   "highlights": "We had no churned customers in Jun 2026, and expansion MRR was €680.\nNet burn fell to €71,2k as collections came in at €133,5k.",
+   "lowlights": "New customers brought in €603 MRR on average, against €898 over the previous 12 months [Founder: add reason].\nARR growth slowed to 38,2 % and net revenue retention is 99,9 %.",
+   "ask": "Please introduce us to mid-sized Nordic companies that could be larger customers than our recent wins.",
    "model": "claude-sonnet-5-5",
-   "prompt_version": "v2"
+   "prompt_version": "v3",
+   "attempt": 1
   },
   {
    "month": "2026-07",
-   "tldr": "MRR fell by €6.870 to €94k, mainly because we lost one customer (€9.400 MRR), and runway is 16,1 months with cash lasting to Dec 2027.",
-   "highlights": "We added 3 new customers and €990 of expansion MRR, and we have 85 active customers.",
-   "lowlights": "We lost one customer worth €9.400 MRR, [Founder: add reason], and new customers came in at €513 MRR on average against €870 over the previous 12 months.\nNet burn rose to €125k because collections were low, and net revenue retention is 90,5%.",
-   "ask": "Please introduce us to mid-sized Nordic prospects who could sign larger contracts than our recent new customers.",
+   "tldr": "We lost one customer worth €9.400 MRR, so MRR fell to €94,0k, and new sales did not cover it.",
+   "highlights": "We added 3 new customers and €990 of expansion MRR.\nNon-payroll costs fell to €35,0k from €36,1k.",
+   "lowlights": "Net revenue retention over 12 months is 90,5 %, and the churned customer's reason is [Founder: add reason]\nNew customers averaged €513 MRR against €870 over the previous 12 months, because [Founder: add reason]",
+   "ask": "Please introduce us to mid-sized Nordic companies that could be a fit for our product.",
    "model": "claude-sonnet-5-5",
-   "prompt_version": "v2"
+   "prompt_version": "v3",
+   "attempt": 1
   },
   {
    "month": "2026-08",
-   "tldr": "MRR grew to €101.610 with four new customers and no churn, and runway is 18,6 months, so we are focused on keeping new deals at this larger size.",
-   "highlights": "We added 4 new customers at an average of €1.835 MRR each, against €846 over the previous 12 months.\nNet burn fell to €79.146 and runway moved from 16,1 to 18,6 months.",
-   "lowlights": "Net revenue retention over 12 months is 90,6%, below 100%, and [Founder: add reason].",
-   "ask": "Please introduce us to companies similar to our four new customers, so we can repeat these larger deals.",
+   "tldr": "We added 4 new customers and no one churned, with new customers coming in at a much higher average MRR than usual.",
+   "highlights": "Average MRR per new customer was €1.835, against €846 over the previous 12 months.\nNet burn fell to €79,1k from €125,0k, which is mostly annual billing timing.",
+   "lowlights": "Net revenue retention over 12 months is 90,6 %, below 100 %, and expansion this month was only €310.",
+   "ask": "Please introduce us to mid-sized Nordic companies that could be a fit, so we can repeat this new customer size.",
    "model": "claude-sonnet-5-5",
-   "prompt_version": "v2"
+   "prompt_version": "v3",
+   "attempt": 1
   },
   {
    "month": "2026-09",
-   "tldr": "Net burn rose to €127k and runway shortened to 14,3 months, while MRR grew by €1.460 and we added 3 customers.",
-   "highlights": "We added 3 new customers and lost 1, so MRR grew to €103k.\nPayroll and non-payroll costs stayed flat against last month.",
-   "lowlights": "Net burn went up and runway fell from 18,6 to 14,3 months; [Founder: add whether low collections reflect annual payment timing].\nNet revenue retention is 88,7%, and ARR growth vs a year ago slowed to 32,4%.",
-   "ask": "Please introduce us to Nordic companies that fit our customer profile, so we can add larger contracts and lift net revenue retention.",
+   "tldr": "Net burn rose to €126,8k because collections were low at €78,7k, while payments stayed near normal; we think this is annual billing timing. [Founder: confirm]",
+   "highlights": "We added 3 new customers and MRR grew by €1.460.",
+   "lowlights": "We lost one customer worth -€1.520 of MRR, and net revenue retention is 88,7 %. [Founder: add reason for the churn]",
+   "ask": "We would value introductions to mid-sized Nordic prospects who could replace the lost MRR.",
    "model": "claude-sonnet-5-5",
-   "prompt_version": "v2"
+   "prompt_version": "v3",
+   "attempt": 1
   }
  ],
  "update_checks": [
   {
    "month": "2025-10",
-   "words": 118,
+   "attempt": 1,
+   "words": 108,
+   "placeholders": 1,
+   "numbers_found": 7,
+   "numbers_matched": 7,
+   "unmatched_numbers": null,
+   "causes_named": "hiring; expansion; annual billing timing",
+   "unsupported_causes": null,
+   "banned_words": null,
+   "metrics_worse": "runway got shorter; net revenue retention below 100 %",
+   "checks_failed": null,
+   "problems": null,
+   "passed": true
+  },
+  {
+   "month": "2025-11",
+   "attempt": 1,
+   "words": 92,
+   "placeholders": 2,
+   "numbers_found": 8,
+   "numbers_matched": 8,
+   "unmatched_numbers": null,
+   "causes_named": "expansion",
+   "unsupported_causes": null,
+   "banned_words": null,
+   "metrics_worse": "ARR growth vs 12 months ago slowed; net revenue retention below 100 %",
+   "checks_failed": null,
+   "problems": null,
+   "passed": true
+  },
+  {
+   "month": "2025-12",
+   "attempt": 2,
+   "words": 75,
    "placeholders": 1,
    "numbers_found": 9,
    "numbers_matched": 9,
    "unmatched_numbers": null,
-   "causes_named": null,
-   "unsupported_causes": null,
-   "banned_words": null,
-   "metrics_worse": "runway got shorter; net revenue retention below 100 %",
-   "problems": "118 words (max 110)",
-   "passed": false
-  },
-  {
-   "month": "2025-11",
-   "words": 104,
-   "placeholders": 2,
-   "numbers_found": 12,
-   "numbers_matched": 11,
-   "unmatched_numbers": "€55k",
-   "causes_named": null,
-   "unsupported_causes": null,
-   "banned_words": null,
-   "metrics_worse": "ARR growth vs 12 months ago slowed; net revenue retention below 100 %",
-   "problems": null,
-   "passed": false
-  },
-  {
-   "month": "2025-12",
-   "words": 108,
-   "placeholders": 1,
-   "numbers_found": 11,
-   "numbers_matched": 10,
-   "unmatched_numbers": "€99k",
-   "causes_named": "churn",
+   "causes_named": "churn; expansion",
    "unsupported_causes": null,
    "banned_words": null,
    "metrics_worse": "net burn went up; runway got shorter; net revenue retention below 100 %",
-   "problems": "3 numbers in one highlight or lowlight (max 2)",
-   "passed": false
+   "checks_failed": null,
+   "problems": null,
+   "passed": true
   },
   {
    "month": "2026-01",
-   "words": 113,
-   "placeholders": 1,
-   "numbers_found": 12,
-   "numbers_matched": 12,
-   "unmatched_numbers": null,
-   "causes_named": "churn; expansion; annual billing timing",
-   "unsupported_causes": null,
-   "banned_words": null,
-   "metrics_worse": "ARR growth vs 12 months ago slowed; net revenue retention below 100 %",
-   "problems": "3 numbers in one highlight or lowlight (max 2); 113 words (max 110)",
-   "passed": false
-  },
-  {
-   "month": "2026-02",
-   "words": 107,
-   "placeholders": 1,
-   "numbers_found": 11,
-   "numbers_matched": 11,
-   "unmatched_numbers": null,
-   "causes_named": "annual billing timing",
-   "unsupported_causes": null,
-   "banned_words": null,
-   "metrics_worse": "net burn went up; runway got shorter; net revenue retention below 100 %",
-   "problems": "3 numbers in one highlight or lowlight (max 2)",
-   "passed": false
-  },
-  {
-   "month": "2026-03",
-   "words": 96,
+   "attempt": 2,
+   "words": 86,
    "placeholders": 2,
-   "numbers_found": 13,
-   "numbers_matched": 11,
-   "unmatched_numbers": "€128k; €128k",
-   "causes_named": "hiring",
-   "unsupported_causes": null,
-   "banned_words": null,
-   "metrics_worse": "net burn went up; runway got shorter; net revenue retention below 100 %",
-   "problems": "4 numbers in one highlight or lowlight (max 2)",
-   "passed": false
-  },
-  {
-   "month": "2026-04",
-   "words": 100,
-   "placeholders": 2,
-   "numbers_found": 13,
-   "numbers_matched": 13,
-   "unmatched_numbers": null,
-   "causes_named": "hiring",
-   "unsupported_causes": null,
-   "banned_words": null,
-   "metrics_worse": "runway got shorter; net revenue retention below 100 %",
-   "problems": "3 numbers in one highlight or lowlight (max 2); 3 numbers in one highlight or lowlight (max 2)",
-   "passed": false
-  },
-  {
-   "month": "2026-05",
-   "words": 112,
-   "placeholders": 1,
-   "numbers_found": 17,
-   "numbers_matched": 17,
+   "numbers_found": 9,
+   "numbers_matched": 9,
    "unmatched_numbers": null,
    "causes_named": "churn",
    "unsupported_causes": null,
    "banned_words": null,
+   "metrics_worse": "ARR growth vs 12 months ago slowed; net revenue retention below 100 %",
+   "checks_failed": null,
+   "problems": null,
+   "passed": true
+  },
+  {
+   "month": "2026-02",
+   "attempt": 2,
+   "words": 80,
+   "placeholders": 1,
+   "numbers_found": 7,
+   "numbers_matched": 7,
+   "unmatched_numbers": null,
+   "causes_named": null,
+   "unsupported_causes": null,
+   "banned_words": null,
    "metrics_worse": "net burn went up; runway got shorter; net revenue retention below 100 %",
-   "problems": "3 numbers in one highlight or lowlight (max 2); 3 numbers in one highlight or lowlight (max 2); 3 numbers in one highlight or lowlight (max 2); 112 words (max 110)",
-   "passed": false
+   "checks_failed": null,
+   "problems": null,
+   "passed": true
+  },
+  {
+   "month": "2026-03",
+   "attempt": 2,
+   "words": 87,
+   "placeholders": 2,
+   "numbers_found": 8,
+   "numbers_matched": 8,
+   "unmatched_numbers": null,
+   "causes_named": "hiring",
+   "unsupported_causes": null,
+   "banned_words": null,
+   "metrics_worse": "net burn went up; runway got shorter; net revenue retention below 100 %",
+   "checks_failed": null,
+   "problems": null,
+   "passed": true
+  },
+  {
+   "month": "2026-04",
+   "attempt": 2,
+   "words": 76,
+   "placeholders": 1,
+   "numbers_found": 7,
+   "numbers_matched": 7,
+   "unmatched_numbers": null,
+   "causes_named": null,
+   "unsupported_causes": null,
+   "banned_words": null,
+   "metrics_worse": "runway got shorter; net revenue retention below 100 %",
+   "checks_failed": null,
+   "problems": null,
+   "passed": true
+  },
+  {
+   "month": "2026-05",
+   "attempt": 2,
+   "words": 75,
+   "placeholders": 1,
+   "numbers_found": 9,
+   "numbers_matched": 9,
+   "unmatched_numbers": null,
+   "causes_named": "hiring; churn",
+   "unsupported_causes": null,
+   "banned_words": null,
+   "metrics_worse": "net burn went up; runway got shorter; net revenue retention below 100 %",
+   "checks_failed": null,
+   "problems": null,
+   "passed": true
   },
   {
    "month": "2026-06",
-   "words": 103,
+   "attempt": 1,
+   "words": 91,
    "placeholders": 1,
-   "numbers_found": 10,
-   "numbers_matched": 10,
+   "numbers_found": 8,
+   "numbers_matched": 8,
    "unmatched_numbers": null,
-   "causes_named": "annual billing timing",
+   "causes_named": "expansion",
    "unsupported_causes": null,
    "banned_words": null,
    "metrics_worse": "ARR growth vs 12 months ago slowed; net revenue retention below 100 %",
+   "checks_failed": null,
    "problems": null,
    "passed": true
   },
   {
    "month": "2026-07",
-   "words": 100,
-   "placeholders": 1,
-   "numbers_found": 12,
-   "numbers_matched": 12,
+   "attempt": 1,
+   "words": 85,
+   "placeholders": 2,
+   "numbers_found": 9,
+   "numbers_matched": 9,
    "unmatched_numbers": null,
    "causes_named": "churn; expansion",
    "unsupported_causes": null,
    "banned_words": null,
    "metrics_worse": "net burn went up; runway got shorter; MRR went down; ARR growth vs 12 months ago slowed; net revenue retention below 100 %",
-   "problems": "3 numbers in one highlight or lowlight (max 2); 3 numbers in one highlight or lowlight (max 2)",
-   "passed": false
+   "checks_failed": null,
+   "problems": null,
+   "passed": true
   },
   {
    "month": "2026-08",
-   "words": 92,
-   "placeholders": 1,
-   "numbers_found": 9,
-   "numbers_matched": 9,
+   "attempt": 1,
+   "words": 88,
+   "placeholders": 0,
+   "numbers_found": 7,
+   "numbers_matched": 7,
    "unmatched_numbers": null,
-   "causes_named": null,
+   "causes_named": "expansion; annual billing timing",
    "unsupported_causes": null,
    "banned_words": null,
    "metrics_worse": "net revenue retention below 100 %",
-   "problems": "3 numbers in one highlight or lowlight (max 2); 3 numbers in one highlight or lowlight (max 2)",
-   "passed": false
+   "checks_failed": null,
+   "problems": null,
+   "passed": true
   },
   {
    "month": "2026-09",
-   "words": 101,
-   "placeholders": 1,
-   "numbers_found": 11,
-   "numbers_matched": 11,
+   "attempt": 1,
+   "words": 70,
+   "placeholders": 2,
+   "numbers_found": 6,
+   "numbers_matched": 6,
    "unmatched_numbers": null,
-   "causes_named": "churn",
+   "causes_named": "churn; annual billing timing",
    "unsupported_causes": null,
    "banned_words": null,
    "metrics_worse": "net burn went up; runway got shorter; ARR growth vs 12 months ago slowed; net revenue retention below 100 %",
-   "problems": "3 numbers in one highlight or lowlight (max 2)",
-   "passed": false
+   "checks_failed": null,
+   "problems": null,
+   "passed": true
+  }
+ ],
+ "update_attempts": [
+  {
+   "month": "2025-10",
+   "attempt": 1,
+   "passed": true,
+   "checks_failed": null
+  },
+  {
+   "month": "2025-11",
+   "attempt": 1,
+   "passed": true,
+   "checks_failed": null
+  },
+  {
+   "month": "2025-12",
+   "attempt": 1,
+   "passed": false,
+   "checks_failed": "cause not in the data"
+  },
+  {
+   "month": "2025-12",
+   "attempt": 2,
+   "passed": true,
+   "checks_failed": null
+  },
+  {
+   "month": "2026-01",
+   "attempt": 1,
+   "passed": false,
+   "checks_failed": "numbers per sentence"
+  },
+  {
+   "month": "2026-01",
+   "attempt": 2,
+   "passed": true,
+   "checks_failed": null
+  },
+  {
+   "month": "2026-02",
+   "attempt": 1,
+   "passed": false,
+   "checks_failed": "cause not in the data; numbers per sentence"
+  },
+  {
+   "month": "2026-02",
+   "attempt": 2,
+   "passed": true,
+   "checks_failed": null
+  },
+  {
+   "month": "2026-03",
+   "attempt": 1,
+   "passed": false,
+   "checks_failed": "numbers per sentence"
+  },
+  {
+   "month": "2026-03",
+   "attempt": 2,
+   "passed": true,
+   "checks_failed": null
+  },
+  {
+   "month": "2026-04",
+   "attempt": 1,
+   "passed": false,
+   "checks_failed": "TL;DR numbers"
+  },
+  {
+   "month": "2026-04",
+   "attempt": 2,
+   "passed": true,
+   "checks_failed": null
+  },
+  {
+   "month": "2026-05",
+   "attempt": 1,
+   "passed": false,
+   "checks_failed": "TL;DR length; TL;DR numbers; word limit"
+  },
+  {
+   "month": "2026-05",
+   "attempt": 2,
+   "passed": true,
+   "checks_failed": null
+  },
+  {
+   "month": "2026-06",
+   "attempt": 1,
+   "passed": true,
+   "checks_failed": null
+  },
+  {
+   "month": "2026-07",
+   "attempt": 1,
+   "passed": true,
+   "checks_failed": null
+  },
+  {
+   "month": "2026-08",
+   "attempt": 1,
+   "passed": true,
+   "checks_failed": null
+  },
+  {
+   "month": "2026-09",
+   "attempt": 1,
+   "passed": true,
+   "checks_failed": null
   }
  ],
  "reconciliation": [
