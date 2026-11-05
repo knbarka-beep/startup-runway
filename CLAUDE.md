@@ -17,6 +17,12 @@ Portfolio project: runway dashboard for **Nordlys Analytics ApS (fictional)**. A
 - Never push, create a GitHub remote or deploy unless Knut is at the keyboard and has said yes in that session.
 - Record every self-made choice in `docs/decisions.md` (what, why, alternative considered).
 
+## Design
+
+- Polished and smooth, with clear hierarchy and soft transitions, but nothing that hides or decorates the numbers. Smooth over flashy. No typical "AI" look: no blue, indigo, violet or purple accent, no gradient backgrounds, glassmorphism, glow, emoji, sparkle icons or marketing phrases.
+- Tokens live in `web/styles/tokens.css` (colours, fonts, radius), base styles in `web/styles/kit.css`, shared components in `web/components/kit/` (see its README). Use the tokens, never raw hex values in components. Red is reserved for risk and unfavourable changes.
+- Light theme by default, dark behind the toggle. Source Serif 4 for headings, IBM Plex Sans for text, tabular figures for numbers. Transitions 150 to 200 ms; charts animate once on load (max 400 ms); respect prefers-reduced-motion.
+
 ## Data flow (one place the numbers come from)
 
 1. `python scripts/generate.py` writes CSVs to `data/raw/` (fixed seed).

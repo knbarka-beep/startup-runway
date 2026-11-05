@@ -16,6 +16,7 @@ body {
 .t-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
 .t-kpi { font-size: 1.75rem; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
 .t-small { font-size: 0.82rem; }
+@media (max-width: 480px) { .t-kpi { font-size: 1.35rem; } .t-page { font-size: 1.3rem; } }
 
 a { color: var(--accent); text-underline-offset: 2px; }
 a:hover { text-decoration-thickness: 2px; }

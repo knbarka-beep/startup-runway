@@ -29,7 +29,7 @@ export function CashChart({ actuals, projection, selected, zeroMonth, notes }: {
   const min = Math.min(0, ...projection.map((p) => p.cash));
 
   return (
-    <div style={{ height: 340 }}>
+    <div className="h-[320px] lg:h-[400px]">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={rows} margin={{ top: 24, right: 12, bottom: 0, left: 0 }}>
           <CartesianGrid stroke="var(--grid)" vertical={false} />
@@ -79,8 +79,8 @@ export function CashChart({ actuals, projection, selected, zeroMonth, notes }: {
 
 // MRR bridge as a waterfall. Each bar is a range [from, to]. The axis does not start at zero,
 // otherwise the monthly movements (a few thousand euros) would be invisible next to ~€100k MRR.
+// Not animated: Recharts hides the value labels while bars animate, and they must always show.
 export function MrrBridge({ m }: { m: Month }) {
-  const animate = useAnimateOnce();
   const steps = [
     // Short names so the axis fits on a phone; the tooltip shows the full name.
     { name: "Open", full: "Opening MRR", value: m.opening_mrr, total: true },
@@ -120,7 +120,7 @@ export function MrrBridge({ m }: { m: Month }) {
               return <ChartTooltip title={`MRR bridge, ${monthLabel(m.month)}`} rows={[{ name: r.full, value: eur(r.value), color: colour(r) }]} />;
             }}
           />
-          <Bar dataKey="range" radius={2} maxBarSize={44} isAnimationActive={animate} animationDuration={ANIMATION_MS}>
+          <Bar dataKey="range" radius={2} maxBarSize={44} isAnimationActive={false}>
             {rows.map((r) => <Cell key={r.name} fill={colour(r)} fillOpacity={r.total ? 0.6 : 0.85} />)}
             <LabelList dataKey="value" position="top" formatter={(v) => (v === 0 ? "€0" : eurShort(Number(v)))}
                        style={{ fill: "var(--text)", fontSize: 10 }} />

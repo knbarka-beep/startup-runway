@@ -232,6 +232,20 @@ try {
     await wait(400);
     await shoot(`update-${month.toLowerCase().replace(" ", "-")}.png`, ".update");
   }
+  // No sideways scrolling on a phone, and no transitions when the visitor asks for reduced motion.
+  await open("/?theme=light", 375, true);
+  const sw = await js("[document.documentElement.scrollWidth, document.documentElement.clientWidth]");
+  const swOk = sw[0] <= sw[1];
+  console.log(`  ${swOk ? "PASS" : "FAIL"}  no horizontal scroll at 375 px (scrollWidth ${sw[0]}, clientWidth ${sw[1]})`);
+  failed ||= !swOk;
+  await send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
+  await open("/?theme=light", 1440);
+  const dur = await js("getComputedStyle(document.querySelector('.btn')).transitionDuration");
+  const rmOk = dur.split(",").every((d) => parseFloat(d) === 0);
+  console.log(`  ${rmOk ? "PASS" : "FAIL"}  reduced motion: button transition ${dur}`);
+  failed ||= !rmOk;
+  await send("Emulation.setEmulatedMedia", { features: [] });
+
   const errOk = consoleErrors.length === 0;
   console.log(`  ${errOk ? "PASS" : "FAIL"}  no console errors` + (errOk ? "" : `: ${consoleErrors.join(" | ")}`));
   failed ||= !errOk;

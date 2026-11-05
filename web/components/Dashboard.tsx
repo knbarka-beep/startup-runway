@@ -47,7 +47,7 @@ function Slider({ id, label, value, hint, min, max, step, current, onChange }: {
   return (
     <div className="mb-4">
       <label htmlFor={id} className="mb-1 flex justify-between gap-2 text-sm">
-        <span>{label}</span><strong className="font-semibold tabular-nums">{value}</strong>
+        <span>{label}</span><strong className="whitespace-nowrap font-semibold tabular-nums">{value}</strong>
       </label>
       <input id={id} type="range" min={min} max={max} step={step} value={current} onChange={onChange}
              style={{ "--fill": fill } as React.CSSProperties} />
