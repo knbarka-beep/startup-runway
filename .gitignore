@@ -7,3 +7,8 @@ data/*.duckdb.wal
 __pycache__/
 .env
 *.log
+private/
+.env*
+.next/
+out/
+node_modules/
