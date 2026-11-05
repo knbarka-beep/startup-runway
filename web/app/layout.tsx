@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <footer className="footer">
           <span>Built with Claude Code by Knut Barka</span>
-          <span>All data is fictional</span>
+          <span>Nordlys Analytics ApS (fictional): all data is synthetic</span>
           <Link href="/method/">How this works</Link>
           <a href="https://github.com/knbarka-beep/startup-runway">Code on GitHub</a>
         </footer>

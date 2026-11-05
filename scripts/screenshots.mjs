@@ -24,6 +24,8 @@ const edge = spawn(EDGE, ["--headless=new", "--disable-gpu", "--hide-scrollbars"
   `--user-data-dir=${join(tmpdir(), "runway-edge-profile")}`, "about:blank"], { stdio: "ignore" });
 
 let ws, nextId = 0;
+const consoleErrors = [];
+const ignoredErrors = [];   // logged, not counted
 const pending = new Map();
 function send(method, params = {}) {
   return new Promise((resolve, reject) => {
@@ -44,6 +46,15 @@ async function connect() {
         await new Promise((r) => (ws.onopen = r));
         ws.onmessage = (e) => {
           const m = JSON.parse(e.data);
+          // Only errors from the site's own scripts count: Edge injects a script of its own that can throw.
+          if (m.method === "Runtime.exceptionThrown") {
+            const d = m.params.exceptionDetails;
+            const where = d.url || d.stackTrace?.callFrames?.[0]?.url || "";
+            if (where.startsWith(SITE)) consoleErrors.push(d.exception?.description ?? d.text);
+            else ignoredErrors.push(`${where || "(no url)"}: ${d.exception?.description?.split("\n")[0] ?? d.text}`);
+          }
+          if (m.method === "Runtime.consoleAPICalled" && m.params.type === "error")
+            consoleErrors.push(m.params.args.map((a) => a.value ?? a.description).join(" "));
           if (m.id && pending.has(m.id)) { pending.get(m.id)(m); pending.delete(m.id); }
         };
         return;
@@ -105,6 +116,36 @@ try {
   await wait(1500);
   await connect();
   await send("Page.enable");
+  await send("Runtime.enable");
+
+  // "(fictional)" must be visible on every page.
+  for (const path of ["/", "/method/"]) {
+    await open(path + "?theme=light", 1440);
+    const ok = await js("document.body.innerText.includes('(fictional)')");
+    console.log(`  ${ok ? "PASS" : "FAIL"}  "(fictional)" visible on ${path}`);
+    failed ||= !ok;
+  }
+
+  // Keyboard: Tab must reach every preset button and slider, each with a visible focus ring.
+  console.log("Keyboard check (Tab):");
+  await open("/?theme=light", 1440);
+  const reached = new Set();
+  let noRing = [];
+  for (let i = 0; i < 40; i++) {
+    await send("Input.dispatchKeyEvent", { type: "keyDown", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9 });
+    await send("Input.dispatchKeyEvent", { type: "keyUp", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9 });
+    const f = await js(`(() => { const e = document.activeElement; const cs = getComputedStyle(e);
+      return { id: e.id || e.textContent.trim(), ring: cs.outlineStyle !== "none" && parseFloat(cs.outlineWidth) >= 2 }; })()`);
+    reached.add(f.id);
+    if (!f.ring) noRing.push(f.id);
+  }
+  const wanted = ["Current plan", "Hiring push", "Downside", "Reset", "hires", "students", "growth", "churn", "opex", "funding"];
+  const missing = wanted.filter((w) => !reached.has(w));
+  noRing = [...new Set(noRing)].filter((n) => wanted.includes(n));
+  const keyOk = missing.length === 0 && noRing.length === 0;
+  console.log(`  ${keyOk ? "PASS" : "FAIL"}  presets and sliders reachable by Tab with a focus ring` +
+    (missing.length ? `; not reached: ${missing.join(", ")}` : "") + (noRing.length ? `; no ring: ${noRing.join(", ")}` : ""));
+  failed ||= !keyOk;
 
   console.log("Touch check at 375 px (cash sparkline):");
   await open("/?theme=light", 375, true);
@@ -171,6 +212,10 @@ try {
     await wait(400);
     await shoot(`update-${month.toLowerCase().replace(" ", "-")}.png`, ".update");
   }
+  const errOk = consoleErrors.length === 0;
+  console.log(`  ${errOk ? "PASS" : "FAIL"}  no console errors` + (errOk ? "" : `: ${consoleErrors.join(" | ")}`));
+  failed ||= !errOk;
+  for (const e of new Set(ignoredErrors)) console.log(`  (ignored, not from the site: ${e})`);
 } finally {
   ws?.close();
   edge.kill();
