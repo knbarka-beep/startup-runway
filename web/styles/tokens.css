@@ -1,5 +1,5 @@
 /* Design tokens shared by the three portfolio projects (P1 variance cockpit, P2 startup runway, P3 AML queue).
-   Copy this file unchanged; only --accent and --accent-soft differ per project (see components/kit/README.md).
+   Copy this file unchanged; only --accent, --accent-soft and --on-accent differ per project (see components/kit/README.md).
    Light is the default; [data-theme="dark"] on <html> switches to dark (set by the theme toggle). */
 
 :root,
@@ -18,10 +18,14 @@
   --negative: #b23a2e;      /* unfavourable and risk only, 5,6:1 */
   --warning: #9a6a00;
 
-  /* Project accent. P2 startup runway: ochre. #A86B12 gave only 4,2:1 on the page, so it is darkened. */
-  --accent: #9a6210;        /* 4,8:1 on the page, 5,1:1 on cards */
-  --accent-soft: #f3e7d3;   /* placeholder highlight, active backgrounds */
-  --on-accent: #ffffff;     /* text on an accent background, 5,1:1 */
+  /* Soft backgrounds for the change pills (text in --positive / --negative stays above 4,5:1 on them). */
+  --positive-soft: #edf6f0; /* green text 4,6:1 */
+  --negative-soft: #f8e6e3; /* red text 4,9:1 */
+
+  /* Project accent. P2 startup runway: deep ink blue (not a bright UI blue, not indigo). */
+  --accent: #2a5788;        /* 7,1:1 on the page, 7,5:1 on cards */
+  --accent-soft: #e3ebf4;   /* placeholder highlight, active backgrounds; accent text 6,2:1 on it */
+  --on-accent: #ffffff;     /* text on an accent background, 7,5:1 */
 
   --shadow: 0 1px 2px rgb(28 27 25 / 0.04);
 }
@@ -41,9 +45,12 @@
   --negative: #e27064;      /* 5,9:1 */
   --warning: #d9a640;
 
-  --accent: #d9963a;        /* lighter ochre for dark, 7,4:1 */
-  --accent-soft: #3a2c17;
-  --on-accent: #141412;     /* 7,4:1 */
+  --positive-soft: #1b2c22; /* green text 6,1:1 */
+  --negative-soft: #35201d; /* red text 4,9:1 */
+
+  --accent: #7fa6d6;        /* lighter ink blue for dark, 7,3:1 on the page, 6,8:1 on cards */
+  --accent-soft: #1f2b3a;   /* accent text 5,7:1 on it */
+  --on-accent: #141412;     /* 7,3:1 */
 
   --shadow: none;
 }
@@ -61,6 +68,8 @@
   --color-neutral: var(--neutral);
   --color-positive: var(--positive);
   --color-negative: var(--negative);
+  --color-positive-soft: var(--positive-soft);
+  --color-negative-soft: var(--negative-soft);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-on-accent: var(--on-accent);

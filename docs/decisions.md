@@ -159,3 +159,8 @@ Every choice made during the unattended first build, as a list: what, why, and t
 119. **MRR bridge colours are now semantic:** new and expansion green, contraction and churn red, opening and closing grey. Before: accent and near-black.
 120. **Before/after screenshots** in `docs/screenshots/redesign/` (`*-before.png` from main before the redesign, `*-after.png`, and `*-compare.png` side by side, made once with Pillow). `node scripts/screenshots.mjs before|after` retakes one set. `screenshots.mjs` also checks now that there is no horizontal scroll at 375 px and that buttons have no transition under reduced motion.
 121. **The link preview image (`web/app/opengraph-image.png`) was not recropped**, so it still shows the old design.
+
+## Redesign v2 (layout and hierarchy, ../prompts/design-p2-v2.md)
+
+122. **Accent changed from ochre to deep ink blue** (Knut did not like the ochre). Light `#2A5788`: 7,1:1 on the page `#FAF9F7`, 7,5:1 on cards, 6,7:1 on `--surface-2`, white text on it 7,5:1. Dark `#7FA6D6`: 7,3:1 on the page `#141412`, 6,8:1 on cards, 6,3:1 on `--surface-2`. `--accent-soft` is `#E3EBF4` light (accent text 6,2:1) and `#1F2B3A` dark (5,7:1). Computed with the WCAG relative-luminance formula. It is a muted, dark blue (hue about 212 degrees, low saturation), not a bright UI blue like `#3B82F6` and not indigo or violet; green and red are unchanged. The design rule in `CLAUDE.md` said "no blue accent", so it now says "no bright UI blue" and names this colour. Alternative: keep ochre, rejected by Knut.
+123. **New tokens `--positive-soft` and `--negative-soft`** for the change pills: light `#EDF6F0` (green text 4,6:1; `#E9F3ED` gave only 4,4:1) and `#F8E6E3` (red text 4,9:1); dark `#1B2C22` (6,1:1) and `#35201D` (4,9:1).

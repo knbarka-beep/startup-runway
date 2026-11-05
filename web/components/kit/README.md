@@ -28,7 +28,7 @@ Only `--accent`, `--accent-soft` and `--on-accent` change per project, in both t
 | Project | Light `--accent` | Dark `--accent` |
 |---|---|---|
 | P1 Variance cockpit (petrol) | around #1F5F6B | lighter, check contrast |
-| P2 Startup runway (ochre) | #9A6210 | #D9963A |
+| P2 Startup runway (deep ink blue) | #2A5788 | #7FA6D6 |
 | P3 AML queue (deep olive) | around #5E6B2A | lighter, check contrast |
 
 Check the new accent for 4,5:1 against `--bg` and `--surface` (text) and 3:1 for chart lines, in both themes, and that it is clearly different from `--positive` (green) and `--negative` (red).

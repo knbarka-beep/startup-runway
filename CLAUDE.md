@@ -19,7 +19,7 @@ Portfolio project: runway dashboard for **Nordlys Analytics ApS (fictional)**. A
 
 ## Design
 
-- Polished and smooth, with clear hierarchy and soft transitions, but nothing that hides or decorates the numbers. Smooth over flashy. No typical "AI" look: no blue, indigo, violet or purple accent, no gradient backgrounds, glassmorphism, glow, emoji, sparkle icons or marketing phrases.
+- Polished and smooth, with clear hierarchy and soft transitions, but nothing that hides or decorates the numbers. Smooth over flashy. No typical "AI" look: no bright UI blue, indigo, violet or purple accent (P2 uses a deep ink blue, `#2A5788` light and `#7FA6D6` dark), no gradient backgrounds, glassmorphism, glow, emoji, sparkle icons or marketing phrases.
 - Tokens live in `web/styles/tokens.css` (colours, fonts, radius), base styles in `web/styles/kit.css`, shared components in `web/components/kit/` (see its README). Use the tokens, never raw hex values in components. Red is reserved for risk and unfavourable changes.
 - Light theme by default, dark behind the toggle. Source Serif 4 for headings, IBM Plex Sans for text, tabular figures for numbers. Transitions 150 to 200 ms; charts animate once on load (max 400 ms); respect prefers-reduced-motion.
 
