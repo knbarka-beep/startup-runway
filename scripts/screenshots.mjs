@@ -118,6 +118,26 @@ try {
   await send("Page.enable");
   await send("Runtime.enable");
 
+  // Redesign comparison: `node scripts/screenshots.mjs before` (or `after`) only takes the four
+  // comparison shots into docs/screenshots/redesign/ and stops.
+  const tag = process.argv[2];
+  if (tag === "before" || tag === "after") {
+    mkdirSync(join(shots, "redesign"), { recursive: true });
+    for (const [name, theme, width, mobile] of [["desktop-light", "light", 1440, false], ["desktop-dark", "dark", 1440, false],
+      ["mobile-light", "light", 375, true]]) {
+      await open(`/?theme=${theme}`, width, mobile);
+      await shoot(`redesign/${name}-${tag}.png`);
+    }
+    await open("/?theme=light", 1440);
+    await js(`(() => { const s = document.getElementById('month');
+      const i = [...s.options].findIndex(o => o.text === 'Sep 2026');
+      Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(s, String(i));
+      s.dispatchEvent(new Event('change', { bubbles: true })); })()`);
+    await wait(400);
+    await shoot(`redesign/update-sep-2026-${tag}.png`, ".update");
+    process.exit(0);
+  }
+
   // "(fictional)" must be visible on every page.
   for (const path of ["/", "/method/"]) {
     await open(path + "?theme=light", 1440);
