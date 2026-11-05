@@ -66,7 +66,7 @@ input[type="range"]:hover::-webkit-slider-thumb { transform: scale(1.1); }
 mark.ph { background: var(--accent-soft); color: var(--text); border-radius: 3px; padding: 0 3px; }
 
 /* Hero headline number (the runway): large serif, about 60 px on desktop. */
-.t-hero { font-family: var(--font-serif); font-weight: 600; font-size: clamp(2.75rem, 4vw + 1.25rem, 3.75rem); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.t-hero { font-family: var(--font-serif); font-weight: 600; font-size: clamp(2.75rem, 1.5vw + 1.75rem, 3rem); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 
 /* Change pill: soft green or red background with an arrow; grey when there is no change. */
 .delta { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; font-size: 0.75rem; font-weight: 600; line-height: 1.6;

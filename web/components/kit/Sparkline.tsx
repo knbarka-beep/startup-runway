@@ -3,7 +3,7 @@
 // the month and the exact value just above the line, e.g. "Jul 2026: €1.785.615".
 import { Area, AreaChart, ResponsiveContainer, Tooltip } from "recharts";
 
-export function Sparkline({ values, months, format, monthLabel, color = "var(--accent)", height = 40 }: {
+export function Sparkline({ values, months, format, monthLabel, color = "var(--accent)", height = 36 }: {
   values: (number | null)[]; months: string[]; format: (v: number) => string;
   monthLabel: (m: string) => string; color?: string; height?: number;
 }) {

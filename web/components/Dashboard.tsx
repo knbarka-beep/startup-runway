@@ -101,9 +101,9 @@ export default function Dashboard() {
 
       <main className="mx-auto max-w-[1200px] px-4 pb-2">
         {/* Hero: how long the cash lasts, then the three numbers behind it. */}
-        <section className="hero grid items-end gap-x-12 gap-y-8 pt-8 pb-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:pt-12">
+        <section className="hero grid items-end gap-x-12 gap-y-8 pt-8 pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-x-10 lg:pt-4 lg:pb-5">
           <div>
-            <p className="t-small mb-4 text-muted">Cash, burn and runway. All company data on this page is synthetic.</p>
+            <p className="t-small mb-4 text-muted lg:mb-1">Cash, burn and runway. All company data on this page is synthetic.</p>
             <div className="flex items-center gap-1.5">
               <span className="t-label">Runway at current burn</span>
               <InfoTip label="runway">
@@ -119,19 +119,19 @@ export default function Dashboard() {
                 ) : <p>Runway needs 3 months of history, so it starts in Dec 2024.</p>}
               </InfoTip>
             </div>
-            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2">
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 lg:mt-1">
               <div className={`t-hero ${runwayRisk ? "text-negative" : ""}`}>
                 {m.runway_months !== null ? <>{dec(m.runway_months)} <span className="text-[0.55em] font-normal">months</span></> : "n/a"}
               </div>
               {runwayChange && <DeltaPill change={runwayChange} />}
             </div>
-            <p className="story mt-3 text-[1.05rem]" aria-live="polite">
+            <p className="story mt-3 text-[1.05rem] lg:mt-2" aria-live="polite">
               {m.zero_cash_month ? <>At current burn, cash lasts until <strong>{monthLabel(m.zero_cash_month)}</strong>. </> : null}
               <strong>{eurShort(m.closing_cash)}</strong> in the bank.
             </p>
-            <div className="mt-3 max-w-[300px]">
+            <div className="mt-3 max-w-[300px] lg:mt-1">
               <Sparkline values={upTo.map((x) => x.runway_months)} months={upMonths} format={months1} monthLabel={monthLabel}
-                         color={runwayRisk ? "var(--negative)" : "var(--accent)"} height={32} />
+                         color={runwayRisk ? "var(--negative)" : "var(--accent)"} height={26} />
             </div>
           </div>
 
@@ -155,8 +155,8 @@ export default function Dashboard() {
         </section>
 
         {/* Cash chart, full width, with the scenario controls directly under it. */}
-        <Card large className="main mb-10 lg:mb-12">
-          <CardHeader eyebrow="Cash" title="Cash in bank: actual and scenario" infoLabel="the cash chart"
+        <Card large className="main mb-10 lg:mb-12 lg:!pt-4 lg:!pb-4">
+          <CardHeader title="Cash in bank: actual and scenario" infoLabel="the cash chart"
                       info={<>
                         <p>Solid line and soft fill: actual cash. Dashed line over a hatch: the projection from{" "}
                           {monthLabel(base.start_month)}, set by the presets and sliders below.</p>
@@ -174,7 +174,7 @@ export default function Dashboard() {
                       } />
           <CashChart actuals={months} projection={projection} selected={m.month} zeroMonth={zero} notes={notes} />
 
-          <div className="mt-5 border-t border-border pt-5">
+          <div className="mt-5 border-t border-border pt-5 lg:mt-3 lg:pt-3">
             <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
               <div className="flex flex-wrap items-center gap-3">
                 <span className="t-label">Scenario from {monthLabel(base.start_month)}</span>

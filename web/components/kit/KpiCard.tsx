@@ -26,10 +26,10 @@ export function KpiCard({ label, info, value, valueClass = "", change, children 
           <span className="t-label">{label}</span>
           {info && <InfoTip label={label}>{info}</InfoTip>}
         </div>
-        <div className={`t-kpi mt-1 ${valueClass}`}>{value}</div>
+        <div className={`t-kpi mt-1 lg:mt-0.5 ${valueClass}`}>{value}</div>
         <div className="mt-1 min-h-[1.25rem]">{change && <DeltaPill change={change} />}</div>
       </div>
-      <div className="sm:mt-2">{children}</div>
+      <div className="sm:mt-2 lg:mt-1.5">{children}</div>
     </div>
   );
 }

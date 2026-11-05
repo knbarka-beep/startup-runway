@@ -20,13 +20,14 @@ const halo = { paintOrder: "stroke", stroke: "var(--surface)", strokeWidth: 4, s
 
 // A flag on the cash line: a thin stem up from the point and a short label at the top of it.
 // `level` sets the stem length, so labels of neighbouring months sit at different heights and never overlap.
-function Flag({ viewBox, note, level, chartWidth }: Box & { note: Annotation; level: number; chartWidth: number }) {
+// On a short chart (laptop screens) the stems are shorter, so the top label stays inside the chart.
+function Flag({ viewBox, note, level, chartWidth, compact }: Box & { note: Annotation; level: number; chartWidth: number; compact: boolean }) {
   const cx = (viewBox?.x ?? 0) + (viewBox?.width ?? 0) / 2;
   const cy = (viewBox?.y ?? 0) + (viewBox?.height ?? 0) / 2;
   // Near the right edge (on a phone) the flag hangs below the line instead, ending at the stem: the area
   // under the line is empty there, and the labels of the other flags are all above the line.
   const below = cx + note.short.length * 6.3 + 8 > chartWidth;
-  const top = below ? cy + 30 : cy - 26 - level * 19;
+  const top = below ? cy + 30 : compact ? cy - 18 - level * 15 : cy - 26 - level * 19;
   return (
     <g>
       <title>{`${monthLabel(note.month)}: ${note.text}`}</title>
@@ -58,6 +59,7 @@ export function CashChart({ actuals, projection, selected, zeroMonth, notes }: {
   const animate = useAnimateOnce();
   const motion = useMotionOk();
   const [width, setWidth] = useState(1000);
+  const [height, setHeight] = useState(400);
   const last = actuals[actuals.length - 1];
   // Memoised, so changing the month does not restart the projection tween.
   const rows = useMemo(() => {
@@ -72,8 +74,8 @@ export function CashChart({ actuals, projection, selected, zeroMonth, notes }: {
   const min = Math.min(0, ...projection.map((p) => p.cash));
 
   return (
-    <div className="h-[300px] lg:h-[420px]">
-      <ResponsiveContainer width="100%" height="100%" onResize={(w) => setWidth(w)}>
+    <div className="h-[300px] lg:h-[clamp(260px,42vh,400px)]">
+      <ResponsiveContainer width="100%" height="100%" onResize={(w, h) => { setWidth(w); setHeight(h); }}>
         <ComposedChart data={rows} margin={{ top: 16, right: 12, bottom: 4, left: 0 }}>
           <defs>
             <pattern id="projection-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -121,7 +123,7 @@ export function CashChart({ actuals, projection, selected, zeroMonth, notes }: {
           {notes.map((n, i) => (
             <ReferenceDot key={n.month} x={n.month} y={n.cash} r={3.5} fill="var(--surface)" stroke="var(--text)" strokeWidth={1.25}
                           // The earliest event gets the longest stem, so the labels step down from left to right.
-                          label={(p: Box) => <Flag {...p} note={n} level={notes.length - 1 - i} chartWidth={width} />} />
+                          label={(p: Box) => <Flag {...p} note={n} level={notes.length - 1 - i} chartWidth={width} compact={height < 340} />} />
           ))}
         </ComposedChart>
       </ResponsiveContainer>

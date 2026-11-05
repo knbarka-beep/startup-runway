@@ -15,7 +15,7 @@ export function CardHeader({ eyebrow, title, info, infoLabel, aside }: {
   eyebrow?: string; title: React.ReactNode; info?: React.ReactNode; infoLabel?: string; aside?: React.ReactNode;
 }) {
   return (
-    <div className="mb-4 flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
+    <div className="mb-4 flex flex-wrap items-end justify-between gap-x-4 gap-y-1 [.main_&]:lg:mb-2">
       <div>
         {eyebrow && <div className="t-label mb-0.5">{eyebrow}</div>}
         <div className="flex items-center gap-2">

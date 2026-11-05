@@ -66,9 +66,9 @@ async function connect() {
 }
 
 let current = { width: 1440, mobile: false };
-async function open(path, width, mobile = false) {
+async function open(path, width, mobile = false, height = mobile ? 900 : 2400) {
   current = { width, mobile };
-  await send("Emulation.setDeviceMetricsOverride", { width, height: mobile ? 900 : 2400, deviceScaleFactor: 1, mobile });
+  await send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile });
   await send("Emulation.setTouchEmulationEnabled", { enabled: mobile, maxTouchPoints: 5 });
   await send("Page.navigate", { url: SITE + path });
   for (let i = 0; i < 100; i++) {
@@ -117,6 +117,9 @@ try {
   await connect();
   await send("Page.enable");
   await send("Runtime.enable");
+  // Never serve a cached page: the Edge profile is reused between runs, and a stale build would be photographed.
+  await send("Network.enable");
+  await send("Network.setCacheDisabled", { cacheDisabled: true });
 
   // Redesign comparison: `node scripts/screenshots.mjs before` (or `after`) only takes the
   // comparison shots into docs/screenshots/redesign-v2/ and stops. (The first redesign's set is in redesign/.)
@@ -143,6 +146,23 @@ try {
     await wait(400);
     await shoot(`redesign-v2/update-sep-2026-${tag}.png`, ".update");
     process.exit(0);
+  }
+
+  // Laptop fit: at 1536 x 730 and 1366 x 650, with no scrolling, the hero, the whole cash chart and the
+  // result pill under it must all be on screen. Saves the visible screen as fit-<width>.png.
+  console.log("Laptop fit (no scrolling):");
+  mkdirSync(join(shots, "redesign-v2"), { recursive: true });
+  for (const [w, h] of [[1536, 730], [1366, 650]]) {
+    await open("/?theme=light", w, false, h);
+    const r = await js(`(() => { const b = (q) => document.querySelector(q).getBoundingClientRect();
+      return { pill: Math.round(b('.projection-line').bottom), axis: Math.round(b('.main .recharts-wrapper').bottom),
+        chart: Math.round(b('.main .recharts-wrapper').height), y: scrollY }; })()`);
+    const fitOk = r.y === 0 && r.pill <= h && r.axis <= h;
+    console.log(`  ${fitOk ? "PASS" : "FAIL"}  ${w} x ${h}: result pill bottom ${r.pill} px, x axis bottom ${r.axis} px (chart ${r.chart} px tall)`);
+    failed ||= !fitOk;
+    const { data } = await send("Page.captureScreenshot", { format: "png" });
+    writeFileSync(join(shots, "redesign-v2", `fit-${w}.png`), Buffer.from(data, "base64"));
+    console.log(`  saved docs/screenshots/redesign-v2/fit-${w}.png`);
   }
 
   // "(fictional)" must be visible on every page.
