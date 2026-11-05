@@ -191,8 +191,17 @@ export default function Method() {
         <li>Revenue equals MRR. No proration, VAT, tax, payables or receivables timing.</li>
         <li>The projection keeps other costs flat apart from the slider, treats collections as equal to revenue (annual upfront billing is ignored) and does not let new hires change the growth rate.</li>
         <li>Gross margin counts cloud hosting and customer success payroll as cost of revenue. Third-party software stays in operating costs because the data does not say which part serves customers.</li>
-        <li>The AI check verifies numbers, named causes, structure and a few style rules. A draft could pass and still be badly written or emphasise the wrong thing, and every draft needs a founder to fill in the placeholders. Passing after a retry shows the draft meets
+        <li>The AI check verifies numbers, named causes, structure and a few style rules. It does not judge writing quality. A draft could pass and still be badly written or stress the wrong thing. Every draft needs a founder to fill in the placeholders. Passing after a retry shows the draft meets
           the rules, not that the model follows them reliably: half the first drafts did not.</li>
+      </ul>
+      <h3 className="small">Known weaknesses in the v3 drafts (disclosed, not fixed)</h3>
+      <ul>
+        <li>Sep 2026 writes the lost MRR as &quot;-€1.520&quot;, with a minus sign. It also guesses &quot;annual billing timing&quot; as the cause of low collections.</li>
+        <li>Jul 2026 has two sentences that end on a placeholder with no full stop.</li>
+        <li>The Apr 2026 TL;DR says costs are rising faster than revenue. That is an inference. The checker cannot verify it.</li>
+        <li>2 of the 6 retries were caused by false flags in the cause check (&quot;Contraction MRR was €0&quot; and &quot;churn was zero&quot;). The checker was not fixed after the run.</li>
+        <li>The rule that a planned hire is not a lowlight is only in the prompt. The checker does not test it.</li>
+        <li>Each prompt version was run once. How much the drafts vary between runs is not measured.</li>
       </ul>
     </main>
   );
