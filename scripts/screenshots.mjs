@@ -118,23 +118,27 @@ try {
   await send("Page.enable");
   await send("Runtime.enable");
 
-  // Redesign comparison: `node scripts/screenshots.mjs before` (or `after`) only takes the four
-  // comparison shots into docs/screenshots/redesign/ and stops.
+  // Redesign comparison: `node scripts/screenshots.mjs before` (or `after`) only takes the
+  // comparison shots into docs/screenshots/redesign-v2/ and stops. (The first redesign's set is in redesign/.)
   const tag = process.argv[2];
   if (tag === "before" || tag === "after") {
-    mkdirSync(join(shots, "redesign"), { recursive: true });
+    mkdirSync(join(shots, "redesign-v2"), { recursive: true });
     for (const [name, theme, width, mobile] of [["desktop-light", "light", 1440, false], ["desktop-dark", "dark", 1440, false],
       ["mobile-light", "light", 375, true]]) {
       await open(`/?theme=${theme}`, width, mobile);
-      await shoot(`redesign/${name}-${tag}.png`);
+      await shoot(`redesign-v2/${name}-${tag}.png`);
     }
+    // The scenario panel with Hiring push selected (.main holds the chart and the scenario controls).
     await open("/?theme=light", 1440);
+    await click("Hiring push");
+    await wait(400);
+    await shoot(`redesign-v2/scenario-hiring-push-${tag}.png`, ".main");
     await js(`(() => { const s = document.getElementById('month');
       const i = [...s.options].findIndex(o => o.text === 'Sep 2026');
       Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(s, String(i));
       s.dispatchEvent(new Event('change', { bubbles: true })); })()`);
     await wait(400);
-    await shoot(`redesign/update-sep-2026-${tag}.png`, ".update");
+    await shoot(`redesign-v2/update-sep-2026-${tag}.png`, ".update");
     process.exit(0);
   }
 
