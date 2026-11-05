@@ -3,6 +3,7 @@
 // at build time. No API calls at runtime.
 import raw from "../data/dashboard.json";
 import type { ScenarioBase } from "./scenario";
+import { eur, eurShort } from "./format";
 
 export type Month = {
   month: string;
@@ -119,3 +120,25 @@ export function attemptSummary() {
 export const RETRY_SENTENCE =
   "The model does not follow format rules reliably, so the pipeline checks every draft and asks for one or two " +
   "corrections. Both the first-attempt and final results are shown.";
+
+// Up to three events marked on the actual cash line. Each month is picked from the exported data
+// (no new numbers are calculated); the wording follows the planted story in docs/data-spec.md.
+export type Annotation = { month: string; cash: number; text: string };
+export function cashAnnotations(): Annotation[] {
+  const months = data.monthly;
+  const pick = (better: (a: number, b: number) => boolean, value: (i: number) => number) =>
+    months.reduce((best, _m, i) => (i > 0 && better(value(i), value(best)) ? i : best), 1);
+  // 1. The month with the largest headcount increase: start of the hiring push.
+  const hire = pick((a, b) => a > b, (i) => months[i].headcount - months[i - 1].headcount);
+  // 2. The month with the highest professional fees: the one-off recruiting agency fee.
+  const fees = (i: number) => data.burn_drivers.find((d) => d.month === months[i].month && d.driver === "professional fees")?.amount ?? 0;
+  const fee = pick((a, b) => a > b, fees);
+  // 3. The month with the largest churned MRR: the largest customer leaves.
+  const churn = pick((a, b) => a < b, (i) => months[i].churn_mrr);
+  const at = (i: number, text: string) => ({ month: months[i].month, cash: months[i].closing_cash, text });
+  return [
+    at(hire, `Hiring push starts, headcount ${months[hire - 1].headcount} to ${months[hire].headcount}`),
+    at(fee, `One-off recruiting agency fee, professional fees ${eurShort(fees(fee))}`),
+    at(churn, `Largest customer churns, ${eur(months[churn].churn_mrr)} MRR`),
+  ].sort((a, b) => a.month.localeCompare(b.month));
+}

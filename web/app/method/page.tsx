@@ -9,7 +9,7 @@ export default function Method() {
   const sum = attemptSummary();
   const base = data.scenario_base;
   return (
-    <main className="wrap method">
+    <main className="prose method mx-auto px-4 py-6">
       <p><Link href="/">Back to the dashboard</Link></p>
       <h1>How this works</h1>
 

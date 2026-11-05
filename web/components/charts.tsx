@@ -1,58 +1,27 @@
 "use client";
-// The four visual pieces: sparkline, cash curve, MRR bridge (waterfall) and burn driver bars.
+// The three charts of the dashboard: cash curve, MRR bridge (waterfall) and burn driver bars.
+// The KPI sparkline lives in components/kit/Sparkline.tsx.
 import {
-  Bar, BarChart, CartesianGrid, Cell, LabelList, Line, LineChart, ReferenceLine,
+  Area, Bar, BarChart, CartesianGrid, Cell, ComposedChart, LabelList, Line, ReferenceDot, ReferenceLine,
   ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
-import type { Month, BurnDriver } from "@/lib/data";
+import type { Annotation, Month, BurnDriver } from "@/lib/data";
 import type { ProjectedMonth } from "@/lib/scenario";
 import { eur, eurShort, monthLabel, monthShort, pct } from "@/lib/format";
+import { ChartTooltip } from "./kit/ChartTooltip";
+import { ANIMATION_MS, useAnimateOnce } from "./kit/useAnimateOnce";
 
-const tooltipStyle = {
-  background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, color: "var(--text)",
-};
+const axis = { tick: { fill: "var(--muted)", fontSize: 11 }, axisLine: false, tickLine: false } as const;
 
-// Small trend line inside a KPI card. No axes. Hovering (or dragging a finger along it)
-// shows the month and the exact value just above the line, e.g. "Jul 2026: €1.785.615".
-export function Sparkline({ values, months, format, color = "var(--accent)" }: {
-  values: (number | null)[]; months: string[]; format: (v: number) => string; color?: string;
+// Cash curve: actual months as a solid accent line over a soft fill, the scenario projection dashed.
+// Numbered dots on the actual line mark the events listed under the chart.
+export function CashChart({ actuals, projection, selected, zeroMonth, notes }: {
+  actuals: Month[]; projection: ProjectedMonth[]; selected: string; zeroMonth: string | null; notes: Annotation[];
 }) {
-  const rows = values.map((v, i) => ({ month: months[i], v }));
-  return (
-    // touch-action pan-y: a sideways finger drag moves the tooltip, an up/down drag still scrolls the page
-    <div style={{ height: 36, touchAction: "pan-y" }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={rows} margin={{ top: 4, right: 2, bottom: 4, left: 2 }}>
-          <Tooltip
-            isAnimationActive={false}
-            cursor={{ stroke: "var(--border)" }}
-            position={{ y: -26 }}
-            allowEscapeViewBox={{ x: false, y: true }}
-            wrapperStyle={{ zIndex: 5, pointerEvents: "none" }}
-            content={({ active, payload }) => {
-              const p = payload?.[0];
-              if (!active || !p || p.value == null) return null;
-              return (
-                <div style={{ ...tooltipStyle, padding: "2px 7px", fontSize: 12, whiteSpace: "nowrap" }}>
-                  {monthLabel(p.payload.month)}: {format(Number(p.value))}
-                </div>
-              );
-            }}
-          />
-          <Line type="monotone" dataKey="v" stroke={color} strokeWidth={1.5} dot={false} isAnimationActive={false} connectNulls />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
-  );
-}
-
-// Cash curve: actual months as a solid line, scenario projection as a dashed line.
-export function CashChart({ actuals, projection, selected, zeroMonth }: {
-  actuals: Month[]; projection: ProjectedMonth[]; selected: string; zeroMonth: string | null;
-}) {
+  const animate = useAnimateOnce();
   const last = actuals[actuals.length - 1];
   const rows = [
-    ...actuals.map((m) => ({ month: m.month, actual: m.closing_cash, projection: null as number | null })),
+    ...actuals.map((m) => ({ month: m.month, actual: m.closing_cash as number | null, projection: null as number | null })),
     ...projection.map((p) => ({ month: p.month, actual: null as number | null, projection: p.cash })),
   ];
   // Start the dashed line at the last actual point so the two lines join.
@@ -60,28 +29,49 @@ export function CashChart({ actuals, projection, selected, zeroMonth }: {
   const min = Math.min(0, ...projection.map((p) => p.cash));
 
   return (
-    <div style={{ height: 300 }}>
+    <div style={{ height: 340 }}>
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={rows} margin={{ top: 22, right: 12, bottom: 0, left: 0 }}>
+        <ComposedChart data={rows} margin={{ top: 24, right: 12, bottom: 0, left: 0 }}>
           <CartesianGrid stroke="var(--grid)" vertical={false} />
-          <XAxis dataKey="month" tickFormatter={monthShort} tick={{ fill: "var(--muted)", fontSize: 11 }}
-                 interval="preserveStartEnd" minTickGap={28} stroke="var(--border)" />
-          <YAxis tickFormatter={eurShort} tick={{ fill: "var(--muted)", fontSize: 11 }} width={58}
-                 domain={[min, "auto"]} stroke="var(--border)" />
-          <Tooltip contentStyle={tooltipStyle} labelFormatter={(l) => monthLabel(String(l))}
-                   formatter={(v, name) => [eur(Number(v)), name === "actual" ? "Actual cash" : "Projected cash"]} />
-          <ReferenceLine y={0} stroke="var(--risk)" strokeDasharray="2 3"
-                         label={{ value: "€0", position: "insideBottomLeft", fill: "var(--risk)", fontSize: 11 }} />
+          <XAxis dataKey="month" tickFormatter={monthShort} interval="preserveStartEnd" minTickGap={28} {...axis} />
+          <YAxis tickFormatter={eurShort} width={56} domain={[min, "auto"]} {...axis} />
+          <Tooltip
+            cursor={{ stroke: "var(--border-strong)" }}
+            isAnimationActive={false}
+            content={({ active, payload, label }) => {
+              if (!active || !payload?.length) return null;
+              const row = payload[0].payload as (typeof rows)[number];
+              const isActual = row.actual !== null;
+              return (
+                <ChartTooltip
+                  title={monthLabel(String(label))}
+                  rows={[isActual
+                    ? { name: "Actual cash", value: eur(row.actual!), color: "var(--accent)" }
+                    : { name: "Projected cash", value: eur(row.projection!), color: "var(--accent)", dashed: true }]}
+                />
+              );
+            }}
+          />
+          <ReferenceLine y={0} stroke="var(--border-strong)" />
           <ReferenceLine x={last.month} stroke="var(--border)"
-                         label={{ value: "Projection starts", position: "top", fill: "var(--muted)", fontSize: 11 }} />
+                         label={{ value: "Projection", position: "top", fill: "var(--muted)", fontSize: 11 }} />
           {selected !== last.month && <ReferenceLine x={selected} stroke="var(--neutral)" strokeDasharray="3 3" />}
           {zeroMonth && (
-            <ReferenceLine x={zeroMonth} stroke="var(--risk)"
-                           label={{ value: `Cash runs out ${monthLabel(zeroMonth)}`, position: "insideTopRight", fill: "var(--risk)", fontSize: 12 }} />
+            <ReferenceLine x={zeroMonth} stroke="var(--negative)" strokeOpacity={0.45} strokeDasharray="2 3"
+                           label={{ value: `Cash runs out ${monthLabel(zeroMonth)}`, position: "insideTopRight", fill: "var(--negative)", fontSize: 11 }} />
           )}
-          <Line type="linear" dataKey="actual" stroke="var(--accent)" strokeWidth={2.2} dot={false} isAnimationActive={false} />
-          <Line type="linear" dataKey="projection" stroke="var(--accent)" strokeWidth={2} strokeDasharray="6 4" dot={false} isAnimationActive={false} />
-        </LineChart>
+          <Area type="linear" dataKey="actual" stroke="var(--accent)" strokeWidth={2} fill="var(--accent)" fillOpacity={0.08}
+                baseValue={0} dot={false} activeDot={{ r: 3.5, strokeWidth: 0 }}
+                isAnimationActive={animate} animationDuration={ANIMATION_MS} />
+          <Line type="linear" dataKey="projection" stroke="var(--accent)" strokeWidth={1.75} strokeDasharray="5 4" dot={false}
+                activeDot={{ r: 3.5, strokeWidth: 0, fill: "var(--accent)" }} isAnimationActive={false} />
+          {zeroMonth && <ReferenceDot x={zeroMonth} y={0} r={3.5} fill="var(--negative)" stroke="var(--surface)" strokeWidth={1.5} />}
+          {notes.map((n, i) => (
+            <ReferenceDot key={n.month} x={n.month} y={n.cash} r={3.5} fill="var(--surface)" stroke="var(--text)" strokeWidth={1.25}
+                          // Neighbouring months: alternate the number above and below the line so they do not overlap.
+                          label={{ value: String(i + 1), position: i % 2 ? "bottom" : "top", fill: "var(--text)", fontSize: 10, fontWeight: 600 }} />
+          ))}
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   );
@@ -90,6 +80,7 @@ export function CashChart({ actuals, projection, selected, zeroMonth }: {
 // MRR bridge as a waterfall. Each bar is a range [from, to]. The axis does not start at zero,
 // otherwise the monthly movements (a few thousand euros) would be invisible next to ~€100k MRR.
 export function MrrBridge({ m }: { m: Month }) {
+  const animate = useAnimateOnce();
   const steps = [
     // Short names so the axis fits on a phone; the tooltip shows the full name.
     { name: "Open", full: "Opening MRR", value: m.opening_mrr, total: true },
@@ -111,19 +102,26 @@ export function MrrBridge({ m }: { m: Month }) {
   const lo = Math.max(0, Math.floor((Math.min(...points) - Math.max(Math.max(...points) - Math.min(...points), 2000)) / 1000) * 1000);
   const hi = Math.ceil((Math.max(...points) + 1000) / 1000) * 1000;
   for (const r of rows) if (r.total) r.range = [lo, r.value];
+  const colour = (r: (typeof rows)[number]) => (r.total ? "var(--neutral)" : r.value >= 0 ? "var(--positive)" : "var(--negative)");
 
   return (
     <div style={{ height: 240 }}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={rows} margin={{ top: 20, right: 8, bottom: 0, left: 0 }}>
           <CartesianGrid stroke="var(--grid)" vertical={false} />
-          <XAxis dataKey="name" tick={{ fill: "var(--muted)", fontSize: 11 }} interval={0} stroke="var(--border)" />
-          <YAxis domain={[lo, hi]} allowDataOverflow tickFormatter={eurShort} tick={{ fill: "var(--muted)", fontSize: 11 }} width={58} stroke="var(--border)" />
-          <Tooltip contentStyle={tooltipStyle} formatter={(_v, _n, item) => [eur(item.payload.value), item.payload.full]} />
-          <Bar dataKey="range" isAnimationActive={false}>
-            {rows.map((r) => (
-              <Cell key={r.name} fill={r.total ? "var(--neutral)" : r.value >= 0 ? "var(--accent)" : "var(--text)"} fillOpacity={r.total ? 0.55 : 0.9} />
-            ))}
+          <XAxis dataKey="name" interval={0} {...axis} />
+          <YAxis domain={[lo, hi]} allowDataOverflow tickFormatter={eurShort} width={56} {...axis} />
+          <Tooltip
+            cursor={{ fill: "var(--grid)" }}
+            isAnimationActive={false}
+            content={({ active, payload }) => {
+              const r = payload?.[0]?.payload as (typeof rows)[number] | undefined;
+              if (!active || !r) return null;
+              return <ChartTooltip title={`MRR bridge, ${monthLabel(m.month)}`} rows={[{ name: r.full, value: eur(r.value), color: colour(r) }]} />;
+            }}
+          />
+          <Bar dataKey="range" radius={2} maxBarSize={44} isAnimationActive={animate} animationDuration={ANIMATION_MS}>
+            {rows.map((r) => <Cell key={r.name} fill={colour(r)} fillOpacity={r.total ? 0.6 : 0.85} />)}
             <LabelList dataKey="value" position="top" formatter={(v) => (v === 0 ? "€0" : eurShort(Number(v)))}
                        style={{ fill: "var(--text)", fontSize: 10 }} />
           </Bar>
@@ -138,16 +136,20 @@ export function BurnDrivers({ rows, type }: { rows: BurnDriver[]; type: "team" |
   const list = rows.filter((r) => r.driver_type === type).sort((a, b) => b.amount - a.amount);
   const total = list.reduce((s, r) => s + r.amount, 0);
   const max = Math.max(...list.map((r) => r.amount));
+  const row = "grid grid-cols-[120px_1fr_64px] items-center gap-3 text-[0.85rem] max-[480px]:grid-cols-[100px_1fr_56px]";
   return (
-    <div className="bars">
+    <div className="grid gap-1.5">
       {list.map((r) => (
-        <div className="bar-row" key={r.driver} title={`${eur(r.amount)} (${pct(r.amount / total, 0)})`}>
+        <div className={row} key={r.driver} title={`${eur(r.amount)} (${pct(r.amount / total, 0)})`}>
           <span>{r.driver.charAt(0).toUpperCase() + r.driver.slice(1)}</span>
-          <div className="bar-track"><div className="bar-fill" style={{ width: `${(r.amount / max) * 100}%` }} /></div>
-          <span className="amt">{eurShort(r.amount)}</span>
+          <div className="h-2 rounded-sm bg-surface-2">
+            <div className="h-2 rounded-sm bg-accent transition-[width] duration-200 motion-reduce:transition-none"
+                 style={{ width: `${(r.amount / max) * 100}%` }} />
+          </div>
+          <span className="text-right">{eurShort(r.amount)}</span>
         </div>
       ))}
-      <div className="bar-row muted"><span>Total</span><span /><span className="amt">{eurShort(total)}</span></div>
+      <div className={`${row} border-t border-border pt-1.5 text-muted`}><span>Total</span><span /><span className="text-right">{eurShort(total)}</span></div>
     </div>
   );
 }
