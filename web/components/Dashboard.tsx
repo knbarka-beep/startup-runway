@@ -50,13 +50,16 @@ function Slider({ id, label, value, info, min, max, step, current, onChange, chi
   );
 }
 
-// Result of the scenario. The euro amount counts to its new value (200 ms) when a slider moves.
-function ResultPill({ zero, lowest, isLast }: { zero: string | null; lowest: { month: string; cash: number }; isLast: boolean }) {
+// Result of the scenario, always named after the preset ("Custom" once a slider has moved), so it is not
+// mistaken for the hero's date at current burn. The euro amount counts to its new value (200 ms) when a slider moves.
+function ResultPill({ name, zero, lowest, isLast }: {
+  name: string; zero: string | null; lowest: { month: string; cash: number }; isLast: boolean;
+}) {
   const cash = useTween(lowest.cash);
   return (
     <p className={`projection-line result-pill ${zero ? "risk" : ""}`} aria-live="polite">
-      {zero ? <>Cash runs out in {monthLabel(zero)}</>
-        : <>Cash bottoms out at {eurShort(cash)} in {monthLabel(lowest.month)}{isLast ? ", the last projected month" : ""}</>}
+      {name}:&nbsp;{zero ? <>cash runs out in {monthLabel(zero)}</>
+        : <>cash bottoms out at {eurShort(cash)} in {monthLabel(lowest.month)}{isLast ? ", the last projected month" : ""}</>}
     </p>
   );
 }
@@ -107,8 +110,10 @@ export default function Dashboard() {
                 {m.runway_months !== null && m.avg_net_burn_3m !== null && m.zero_cash_month ? (
                   <>
                     <p>Cash at the end of {monthLabel(m.month)} divided by the 3-month average net burn of{" "}
-                      {eurShort(m.avg_net_burn_3m)}. At that pace cash runs out in {monthLabel(m.zero_cash_month)}, so new
+                      {eurShort(m.avg_net_burn_3m)}. At current burn, cash lasts until {monthLabel(m.zero_cash_month)}, so new
                       funding is needed before then.</p>
+                    <p>This date uses the last three months&apos; burn with no changes. The scenario under the chart
+                      uses the preset&apos;s hires, salary rises, growth and churn, so its date can differ.</p>
                     <p>Shown in red below 12 months.</p>
                   </>
                 ) : <p>Runway needs 3 months of history, so it starts in Dec 2024.</p>}
@@ -121,7 +126,7 @@ export default function Dashboard() {
               {runwayChange && <DeltaPill change={runwayChange} />}
             </div>
             <p className="story mt-3 text-[1.05rem]" aria-live="polite">
-              {m.zero_cash_month ? <>Cash runs out <strong>{monthLabel(m.zero_cash_month)}</strong>. </> : null}
+              {m.zero_cash_month ? <>At current burn, cash lasts until <strong>{monthLabel(m.zero_cash_month)}</strong>. </> : null}
               <strong>{eurShort(m.closing_cash)}</strong> in the bank.
             </p>
             <div className="mt-3 max-w-[300px]">
@@ -177,7 +182,7 @@ export default function Dashboard() {
                                   onChange={(p) => setS(presetSettings(base, p as (typeof PRESETS)[number]))} />
                 <button type="button" className="btn" onClick={() => setS(presetSettings(base, "Current plan"))}>Reset</button>
               </div>
-              <ResultPill zero={zero} lowest={lowest} isLast={lowest.month === lastProjected.month} />
+              <ResultPill name={active ?? "Custom"} zero={zero} lowest={lowest} isLast={lowest.month === lastProjected.month} />
             </div>
 
             <details className="assumptions mt-5" open={open} onToggle={(e) => setOpen(e.currentTarget.open)}>

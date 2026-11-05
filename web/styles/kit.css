@@ -101,6 +101,8 @@ mark.ph { background: var(--accent-soft); color: var(--text); border-radius: 3px
 .result-pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 8px 18px; font-size: 1rem; font-weight: 600;
   background: var(--accent-soft); color: var(--text); transition: background-color 200ms ease, color 200ms ease; }
 .result-pill.risk { background: var(--negative-soft); color: var(--negative); }
+/* On a phone the named result can wrap to two lines; a full pill shape looks odd then. */
+@media (max-width: 640px) { .result-pill { border-radius: 14px; font-size: 0.95rem; } }
 
 /* "Adjust assumptions": a native <details>, with a chevron that turns when open. */
 details.assumptions > summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.9rem; border-radius: 6px; }

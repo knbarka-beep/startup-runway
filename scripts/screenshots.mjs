@@ -121,13 +121,16 @@ try {
   // Redesign comparison: `node scripts/screenshots.mjs before` (or `after`) only takes the
   // comparison shots into docs/screenshots/redesign-v2/ and stops. (The first redesign's set is in redesign/.)
   const tag = process.argv[2];
-  if (tag === "before" || tag === "after") {
+  // `after-fix` takes only desktop light and 375 px light.
+  if (tag === "before" || tag === "after" || tag === "after-fix") {
     mkdirSync(join(shots, "redesign-v2"), { recursive: true });
     for (const [name, theme, width, mobile] of [["desktop-light", "light", 1440, false], ["desktop-dark", "dark", 1440, false],
       ["mobile-light", "light", 375, true]]) {
+      if (tag === "after-fix" && name === "desktop-dark") continue;
       await open(`/?theme=${theme}`, width, mobile);
       await shoot(`redesign-v2/${name}-${tag}.png`);
     }
+    if (tag === "after-fix") process.exit(0);
     // The scenario panel with Hiring push selected (.main holds the chart and the scenario controls).
     await open("/?theme=light", 1440);
     await click("Hiring push");
