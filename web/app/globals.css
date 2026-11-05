@@ -84,19 +84,36 @@ button:hover, select:hover { border-color: var(--accent); }
 .bar-fill { background: var(--accent); border-radius: 3px; height: 10px; }
 .bar-row .amt { text-align: right; }
 
-/* Investor update */
-.update p { margin: 0 0 10px; max-width: 75ch; }
-.update-body { max-width: 75ch; }
-.update-body .subject { font-weight: 600; }
-.update-body h3 { font-size: 0.9rem; margin: 14px 0 4px; }
-.update-body ul { margin: 0 0 6px; padding-left: 20px; }
-.update-body li { margin-bottom: 4px; }
-.metrics { border-collapse: collapse; font-size: 0.86rem; margin: 4px 0 6px; width: 100%; max-width: 460px; }
-.metrics th, .metrics td { text-align: left; padding: 4px 10px 4px 0; border-bottom: 1px solid var(--border); }
-.metrics th { color: var(--muted); font-weight: 500; }
+/* Investor update: the draft as an email on the left, "Behind the draft" on the right */
+.update p { margin: 0 0 10px; }
+.update-cols { display: grid; gap: 20px; }
+@media (min-width: 1024px) {
+  .update-cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+}
+.email { border: 1px solid var(--border); border-radius: 8px; background: var(--bg); }
+.email .subject { font-weight: 600; margin: 0; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.email-body { padding: 12px 14px 4px; max-width: 70ch; }
+.email h3 { font-size: 0.9rem; margin: 14px 0 4px; }
+.email ul { margin: 0 0 6px; padding-left: 20px; }
+.email li { margin-bottom: 4px; }
+.behind-title { font-size: 0.95rem; margin: 0 0 4px; }
+.behind h4 { font-size: 0.86rem; margin: 14px 0 6px; }
+.tag { display: inline-block; font-size: 0.72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 0 8px; margin-left: 6px; }
+.metrics, .numbers { border-collapse: collapse; font-size: 0.86rem; margin: 4px 0 6px; width: 100%; }
+.metrics th, .metrics td, .numbers th, .numbers td { text-align: left; padding: 4px 10px 4px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+.metrics th, .numbers th { color: var(--muted); font-weight: 500; }
 .metrics td:nth-child(n+2), .metrics th:nth-child(n+2) { text-align: right; }
+.numbers { font-size: 0.82rem; }
+.numbers .num { white-space: nowrap; font-weight: 600; }
+.numbers .tick { color: var(--ok); font-weight: 700; }
+.numbers .cross { color: var(--risk); font-weight: 700; }
+.attempts { margin: 0 0 8px; padding-left: 20px; }
+.attempts .ok { color: var(--ok); font-weight: 600; }
+.attempts .risk { color: var(--risk); font-weight: 600; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.update .footnote { margin: 14px 0 0; max-width: 100ch; }
 mark.ph { background: var(--accent-soft); color: var(--text); border-radius: 3px; padding: 0 3px; }
-.check { border-top: 1px solid var(--border); margin: 12px 0 10px; padding-top: 10px; font-size: 0.86rem; }
+.check { border-top: 1px solid var(--border); margin: 12px 0 0; padding-top: 2px; font-size: 0.86rem; }
 .pill { display: inline-block; border-radius: 999px; padding: 1px 10px; font-size: 0.78rem; font-weight: 600; border: 1px solid currentColor; }
 .pill.pass { color: var(--ok); }
 .pill.fail { color: var(--risk); }

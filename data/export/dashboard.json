@@ -3399,6 +3399,760 @@
    "checks_failed": null
   }
  ],
+ "update_number_matches": [
+  {
+   "month": "2025-10",
+   "number": "19",
+   "metric": "Headcount",
+   "period_end": "2025-10",
+   "period_months": 1,
+   "value": 19.0
+  },
+  {
+   "month": "2025-10",
+   "number": "€1.875",
+   "metric": "Average MRR per new customer this month",
+   "period_end": "2025-10",
+   "period_months": 1,
+   "value": 1875.0
+  },
+  {
+   "month": "2025-10",
+   "number": "€966",
+   "metric": "Average MRR per new customer, previous 12 months",
+   "period_end": "2025-09",
+   "period_months": 12,
+   "value": 966.2962962962963
+  },
+  {
+   "month": "2025-10",
+   "number": "€68,2k",
+   "metric": "Net burn this month (payments minus collections)",
+   "period_end": "2025-10",
+   "period_months": 1,
+   "value": 68238.0
+  },
+  {
+   "month": "2025-10",
+   "number": "€99,2k",
+   "metric": "Net burn previous month",
+   "period_end": "2025-09",
+   "period_months": 1,
+   "value": 99218.0
+  },
+  {
+   "month": "2025-10",
+   "number": "82,2 %",
+   "metric": "Net revenue retention, 12 months (%)",
+   "period_end": "2025-10",
+   "period_months": 1,
+   "value": 82.23487118034751
+  },
+  {
+   "month": "2025-10",
+   "number": "29,2",
+   "metric": "Runway at average net burn (months)",
+   "period_end": "2025-10",
+   "period_months": 1,
+   "value": 29.182974353573123
+  },
+  {
+   "month": "2025-11",
+   "number": "3",
+   "metric": "New customers",
+   "period_end": "2025-11",
+   "period_months": 1,
+   "value": 3.0
+  },
+  {
+   "month": "2025-11",
+   "number": "€3.890",
+   "metric": "MRR change this month",
+   "period_end": "2025-11",
+   "period_months": 1,
+   "value": 3890.0
+  },
+  {
+   "month": "2025-11",
+   "number": "€2.280",
+   "metric": "Expansion MRR",
+   "period_end": "2025-11",
+   "period_months": 1,
+   "value": 2280.0
+  },
+  {
+   "month": "2025-11",
+   "number": "€2.290",
+   "metric": "New MRR",
+   "period_end": "2025-11",
+   "period_months": 1,
+   "value": 2290.0
+  },
+  {
+   "month": "2025-11",
+   "number": "€763",
+   "metric": "Average MRR per new customer this month",
+   "period_end": "2025-11",
+   "period_months": 1,
+   "value": 763.3333333333334
+  },
+  {
+   "month": "2025-11",
+   "number": "€1.007",
+   "metric": "Average MRR per new customer, previous 12 months",
+   "period_end": "2025-10",
+   "period_months": 12,
+   "value": 1006.6666666666666
+  },
+  {
+   "month": "2025-11",
+   "number": "84,2 %",
+   "metric": "Net revenue retention, 12 months (%)",
+   "period_end": "2025-11",
+   "period_months": 1,
+   "value": 84.21198668146504
+  },
+  {
+   "month": "2025-11",
+   "number": "19,2 %",
+   "metric": "ARR growth vs 12 months earlier (%)",
+   "period_end": "2025-11",
+   "period_months": 1,
+   "value": 19.24250832408434
+  },
+  {
+   "month": "2025-12",
+   "number": "3",
+   "metric": "New customers",
+   "period_end": "2025-12",
+   "period_months": 1,
+   "value": 3.0
+  },
+  {
+   "month": "2025-12",
+   "number": "€760",
+   "metric": "Expansion MRR",
+   "period_end": "2025-12",
+   "period_months": 1,
+   "value": 760.0
+  },
+  {
+   "month": "2025-12",
+   "number": "€1.670",
+   "metric": "MRR change this month",
+   "period_end": "2025-12",
+   "period_months": 1,
+   "value": 1670.0
+  },
+  {
+   "month": "2025-12",
+   "number": "€87,6k",
+   "metric": "MRR",
+   "period_end": "2025-12",
+   "period_months": 1,
+   "value": 87620.0
+  },
+  {
+   "month": "2025-12",
+   "number": "84,2 %",
+   "metric": "Net revenue retention, 12 months (%)",
+   "period_end": "2025-12",
+   "period_months": 1,
+   "value": 84.22131147540983
+  },
+  {
+   "month": "2025-12",
+   "number": "€99,5k",
+   "metric": "Net burn this month (payments minus collections)",
+   "period_end": "2025-12",
+   "period_months": 1,
+   "value": 99519.0
+  },
+  {
+   "month": "2025-12",
+   "number": "€55,8k",
+   "metric": "Net burn previous month",
+   "period_end": "2025-11",
+   "period_months": 1,
+   "value": 55811.0
+  },
+  {
+   "month": "2025-12",
+   "number": "€733",
+   "metric": "Average MRR per new customer this month",
+   "period_end": "2025-12",
+   "period_months": 1,
+   "value": 733.3333333333334
+  },
+  {
+   "month": "2025-12",
+   "number": "€905",
+   "metric": "Average MRR per new customer, previous 12 months",
+   "period_end": "2025-11",
+   "period_months": 12,
+   "value": 904.8148148148148
+  },
+  {
+   "month": "2026-01",
+   "number": "3",
+   "metric": "New customers",
+   "period_end": "2026-01",
+   "period_months": 1,
+   "value": 3.0
+  },
+  {
+   "month": "2026-01",
+   "number": "1",
+   "metric": "Churned customers",
+   "period_end": "2026-01",
+   "period_months": 1,
+   "value": 1.0
+  },
+  {
+   "month": "2026-01",
+   "number": "€171,8k",
+   "metric": "Collections (cash in from customers)",
+   "period_end": "2026-01",
+   "period_months": 1,
+   "value": 171810.0
+  },
+  {
+   "month": "2026-01",
+   "number": "€161,6k",
+   "metric": "Payments (cash out)",
+   "period_end": "2026-01",
+   "period_months": 1,
+   "value": 161632.0
+  },
+  {
+   "month": "2026-01",
+   "number": "3",
+   "metric": "New customers",
+   "period_end": "2026-01",
+   "period_months": 1,
+   "value": 3.0
+  },
+  {
+   "month": "2026-01",
+   "number": "€1.360",
+   "metric": "MRR change this month",
+   "period_end": "2026-01",
+   "period_months": 1,
+   "value": 1360.0
+  },
+  {
+   "month": "2026-01",
+   "number": "84,3 %",
+   "metric": "Net revenue retention, 12 months (%)",
+   "period_end": "2026-01",
+   "period_months": 1,
+   "value": 84.29839671392607
+  },
+  {
+   "month": "2026-01",
+   "number": "17,9 %",
+   "metric": "ARR growth vs 12 months earlier (%)",
+   "period_end": "2026-01",
+   "period_months": 1,
+   "value": 17.90115277593747
+  },
+  {
+   "month": "2026-01",
+   "number": "€1.210",
+   "metric": "Churned MRR",
+   "period_end": "2026-01",
+   "period_months": 1,
+   "value": -1210.0
+  },
+  {
+   "month": "2026-02",
+   "number": "€76,9k",
+   "metric": "Net burn this month (payments minus collections)",
+   "period_end": "2026-02",
+   "period_months": 1,
+   "value": 76906.0
+  },
+  {
+   "month": "2026-02",
+   "number": "€1.020",
+   "metric": "MRR change this month",
+   "period_end": "2026-02",
+   "period_months": 1,
+   "value": 1020.0
+  },
+  {
+   "month": "2026-02",
+   "number": "65,4 %",
+   "metric": "Gross margin (%)",
+   "period_end": "2026-02",
+   "period_months": 1,
+   "value": 65.39555555555555
+  },
+  {
+   "month": "2026-02",
+   "number": "21,4 %",
+   "metric": "ARR growth vs 12 months earlier (%)",
+   "period_end": "2026-02",
+   "period_months": 1,
+   "value": 21.441101065983005
+  },
+  {
+   "month": "2026-02",
+   "number": "89,2 %",
+   "metric": "Net revenue retention, 12 months (%)",
+   "period_end": "2026-02",
+   "period_months": 1,
+   "value": 89.21872891647551
+  },
+  {
+   "month": "2026-02",
+   "number": "€505",
+   "metric": "Average MRR per new customer this month",
+   "period_end": "2026-02",
+   "period_months": 1,
+   "value": 505.0
+  },
+  {
+   "month": "2026-02",
+   "number": "€863",
+   "metric": "Average MRR per new customer, previous 12 months",
+   "period_end": "2026-01",
+   "period_months": 12,
+   "value": 863.448275862069
+  },
+  {
+   "month": "2026-03",
+   "number": "19",
+   "metric": "Headcount previous month",
+   "period_end": "2026-02",
+   "period_months": 1,
+   "value": 19.0
+  },
+  {
+   "month": "2026-03",
+   "number": "22",
+   "metric": "Headcount",
+   "period_end": "2026-03",
+   "period_months": 1,
+   "value": 22.0
+  },
+  {
+   "month": "2026-03",
+   "number": "3",
+   "metric": "New customers",
+   "period_end": "2026-03",
+   "period_months": 1,
+   "value": 3.0
+  },
+  {
+   "month": "2026-03",
+   "number": "€813",
+   "metric": "Average MRR per new customer this month",
+   "period_end": "2026-03",
+   "period_months": 1,
+   "value": 813.3333333333334
+  },
+  {
+   "month": "2026-03",
+   "number": "€812",
+   "metric": "Average MRR per new customer, previous 12 months",
+   "period_end": "2026-02",
+   "period_months": 12,
+   "value": 812.4137931034483
+  },
+  {
+   "month": "2026-03",
+   "number": "€128,7k",
+   "metric": "Net burn this month (payments minus collections)",
+   "period_end": "2026-03",
+   "period_months": 1,
+   "value": 128684.0
+  },
+  {
+   "month": "2026-03",
+   "number": "€76,9k",
+   "metric": "Net burn previous month",
+   "period_end": "2026-02",
+   "period_months": 1,
+   "value": 76906.0
+  },
+  {
+   "month": "2026-03",
+   "number": "94,1 %",
+   "metric": "Net revenue retention, 12 months (%)",
+   "period_end": "2026-03",
+   "period_months": 1,
+   "value": 94.13893916191006
+  },
+  {
+   "month": "2026-04",
+   "number": "22",
+   "metric": "Headcount previous month",
+   "period_end": "2026-03",
+   "period_months": 1,
+   "value": 22.0
+  },
+  {
+   "month": "2026-04",
+   "number": "24",
+   "metric": "Headcount",
+   "period_end": "2026-04",
+   "period_months": 1,
+   "value": 24.0
+  },
+  {
+   "month": "2026-04",
+   "number": "€1.453",
+   "metric": "Average MRR per new customer this month",
+   "period_end": "2026-04",
+   "period_months": 1,
+   "value": 1453.3333333333333
+  },
+  {
+   "month": "2026-04",
+   "number": "€833",
+   "metric": "Average MRR per new customer, previous 12 months",
+   "period_end": "2026-03",
+   "period_months": 12,
+   "value": 833.3333333333334
+  },
+  {
+   "month": "2026-04",
+   "number": "€26,7k",
+   "metric": "Professional fees",
+   "period_end": "2026-04",
+   "period_months": 1,
+   "value": 26668.0
+  },
+  {
+   "month": "2026-04",
+   "number": "€2.458",
+   "metric": "Professional fees, average of previous 12 months",
+   "period_end": "2026-03",
+   "period_months": 12,
+   "value": 2458.5
+  },
+  {
+   "month": "2026-04",
+   "number": "93,0 %",
+   "metric": "Net revenue retention, 12 months (%)",
+   "period_end": "2026-04",
+   "period_months": 1,
+   "value": 93.0068984174219
+  },
+  {
+   "month": "2026-05",
+   "number": "25",
+   "metric": "Headcount",
+   "period_end": "2026-05",
+   "period_months": 1,
+   "value": 25.0
+  },
+  {
+   "month": "2026-05",
+   "number": "€1.660",
+   "metric": "New MRR",
+   "period_end": "2026-05",
+   "period_months": 1,
+   "value": 1660.0
+  },
+  {
+   "month": "2026-05",
+   "number": "€590",
+   "metric": "Churned MRR",
+   "period_end": "2026-05",
+   "period_months": 1,
+   "value": -590.0
+  },
+  {
+   "month": "2026-05",
+   "number": "€35,6k",
+   "metric": "Non-payroll costs",
+   "period_end": "2026-05",
+   "period_months": 1,
+   "value": 35564.0
+  },
+  {
+   "month": "2026-05",
+   "number": "€60,4k",
+   "metric": "Non-payroll costs previous month",
+   "period_end": "2026-04",
+   "period_months": 1,
+   "value": 60356.0
+  },
+  {
+   "month": "2026-05",
+   "number": "€136,5k",
+   "metric": "Net burn this month (payments minus collections)",
+   "period_end": "2026-05",
+   "period_months": 1,
+   "value": 136536.0
+  },
+  {
+   "month": "2026-05",
+   "number": "98,0 %",
+   "metric": "Net revenue retention, 12 months (%)",
+   "period_end": "2026-05",
+   "period_months": 1,
+   "value": 97.95601917113054
+  },
+  {
+   "month": "2026-05",
+   "number": "€553",
+   "metric": "Average MRR per new customer this month",
+   "period_end": "2026-05",
+   "period_months": 1,
+   "value": 553.3333333333334
+  },
+  {
+   "month": "2026-05",
+   "number": "€908",
+   "metric": "Average MRR per new customer, previous 12 months",
+   "period_end": "2026-04",
+   "period_months": 12,
+   "value": 908.0645161290323
+  },
+  {
+   "month": "2026-06",
+   "number": "3",
+   "metric": "New customers",
+   "period_end": "2026-06",
+   "period_months": 1,
+   "value": 3.0
+  },
+  {
+   "month": "2026-06",
+   "number": "€680",
+   "metric": "Expansion MRR",
+   "period_end": "2026-06",
+   "period_months": 1,
+   "value": 680.0
+  },
+  {
+   "month": "2026-06",
+   "number": "€71,2k",
+   "metric": "Net burn this month (payments minus collections)",
+   "period_end": "2026-06",
+   "period_months": 1,
+   "value": 71218.0
+  },
+  {
+   "month": "2026-06",
+   "number": "€133,5k",
+   "metric": "Collections (cash in from customers)",
+   "period_end": "2026-06",
+   "period_months": 1,
+   "value": 133520.0
+  },
+  {
+   "month": "2026-06",
+   "number": "€603",
+   "metric": "Average MRR per new customer this month",
+   "period_end": "2026-06",
+   "period_months": 1,
+   "value": 603.3333333333334
+  },
+  {
+   "month": "2026-06",
+   "number": "€898",
+   "metric": "Average MRR per new customer, previous 12 months",
+   "period_end": "2026-05",
+   "period_months": 12,
+   "value": 897.8125
+  },
+  {
+   "month": "2026-06",
+   "number": "38,2 %",
+   "metric": "ARR growth vs 12 months earlier (%)",
+   "period_end": "2026-06",
+   "period_months": 1,
+   "value": 38.23690704688785
+  },
+  {
+   "month": "2026-06",
+   "number": "99,9 %",
+   "metric": "Net revenue retention, 12 months (%)",
+   "period_end": "2026-06",
+   "period_months": 1,
+   "value": 99.90403071017275
+  },
+  {
+   "month": "2026-07",
+   "number": "€9.400",
+   "metric": "Churned MRR",
+   "period_end": "2026-07",
+   "period_months": 1,
+   "value": -9400.0
+  },
+  {
+   "month": "2026-07",
+   "number": "€94,0k",
+   "metric": "MRR",
+   "period_end": "2026-07",
+   "period_months": 1,
+   "value": 93960.0
+  },
+  {
+   "month": "2026-07",
+   "number": "3",
+   "metric": "New customers",
+   "period_end": "2026-07",
+   "period_months": 1,
+   "value": 3.0
+  },
+  {
+   "month": "2026-07",
+   "number": "€990",
+   "metric": "Expansion MRR",
+   "period_end": "2026-07",
+   "period_months": 1,
+   "value": 990.0
+  },
+  {
+   "month": "2026-07",
+   "number": "€35,0k",
+   "metric": "Non-payroll costs",
+   "period_end": "2026-07",
+   "period_months": 1,
+   "value": 34950.0
+  },
+  {
+   "month": "2026-07",
+   "number": "€36,1k",
+   "metric": "Non-payroll costs previous month",
+   "period_end": "2026-06",
+   "period_months": 1,
+   "value": 36066.0
+  },
+  {
+   "month": "2026-07",
+   "number": "90,5 %",
+   "metric": "Net revenue retention, 12 months (%)",
+   "period_end": "2026-07",
+   "period_months": 1,
+   "value": 90.51345414607358
+  },
+  {
+   "month": "2026-07",
+   "number": "€513",
+   "metric": "Average MRR per new customer this month",
+   "period_end": "2026-07",
+   "period_months": 1,
+   "value": 513.3333333333334
+  },
+  {
+   "month": "2026-07",
+   "number": "€870",
+   "metric": "Average MRR per new customer, previous 12 months",
+   "period_end": "2026-06",
+   "period_months": 12,
+   "value": 870.0
+  },
+  {
+   "month": "2026-08",
+   "number": "4",
+   "metric": "New customers",
+   "period_end": "2026-08",
+   "period_months": 1,
+   "value": 4.0
+  },
+  {
+   "month": "2026-08",
+   "number": "€1.835",
+   "metric": "Average MRR per new customer this month",
+   "period_end": "2026-08",
+   "period_months": 1,
+   "value": 1835.0
+  },
+  {
+   "month": "2026-08",
+   "number": "€846",
+   "metric": "Average MRR per new customer, previous 12 months",
+   "period_end": "2026-07",
+   "period_months": 12,
+   "value": 845.7575757575758
+  },
+  {
+   "month": "2026-08",
+   "number": "€79,1k",
+   "metric": "Net burn this month (payments minus collections)",
+   "period_end": "2026-08",
+   "period_months": 1,
+   "value": 79146.0
+  },
+  {
+   "month": "2026-08",
+   "number": "€125,0k",
+   "metric": "Net burn previous month",
+   "period_end": "2026-07",
+   "period_months": 1,
+   "value": 124962.0
+  },
+  {
+   "month": "2026-08",
+   "number": "90,6 %",
+   "metric": "Net revenue retention, 12 months (%)",
+   "period_end": "2026-08",
+   "period_months": 1,
+   "value": 90.5518062723303
+  },
+  {
+   "month": "2026-08",
+   "number": "€310",
+   "metric": "Expansion MRR",
+   "period_end": "2026-08",
+   "period_months": 1,
+   "value": 310.0
+  },
+  {
+   "month": "2026-09",
+   "number": "€126,8k",
+   "metric": "Net burn this month (payments minus collections)",
+   "period_end": "2026-09",
+   "period_months": 1,
+   "value": 126839.0
+  },
+  {
+   "month": "2026-09",
+   "number": "€78,7k",
+   "metric": "Collections (cash in from customers)",
+   "period_end": "2026-09",
+   "period_months": 1,
+   "value": 78670.0
+  },
+  {
+   "month": "2026-09",
+   "number": "3",
+   "metric": "New customers",
+   "period_end": "2026-09",
+   "period_months": 1,
+   "value": 3.0
+  },
+  {
+   "month": "2026-09",
+   "number": "€1.460",
+   "metric": "MRR change this month",
+   "period_end": "2026-09",
+   "period_months": 1,
+   "value": 1460.0
+  },
+  {
+   "month": "2026-09",
+   "number": "€1.520",
+   "metric": "Churned MRR",
+   "period_end": "2026-09",
+   "period_months": 1,
+   "value": -1520.0
+  },
+  {
+   "month": "2026-09",
+   "number": "88,7 %",
+   "metric": "Net revenue retention, 12 months (%)",
+   "period_end": "2026-09",
+   "period_months": 1,
+   "value": 88.66760889117306
+  }
+ ],
  "reconciliation": [
   {
    "check": "Cash: closing = opening + collections - payments + funding",

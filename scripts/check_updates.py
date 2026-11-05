@@ -30,7 +30,9 @@ For each update:
 This checks numbers, causes, structure and a few style rules, not writing quality.
 check_draft() is also used by scripts/write_updates.py to check each draft right after
 it is written, and to tell the model which checks failed.
-Writes data/check/update_checks.csv and prints a summary.
+Writes data/check/update_checks.csv and prints a summary. Also writes
+data/check/update_number_matches.csv: for each number in a kept draft, the fact it matched
+(for display on the dashboard only; it does not change any check).
 """
 
 import csv
@@ -48,6 +50,7 @@ from write_updates import build_facts, worsened  # noqa: E402
 
 UPDATES = ROOT / "data" / "ai" / "updates.csv"
 OUT = ROOT / "data" / "check" / "update_checks.csv"
+MATCHES_OUT = ROOT / "data" / "check" / "update_number_matches.csv"
 
 MAX_WORDS = 110
 MAX_TLDR_WORDS = 30
@@ -74,9 +77,12 @@ def parse(match):
     return value * mult, 0.5 * 10 ** -decimals * mult
 
 
-def check_numbers(text, facts):
-    """Return (numbers found, numbers that match nothing in the fact sheet)."""
-    values = [abs(v) for _, _, v in facts if isinstance(v, (int, float)) and v is not None]
+def check_numbers(text, facts, matches=None):
+    """Return (numbers found, numbers that match nothing in the fact sheet).
+    If a list is passed as `matches`, each matched number is added to it as
+    (number as written, fact label, fact value), using the closest fact when several fit."""
+    numeric = [(label, v) for label, _, v in facts if isinstance(v, (int, float)) and v is not None]
+    values = [abs(v) for _, v in numeric]
     found, unmatched = 0, []
     for m in NUMBER.finditer(text):
         euro, digits, scale, pct = m.groups()
@@ -91,6 +97,9 @@ def check_numbers(text, facts):
         value, tol = parse(m)
         if not any(abs(value - v) <= tol + 1e-9 for v in values):
             unmatched.append(m.group(0).strip())
+        elif matches is not None:
+            label, v = min(numeric, key=lambda lv: abs(value - abs(lv[1])))
+            matches.append((m.group(0).strip(), label, v))
     return found, unmatched
 
 
@@ -191,7 +200,8 @@ def check_draft(u, con, month):
     worse = worsened(con, f"{month}-01")
     ai_text = " ".join(lines(u["tldr"]) + lines(u["highlights"]) + lines(u["lowlights"]) + lines(u["ask"]))
     no_placeholders = PLACEHOLDER.sub("", ai_text)
-    n_found, unmatched = check_numbers(no_placeholders, facts)
+    matches = []
+    n_found, unmatched = check_numbers(no_placeholders, facts, matches)
     named, unsupported = causes(no_placeholders, fdict, month)
     fails, words, n_placeholders, banned = structure_and_style(u, worse)
     fails = ([("number not in the data", n) for n in unmatched]
@@ -199,12 +209,25 @@ def check_draft(u, con, month):
     return {"words": words, "placeholders": n_placeholders, "numbers_found": n_found,
             "numbers_matched": n_found - len(unmatched), "unmatched": unmatched, "named": named,
             "unsupported": unsupported, "banned": banned, "worse": worse, "failures": fails,
-            "passed": not fails}
+            "passed": not fails, "matches": matches}
 
 
 def failed_checks(failures):
     """Short names of the failed checks, each once: 'numbers per sentence; word limit'."""
     return "; ".join(dict.fromkeys(name for name, _ in failures))
+
+
+def source_period(month, label):
+    """The period a fact covers, read from its label: (last month 'YYYY-MM', number of months).
+    'Net burn previous month' is (previous month, 1); 'Average net burn, last 3 months' is
+    (this month, 3); 'Professional fees, average of previous 12 months' is (previous month, 12)."""
+    back = 3 if "3 months earlier" in label else 1 if "previous" in label else 0
+    window = 12 if "previous 12 months" in label else 3 if "last 3 months" in label else 1
+    y, m = map(int, month.split("-"))
+    m -= back
+    if m < 1:
+        y, m = y - 1, m + 12
+    return f"{y}-{m:02d}", window
 
 
 def self_test():
@@ -247,7 +270,7 @@ def main():
         return
     con = duckdb.connect()
     build(con)
-    rows = []
+    rows, match_rows = [], []
     with open(UPDATES, encoding="utf-8") as fh:
         updates = list(csv.DictReader(fh))
     for u in updates:
@@ -260,6 +283,8 @@ def main():
                      "; ".join(f"{n}: {d}" for n, d in r["failures"]
                                if n not in ("number not in the data", "cause not in the data")),
                      r["passed"]])
+        for written, label, value in r["matches"]:
+            match_rows.append([month, written, label, *source_period(month, label), value])
         print(f"{'PASS' if r['passed'] else 'FAIL'}  {month}: {r['words']} words, {r['placeholders']} placeholders, "
               f"{r['numbers_matched']}/{r['numbers_found']} numbers matched"
               + (f", failed: {failed_checks(r['failures'])}" if r["failures"] else ""))
@@ -270,6 +295,10 @@ def main():
                     "unmatched_numbers", "causes_named", "unsupported_causes", "banned_words", "metrics_worse",
                     "checks_failed", "problems", "passed"])
         w.writerows(rows)
+    with open(MATCHES_OUT, "w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["month", "number", "metric", "period_end", "period_months", "value"])
+        w.writerows(match_rows)
     n_pass = sum(r[-1] for r in rows)
     total_n = sum(r[4] for r in rows)
     total_ok = sum(r[5] for r in rows)

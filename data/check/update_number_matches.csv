@@ -1,0 +1,95 @@
+month,number,metric,period_end,period_months,value
+2025-10,19,Headcount,2025-10,1,19
+2025-10,€1.875,Average MRR per new customer this month,2025-10,1,1875.0
+2025-10,€966,"Average MRR per new customer, previous 12 months",2025-09,12,966.2962962962963
+2025-10,"€68,2k",Net burn this month (payments minus collections),2025-10,1,68238
+2025-10,"€99,2k",Net burn previous month,2025-09,1,99218
+2025-10,"82,2 %","Net revenue retention, 12 months (%)",2025-10,1,82.23487118034751
+2025-10,"29,2",Runway at average net burn (months),2025-10,1,29.182974353573123
+2025-11,3,New customers,2025-11,1,3
+2025-11,€3.890,MRR change this month,2025-11,1,3890
+2025-11,€2.280,Expansion MRR,2025-11,1,2280
+2025-11,€2.290,New MRR,2025-11,1,2290
+2025-11,€763,Average MRR per new customer this month,2025-11,1,763.3333333333334
+2025-11,€1.007,"Average MRR per new customer, previous 12 months",2025-10,12,1006.6666666666666
+2025-11,"84,2 %","Net revenue retention, 12 months (%)",2025-11,1,84.21198668146504
+2025-11,"19,2 %",ARR growth vs 12 months earlier (%),2025-11,1,19.24250832408434
+2025-12,3,New customers,2025-12,1,3
+2025-12,€760,Expansion MRR,2025-12,1,760
+2025-12,€1.670,MRR change this month,2025-12,1,1670
+2025-12,"€87,6k",MRR,2025-12,1,87620
+2025-12,"84,2 %","Net revenue retention, 12 months (%)",2025-12,1,84.22131147540983
+2025-12,"€99,5k",Net burn this month (payments minus collections),2025-12,1,99519
+2025-12,"€55,8k",Net burn previous month,2025-11,1,55811
+2025-12,€733,Average MRR per new customer this month,2025-12,1,733.3333333333334
+2025-12,€905,"Average MRR per new customer, previous 12 months",2025-11,12,904.8148148148148
+2026-01,3,New customers,2026-01,1,3
+2026-01,1,Churned customers,2026-01,1,1
+2026-01,"€171,8k",Collections (cash in from customers),2026-01,1,171810
+2026-01,"€161,6k",Payments (cash out),2026-01,1,161632
+2026-01,3,New customers,2026-01,1,3
+2026-01,€1.360,MRR change this month,2026-01,1,1360
+2026-01,"84,3 %","Net revenue retention, 12 months (%)",2026-01,1,84.29839671392607
+2026-01,"17,9 %",ARR growth vs 12 months earlier (%),2026-01,1,17.90115277593747
+2026-01,€1.210,Churned MRR,2026-01,1,-1210
+2026-02,"€76,9k",Net burn this month (payments minus collections),2026-02,1,76906
+2026-02,€1.020,MRR change this month,2026-02,1,1020
+2026-02,"65,4 %",Gross margin (%),2026-02,1,65.39555555555555
+2026-02,"21,4 %",ARR growth vs 12 months earlier (%),2026-02,1,21.441101065983005
+2026-02,"89,2 %","Net revenue retention, 12 months (%)",2026-02,1,89.21872891647551
+2026-02,€505,Average MRR per new customer this month,2026-02,1,505.0
+2026-02,€863,"Average MRR per new customer, previous 12 months",2026-01,12,863.448275862069
+2026-03,19,Headcount previous month,2026-02,1,19
+2026-03,22,Headcount,2026-03,1,22
+2026-03,3,New customers,2026-03,1,3
+2026-03,€813,Average MRR per new customer this month,2026-03,1,813.3333333333334
+2026-03,€812,"Average MRR per new customer, previous 12 months",2026-02,12,812.4137931034483
+2026-03,"€128,7k",Net burn this month (payments minus collections),2026-03,1,128684
+2026-03,"€76,9k",Net burn previous month,2026-02,1,76906
+2026-03,"94,1 %","Net revenue retention, 12 months (%)",2026-03,1,94.13893916191006
+2026-04,22,Headcount previous month,2026-03,1,22
+2026-04,24,Headcount,2026-04,1,24
+2026-04,€1.453,Average MRR per new customer this month,2026-04,1,1453.3333333333333
+2026-04,€833,"Average MRR per new customer, previous 12 months",2026-03,12,833.3333333333334
+2026-04,"€26,7k",Professional fees,2026-04,1,26668
+2026-04,€2.458,"Professional fees, average of previous 12 months",2026-03,12,2458.5
+2026-04,"93,0 %","Net revenue retention, 12 months (%)",2026-04,1,93.0068984174219
+2026-05,25,Headcount,2026-05,1,25
+2026-05,€1.660,New MRR,2026-05,1,1660
+2026-05,€590,Churned MRR,2026-05,1,-590
+2026-05,"€35,6k",Non-payroll costs,2026-05,1,35564
+2026-05,"€60,4k",Non-payroll costs previous month,2026-04,1,60356
+2026-05,"€136,5k",Net burn this month (payments minus collections),2026-05,1,136536
+2026-05,"98,0 %","Net revenue retention, 12 months (%)",2026-05,1,97.95601917113054
+2026-05,€553,Average MRR per new customer this month,2026-05,1,553.3333333333334
+2026-05,€908,"Average MRR per new customer, previous 12 months",2026-04,12,908.0645161290323
+2026-06,3,New customers,2026-06,1,3
+2026-06,€680,Expansion MRR,2026-06,1,680
+2026-06,"€71,2k",Net burn this month (payments minus collections),2026-06,1,71218
+2026-06,"€133,5k",Collections (cash in from customers),2026-06,1,133520
+2026-06,€603,Average MRR per new customer this month,2026-06,1,603.3333333333334
+2026-06,€898,"Average MRR per new customer, previous 12 months",2026-05,12,897.8125
+2026-06,"38,2 %",ARR growth vs 12 months earlier (%),2026-06,1,38.23690704688785
+2026-06,"99,9 %","Net revenue retention, 12 months (%)",2026-06,1,99.90403071017275
+2026-07,€9.400,Churned MRR,2026-07,1,-9400
+2026-07,"€94,0k",MRR,2026-07,1,93960
+2026-07,3,New customers,2026-07,1,3
+2026-07,€990,Expansion MRR,2026-07,1,990
+2026-07,"€35,0k",Non-payroll costs,2026-07,1,34950
+2026-07,"€36,1k",Non-payroll costs previous month,2026-06,1,36066
+2026-07,"90,5 %","Net revenue retention, 12 months (%)",2026-07,1,90.51345414607358
+2026-07,€513,Average MRR per new customer this month,2026-07,1,513.3333333333334
+2026-07,€870,"Average MRR per new customer, previous 12 months",2026-06,12,870.0
+2026-08,4,New customers,2026-08,1,4
+2026-08,€1.835,Average MRR per new customer this month,2026-08,1,1835.0
+2026-08,€846,"Average MRR per new customer, previous 12 months",2026-07,12,845.7575757575758
+2026-08,"€79,1k",Net burn this month (payments minus collections),2026-08,1,79146
+2026-08,"€125,0k",Net burn previous month,2026-07,1,124962
+2026-08,"90,6 %","Net revenue retention, 12 months (%)",2026-08,1,90.5518062723303
+2026-08,€310,Expansion MRR,2026-08,1,310
+2026-09,"€126,8k",Net burn this month (payments minus collections),2026-09,1,126839
+2026-09,"€78,7k",Collections (cash in from customers),2026-09,1,78670
+2026-09,3,New customers,2026-09,1,3
+2026-09,€1.460,MRR change this month,2026-09,1,1460
+2026-09,€1.520,Churned MRR,2026-09,1,-1520
+2026-09,"88,7 %","Net revenue retention, 12 months (%)",2026-09,1,88.66760889117306

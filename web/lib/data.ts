@@ -44,6 +44,12 @@ export type Update = {
 };
 // One row per API call in the v3 run: data/ai/update_attempts.csv
 export type UpdateAttempt = { month: string; attempt: number; passed: boolean; checks_failed: string | null };
+// One row per number in a kept draft: the fact it matched (data/check/update_number_matches.csv)
+export type NumberMatch = {
+  month: string; number: string; metric: string;
+  period_end: string; period_months: number;  // the fact covers period_months months up to period_end
+  value: number;
+};
 export type UpdateCheck = {
   month: string;
   attempt: number;
@@ -81,6 +87,7 @@ type Dashboard = {
   updates: Update[];
   update_checks: UpdateCheck[];
   update_attempts: UpdateAttempt[];
+  update_number_matches: NumberMatch[];
   update_metrics: UpdateMetrics[];
   reconciliation: { check: string; passed: boolean }[];
 };

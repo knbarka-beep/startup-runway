@@ -25,6 +25,7 @@ WEB_COPY = ROOT / "web" / "data" / "dashboard.json"
 UPDATES = ROOT / "data" / "ai" / "updates.csv"
 CHECKS = ROOT / "data" / "check" / "update_checks.csv"
 ATTEMPTS = ROOT / "data" / "ai" / "update_attempts.csv"
+MATCHES = ROOT / "data" / "check" / "update_number_matches.csv"
 RECON = ROOT / "data" / "check" / "reconciliation.json"
 
 RAW_TABLES = ["customers", "mrr_movements", "headcount", "opex", "cash"]
@@ -84,6 +85,7 @@ def export(con):
         "updates": [],
         "update_checks": [],
         "update_attempts": [],
+        "update_number_matches": [],
         "reconciliation": json.loads(RECON.read_text(encoding="utf-8")) if RECON.exists() else [],
     }
     tables = {r[0] for r in con.execute("SHOW TABLES").fetchall()}
@@ -96,6 +98,8 @@ def export(con):
     if "update_attempts" in tables:
         data["update_attempts"] = rows(con, """SELECT month, attempt, passed, checks_failed
                                                 FROM update_attempts ORDER BY month, attempt""")
+    if "update_number_matches" in tables:
+        data["update_number_matches"] = rows(con, "SELECT * FROM update_number_matches")
     EXPORT.parent.mkdir(parents=True, exist_ok=True)
     EXPORT.write_text(json.dumps(data, indent=1, ensure_ascii=False), encoding="utf-8")
     WEB_COPY.parent.mkdir(parents=True, exist_ok=True)
@@ -114,6 +118,11 @@ def main():
         con.execute(f"CREATE TABLE updates AS SELECT * FROM read_csv('{UPDATES.as_posix()}', header=true, all_varchar=true)")
     if CHECKS.exists():
         con.execute(f"CREATE TABLE update_checks AS SELECT * FROM read_csv_auto('{CHECKS.as_posix()}')")
+    if MATCHES.exists():   # which fact each number in a kept draft matched (from check_updates.py)
+        con.execute(f"""CREATE TABLE update_number_matches AS
+            SELECT month, number, metric, period_end, CAST(period_months AS INTEGER) AS period_months,
+                   CAST(value AS DOUBLE) AS value
+            FROM read_csv('{MATCHES.as_posix()}', header=true, all_varchar=true)""")
     if ATTEMPTS.exists():
         con.execute(f"CREATE TABLE update_attempts AS SELECT * FROM read_csv_auto('{ATTEMPTS.as_posix()}')")
     views = [r[0] for r in con.execute(
