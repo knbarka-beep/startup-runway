@@ -2,7 +2,7 @@
 
 A cash, burn and runway dashboard for a fictional Danish SaaS startup, with AI-drafted investor updates that a script checks.
 
-**Live site:** LIVE_URL_PLACEHOLDER
+**Live site:** [https://startup-runway-rust.vercel.app](https://startup-runway-rust.vercel.app)
 
 > **All data in this project is fictional.** Nordlys Analytics ApS does not exist. A script generated every customer, employee, cost and cash figure. Customer names are built from invented word parts, so any match with a real company is a coincidence.
 
