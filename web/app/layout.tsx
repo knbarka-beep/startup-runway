@@ -6,11 +6,15 @@ const title = "Nordlys Analytics (fictional): runway dashboard";
 const description =
   "Cash, burn and runway for a fictional Copenhagen SaaS startup, with AI-drafted investor updates checked against the data. All data is synthetic.";
 
-// The preview image is app/opengraph-image.png (a cropped screenshot), picked up by Next.js.
+// The live address. Link previews (LinkedIn, Slack) need absolute URLs, so the preview
+// image (app/opengraph-image.png, a cropped screenshot) and og:url are built from it.
+const site = "https://nordlys-runway.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(site),
   title,
   description,
-  openGraph: { title, description, type: "website" },
+  openGraph: { title, description, type: "website", url: site },
   twitter: { card: "summary_large_image", title, description },
 };
 
