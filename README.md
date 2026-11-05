@@ -10,7 +10,7 @@ A cash, burn and runway dashboard for a fictional Danish SaaS startup, with AI-d
 
 ## The problem
 
-Every month a startup founder has to know how much cash is left, how fast it is going and how long it will last. Investors then want a short update on what changed. This project answers both for one fictional company, and every number can be traced to one SQL file.
+Every month a startup founder has to know how long the cash will last at the current burn. Investors then want a short update on what changed. This project answers both for one fictional company, and every number can be traced to one SQL file.
 
 ## What the dashboard shows
 
