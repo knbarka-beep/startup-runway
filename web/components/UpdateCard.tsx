@@ -1,8 +1,8 @@
 // Draft investor update for the selected month, in two columns (stacked below 1024 px):
-//   Left, styled as an email: subject (not AI), TL;DR, highlights, lowlights and ask (AI).
-//   Right, "Behind the draft": the key metrics table (not AI, from sql/09_update_metrics.sql),
-//   each number in the draft with the fact it matched (scripts/check_updates.py), and every
-//   attempt with its check result (data/ai/update_attempts.csv).
+//   Left, styled as an email: subject (not AI), TL;DR (AI), key metrics table (not AI, from
+//   sql/09_update_metrics.sql), highlights, lowlights and ask (AI).
+//   Right, "Behind the draft": each number in the draft with the fact it matched
+//   (scripts/check_updates.py), and every attempt with its check result (data/ai/update_attempts.csv).
 // Text in [square brackets] is a placeholder the AI left for the founder, shown highlighted.
 import { attemptSummary, data, RETRY_SENTENCE, type NumberMatch, type UpdateMetrics } from "@/lib/data";
 import { dec, eur, eurShort, monthLabel, pct } from "@/lib/format";
@@ -83,6 +83,8 @@ export default function UpdateCard({ month }: { month: string }) {
             <p className="subject"><span className="muted">Subject:</span> Nordlys Analytics: {monthLabel(month)} update</p>
             <div className="email-body">
               <p><strong>TL;DR:</strong> <WithPlaceholders text={update.tldr} /></p>
+              <h3>Key metrics <span className="tag">From the data, not AI</span></h3>
+              <MetricsTable r={metrics} />
               <h3>Highlights</h3>
               <ul>{lines(update.highlights).map((t, i) => <li key={i}><WithPlaceholders text={t} /></li>)}</ul>
               <h3>Lowlights</h3>
@@ -96,9 +98,6 @@ export default function UpdateCard({ month }: { month: string }) {
 
           <aside className="behind" aria-label="Behind the draft">
             <h3 className="behind-title">Behind the draft</h3>
-
-            <h4>Key metrics <span className="tag">From the data, not AI</span></h4>
-            <MetricsTable r={metrics} />
 
             <h4>Numbers in the draft</h4>
             {check && (

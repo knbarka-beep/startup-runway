@@ -98,6 +98,7 @@ button:hover, select:hover { border-color: var(--accent); }
 .email li { margin-bottom: 4px; }
 .behind-title { font-size: 0.95rem; margin: 0 0 4px; }
 .behind h4 { font-size: 0.86rem; margin: 14px 0 6px; }
+.behind h4:first-of-type { margin-top: 8px; }
 .tag { display: inline-block; font-size: 0.72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 0 8px; margin-left: 6px; }
 .metrics, .numbers { border-collapse: collapse; font-size: 0.86rem; margin: 4px 0 6px; width: 100%; }
 .metrics th, .metrics td, .numbers th, .numbers td { text-align: left; padding: 4px 10px 4px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
