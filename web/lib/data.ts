@@ -123,7 +123,8 @@ export const RETRY_SENTENCE =
 
 // Up to three events marked on the actual cash line. Each month is picked from the exported data
 // (no new numbers are calculated); the wording follows the planted story in docs/data-spec.md.
-export type Annotation = { month: string; cash: number; text: string };
+// `short` is the flag label on the chart, `text` the full description (hover title and the chart's (i)).
+export type Annotation = { month: string; cash: number; short: string; text: string };
 export function cashAnnotations(): Annotation[] {
   const months = data.monthly;
   const pick = (better: (a: number, b: number) => boolean, value: (i: number) => number) =>
@@ -135,10 +136,10 @@ export function cashAnnotations(): Annotation[] {
   const fee = pick((a, b) => a > b, fees);
   // 3. The month with the largest churned MRR: the largest customer leaves.
   const churn = pick((a, b) => a < b, (i) => months[i].churn_mrr);
-  const at = (i: number, text: string) => ({ month: months[i].month, cash: months[i].closing_cash, text });
+  const at = (i: number, short: string, text: string) => ({ month: months[i].month, cash: months[i].closing_cash, short, text });
   return [
-    at(hire, `Hiring push starts, headcount ${months[hire - 1].headcount} to ${months[hire].headcount}`),
-    at(fee, `One-off recruiting agency fee, professional fees ${eurShort(fees(fee))}`),
-    at(churn, `Largest customer churns, ${eur(months[churn].churn_mrr)} MRR`),
+    at(hire, "Hiring push", `Hiring push starts, headcount ${months[hire - 1].headcount} to ${months[hire].headcount}`),
+    at(fee, "Recruiting fee", `One-off recruiting agency fee, professional fees ${eurShort(fees(fee))}`),
+    at(churn, "Largest customer churns", `Largest customer churns, ${eur(months[churn].churn_mrr)} MRR`),
   ].sort((a, b) => a.month.localeCompare(b.month));
 }

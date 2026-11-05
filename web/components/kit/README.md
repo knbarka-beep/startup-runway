@@ -5,8 +5,8 @@ Shared look for the three portfolio dashboards (P1 variance cockpit, P2 startup 
 ## Files
 
 - `web/styles/tokens.css`: colours, fonts, radius and shadow as CSS variables, light and dark, mapped into Tailwind's theme (`bg-surface`, `text-muted`, `text-accent`, `border-border` and so on).
-- `web/styles/kit.css`: type scale (`t-page`, `t-section`, `t-label`, `t-kpi`, `t-small`), buttons (`btn`), select, range slider, segmented control, badge, focus ring, reduced motion.
-- `web/components/kit/`: `Card` (+ `CardHeader`), `KpiCard`, `Sparkline`, `ChartTooltip`, `SegmentedControl`, `ThemeToggle`, `PageHeader`, `useAnimateOnce`.
+- `web/styles/kit.css`: type scale (`t-hero`, `t-page`, `t-section`, `t-label`, `t-kpi`, `t-small`), buttons (`btn`), select, range slider, segmented control, badge, change pill (`delta`), (i) popover (`info`), result pill, collapsible `details.assumptions`, focus ring, reduced motion.
+- `web/components/kit/`: `Card` (`large` for the 12 px hero chart card; `CardHeader` with eyebrow, serif title and optional (i)), `InfoTip` (the (i) popover: keyboard, Esc, bottom sheet on a phone), `KpiCard` (compact stat) and `DeltaPill`, `Sparkline` (line with a faint area), `ChartTooltip`, `SegmentedControl`, `ThemeToggle`, `PageHeader` (thin sticky bar), `useAnimateOnce` (also `useTween` and `useMotionOk`).
 
 ## Copy into another repo
 

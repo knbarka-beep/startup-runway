@@ -171,6 +171,36 @@ try {
     (missing.length ? `; not reached: ${missing.join(", ")}` : "") + (noRing.length ? `; no ring: ${noRing.join(", ")}` : ""));
   failed ||= !keyOk;
 
+  // Tab order and focus ring colour; (i) popovers open with Enter and close with Esc, focus back on the button.
+  const order = await js(`(() => { const all = [...document.querySelectorAll('a[href], button, select, input, summary, [tabindex]:not([tabindex="-1"])')]
+      .filter((x) => x.offsetParent !== null && x.tabIndex >= 0);
+    return all.slice(0, 14).map((x) => x.id || x.getAttribute('aria-label') || x.textContent.trim().slice(0, 20)); })()`);
+  console.log(`  tab order (first 14): ${order.join(" > ")}`);
+  await open("/?theme=light", 1440);
+  // Enter needs its text ("\r") to activate a button, as a real key press would.
+  const key = async (k, code, vk) => {
+    await send("Input.dispatchKeyEvent", { type: "keyDown", key: k, code, windowsVirtualKeyCode: vk, ...(k === "Enter" ? { text: "\r" } : {}) });
+    await send("Input.dispatchKeyEvent", { type: "keyUp", key: k, code, windowsVirtualKeyCode: vk });
+  };
+  for (let i = 0; i < 10 && !(await js("document.activeElement.classList.contains('info-btn')")); i++) await key("Tab", "Tab", 9);
+  const ringNow = await js("getComputedStyle(document.activeElement).outlineColor");
+  await key("Enter", "Enter", 13);
+  await wait(150);
+  const opened = await js("!!document.querySelector('.info-pop')");
+  await key("Escape", "Escape", 27);
+  await wait(150);
+  const pop = { opened, ring: ringNow, accent: await js("getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()"),
+    closed: await js("!document.querySelector('.info-pop')"), back: await js("document.activeElement.classList.contains('info-btn')") };
+  const hex = pop.accent.replace("#", "");
+  const rgb = `rgb(${parseInt(hex.slice(0, 2), 16)}, ${parseInt(hex.slice(2, 4), 16)}, ${parseInt(hex.slice(4, 6), 16)})`;
+  const popOk = pop.opened && pop.closed && pop.back && pop.ring === rgb;
+  console.log(`  ${popOk ? "PASS" : "FAIL"}  (i) popover: opens ${pop.opened}, Esc closes ${pop.closed}, focus back ${pop.back}, ring ${pop.ring} = accent ${rgb}`);
+  failed ||= !popOk;
+  // Popovers that exist must be keyboard buttons, and every one must have an accessible name.
+  const unnamed = await js("[...document.querySelectorAll('.info-btn')].filter((b) => !b.getAttribute('aria-label')).length");
+  console.log(`  ${unnamed === 0 ? "PASS" : "FAIL"}  every (i) button has a name (${await js("document.querySelectorAll('.info-btn').length")} buttons)`);
+  failed ||= unnamed !== 0;
+
   console.log("Touch check at 375 px (cash sparkline):");
   await open("/?theme=light", 375, true);
   // A real finger drag fires many small move events. Simulate that, reading the tooltip at three points.
@@ -242,6 +272,14 @@ try {
   const swOk = sw[0] <= sw[1];
   console.log(`  ${swOk ? "PASS" : "FAIL"}  no horizontal scroll at 375 px (scrollWidth ${sw[0]}, clientWidth ${sw[1]})`);
   failed ||= !swOk;
+  // On a phone "Adjust assumptions" starts closed, and an open popover stays inside the screen.
+  const phone = await js(`(async () => { const closed = !document.querySelector('details.assumptions').open;
+    document.querySelector('.kpi .info-btn').click(); await new Promise((r) => setTimeout(r, 100));
+    const r = document.querySelector('.info-pop').getBoundingClientRect();
+    return { closed, inside: r.left >= 0 && r.right <= document.documentElement.clientWidth, sw: document.documentElement.scrollWidth }; })()`);
+  const phoneOk = phone.closed && phone.inside && phone.sw <= sw[1];
+  console.log(`  ${phoneOk ? "PASS" : "FAIL"}  375 px: assumptions closed ${phone.closed}, popover inside the screen ${phone.inside}`);
+  failed ||= !phoneOk;
   await send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
   await open("/?theme=light", 1440);
   const dur = await js("getComputedStyle(document.querySelector('.btn')).transitionDuration");

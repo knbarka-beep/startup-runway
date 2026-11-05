@@ -1,75 +1,127 @@
 "use client";
 // The three charts of the dashboard: cash curve, MRR bridge (waterfall) and burn driver bars.
 // The KPI sparkline lives in components/kit/Sparkline.tsx.
+import { useMemo, useState } from "react";
 import {
-  Area, Bar, BarChart, CartesianGrid, Cell, ComposedChart, LabelList, Line, ReferenceDot, ReferenceLine,
+  Area, Bar, BarChart, CartesianGrid, Cell, ComposedChart, LabelList, ReferenceDot, ReferenceLine,
   ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
 import type { Annotation, Month, BurnDriver } from "@/lib/data";
 import type { ProjectedMonth } from "@/lib/scenario";
 import { eur, eurShort, monthLabel, monthShort, pct } from "@/lib/format";
 import { ChartTooltip } from "./kit/ChartTooltip";
-import { ANIMATION_MS, useAnimateOnce } from "./kit/useAnimateOnce";
+import { ANIMATION_MS, TWEEN_MS, useAnimateOnce, useMotionOk } from "./kit/useAnimateOnce";
 
 const axis = { tick: { fill: "var(--muted)", fontSize: 11 }, axisLine: false, tickLine: false } as const;
+// Recharts passes a label the box of the element it belongs to.
+type Box = { viewBox?: { x?: number; y?: number; width?: number; height?: number } };
+// Text with a halo in the card colour, so a label stays readable where it crosses a line.
+const halo = { paintOrder: "stroke", stroke: "var(--surface)", strokeWidth: 4, strokeLinejoin: "round" } as const;
 
-// Cash curve: actual months as a solid accent line over a soft fill, the scenario projection dashed.
-// Numbered dots on the actual line mark the events listed under the chart.
+// A flag on the cash line: a thin stem up from the point and a short label at the top of it.
+// `level` sets the stem length, so labels of neighbouring months sit at different heights and never overlap.
+function Flag({ viewBox, note, level, chartWidth }: Box & { note: Annotation; level: number; chartWidth: number }) {
+  const cx = (viewBox?.x ?? 0) + (viewBox?.width ?? 0) / 2;
+  const cy = (viewBox?.y ?? 0) + (viewBox?.height ?? 0) / 2;
+  // Near the right edge (on a phone) the flag hangs below the line instead, ending at the stem: the area
+  // under the line is empty there, and the labels of the other flags are all above the line.
+  const below = cx + note.short.length * 6.3 + 8 > chartWidth;
+  const top = below ? cy + 30 : cy - 26 - level * 19;
+  return (
+    <g>
+      <title>{`${monthLabel(note.month)}: ${note.text}`}</title>
+      <line x1={cx} y1={below ? cy + 5 : cy - 5} x2={cx} y2={below ? top + 3 : top - 4} stroke="var(--muted)" strokeWidth={1} />
+      <text x={below ? cx - 5 : cx + 5} y={top + (below ? 9 : 0)} textAnchor={below ? "end" : "start"} fontSize={11.5} fontWeight={500}
+            fill="var(--text)" style={halo}>{note.short}</text>
+    </g>
+  );
+}
+
+// The zero-cash month: a small red pill sitting on the x axis.
+function ZeroPill({ viewBox, text }: Box & { text: string }) {
+  const x = viewBox?.x ?? 0;
+  const y = (viewBox?.y ?? 0) + (viewBox?.height ?? 0);
+  const w = text.length * 6.2 + 14;
+  return (
+    <g>
+      <rect x={x - w / 2} y={y - 9} width={w} height={18} rx={9} fill="var(--negative-soft)" stroke="var(--negative)" strokeWidth={1} />
+      <text x={x} y={y + 4} textAnchor="middle" fontSize={11} fontWeight={600} fill="var(--negative)">{text}</text>
+    </g>
+  );
+}
+
+// Cash curve: actual months as a solid accent line over a soft fill, the scenario projection dashed over a
+// light hatch. Flags on the actual line mark three events. A slider move tweens the projection in 200 ms.
 export function CashChart({ actuals, projection, selected, zeroMonth, notes }: {
   actuals: Month[]; projection: ProjectedMonth[]; selected: string; zeroMonth: string | null; notes: Annotation[];
 }) {
   const animate = useAnimateOnce();
+  const motion = useMotionOk();
+  const [width, setWidth] = useState(1000);
   const last = actuals[actuals.length - 1];
-  const rows = [
-    ...actuals.map((m) => ({ month: m.month, actual: m.closing_cash as number | null, projection: null as number | null })),
-    ...projection.map((p) => ({ month: p.month, actual: null as number | null, projection: p.cash })),
-  ];
-  // Start the dashed line at the last actual point so the two lines join.
-  rows[actuals.length - 1].projection = last.closing_cash;
+  // Memoised, so changing the month does not restart the projection tween.
+  const rows = useMemo(() => {
+    const r = [
+      ...actuals.map((m) => ({ month: m.month, actual: m.closing_cash as number | null, projection: null as number | null })),
+      ...projection.map((p) => ({ month: p.month, actual: null as number | null, projection: p.cash })),
+    ];
+    // Start the projection at the last actual point so the two lines join.
+    r[actuals.length - 1].projection = last.closing_cash;
+    return r;
+  }, [actuals, projection, last]);
   const min = Math.min(0, ...projection.map((p) => p.cash));
 
   return (
-    <div className="h-[320px] lg:h-[400px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={rows} margin={{ top: 24, right: 12, bottom: 0, left: 0 }}>
+    <div className="h-[300px] lg:h-[420px]">
+      <ResponsiveContainer width="100%" height="100%" onResize={(w) => setWidth(w)}>
+        <ComposedChart data={rows} margin={{ top: 16, right: 12, bottom: 4, left: 0 }}>
+          <defs>
+            <pattern id="projection-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="6" stroke="var(--accent)" strokeOpacity="0.16" strokeWidth="2" />
+            </pattern>
+          </defs>
           <CartesianGrid stroke="var(--grid)" vertical={false} />
-          <XAxis dataKey="month" tickFormatter={monthShort} interval="preserveStartEnd" minTickGap={28} {...axis} />
+          <XAxis dataKey="month" tickFormatter={monthShort} interval="preserveStartEnd" minTickGap={28} tickMargin={8} {...axis} />
           <YAxis tickFormatter={eurShort} width={56} domain={[min, "auto"]} {...axis} />
           <Tooltip
-            cursor={{ stroke: "var(--border-strong)" }}
+            cursor={{ stroke: "var(--muted)", strokeWidth: 1, strokeDasharray: "3 3" }}
             isAnimationActive={false}
             content={({ active, payload, label }) => {
               if (!active || !payload?.length) return null;
               const row = payload[0].payload as (typeof rows)[number];
               const isActual = row.actual !== null;
               return (
-                <ChartTooltip
-                  title={monthLabel(String(label))}
-                  rows={[isActual
-                    ? { name: "Actual cash", value: eur(row.actual!), color: "var(--accent)" }
-                    : { name: "Projected cash", value: eur(row.projection!), color: "var(--accent)", dashed: true }]}
-                />
+                <div className="min-w-[150px] rounded-md border border-border bg-surface px-3 py-2 text-xs shadow-card">
+                  <div className="mb-0.5 flex items-center justify-between gap-3">
+                    <span className="font-semibold">{monthLabel(String(label))}</span>
+                    {!isActual && <span className="delta">projected</span>}
+                  </div>
+                  <div className="text-[0.95rem] font-semibold tabular-nums">{eur(isActual ? row.actual! : row.projection!)}</div>
+                  <div className="text-muted">cash in bank</div>
+                </div>
               );
             }}
           />
           <ReferenceLine y={0} stroke="var(--border-strong)" />
           <ReferenceLine x={last.month} stroke="var(--border)"
-                         label={{ value: "Projection", position: "top", fill: "var(--muted)", fontSize: 11 }} />
+                         // On a phone the legend above the chart names it; the text would collide with the flags.
+                         label={width < 640 ? undefined : { value: "Projection", position: "insideTopLeft", fill: "var(--muted)", fontSize: 11, dx: 4 }} />
           {selected !== last.month && <ReferenceLine x={selected} stroke="var(--neutral)" strokeDasharray="3 3" />}
           {zeroMonth && (
             <ReferenceLine x={zeroMonth} stroke="var(--negative)" strokeOpacity={0.45} strokeDasharray="2 3"
-                           label={{ value: `Cash runs out ${monthLabel(zeroMonth)}`, position: "insideTopRight", fill: "var(--negative)", fontSize: 11 }} />
+                           label={(p: Box) => <ZeroPill {...p} text={monthLabel(zeroMonth)} />} />
           )}
-          <Area type="linear" dataKey="actual" stroke="var(--accent)" strokeWidth={2} fill="var(--accent)" fillOpacity={0.08}
-                baseValue={0} dot={false} activeDot={{ r: 3.5, strokeWidth: 0 }}
+          <Area type="linear" dataKey="actual" stroke="var(--accent)" strokeWidth={2} fill="var(--accent)" fillOpacity={0.09}
+                baseValue={0} dot={false} activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--surface)" }}
                 isAnimationActive={animate} animationDuration={ANIMATION_MS} />
-          <Line type="linear" dataKey="projection" stroke="var(--accent)" strokeWidth={1.75} strokeDasharray="5 4" dot={false}
-                activeDot={{ r: 3.5, strokeWidth: 0, fill: "var(--accent)" }} isAnimationActive={false} />
-          {zeroMonth && <ReferenceDot x={zeroMonth} y={0} r={3.5} fill="var(--negative)" stroke="var(--surface)" strokeWidth={1.5} />}
+          <Area type="linear" dataKey="projection" stroke="var(--accent)" strokeWidth={1.75} strokeDasharray="5 4"
+                fill="url(#projection-hatch)" fillOpacity={1} baseValue={0} dot={false}
+                activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--surface)", fill: "var(--accent)" }}
+                isAnimationActive={motion} animationDuration={TWEEN_MS} animationEasing="ease-out" />
           {notes.map((n, i) => (
             <ReferenceDot key={n.month} x={n.month} y={n.cash} r={3.5} fill="var(--surface)" stroke="var(--text)" strokeWidth={1.25}
-                          // Neighbouring months: alternate the number above and below the line so they do not overlap.
-                          label={{ value: String(i + 1), position: i % 2 ? "bottom" : "top", fill: "var(--text)", fontSize: 10, fontWeight: 600 }} />
+                          // The earliest event gets the longest stem, so the labels step down from left to right.
+                          label={(p: Box) => <Flag {...p} note={n} level={notes.length - 1 - i} chartWidth={width} />} />
           ))}
         </ComposedChart>
       </ResponsiveContainer>
@@ -105,9 +157,9 @@ export function MrrBridge({ m }: { m: Month }) {
   const colour = (r: (typeof rows)[number]) => (r.total ? "var(--neutral)" : r.value >= 0 ? "var(--positive)" : "var(--negative)");
 
   return (
-    <div style={{ height: 240 }}>
+    <div className="min-h-[250px] flex-1">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={rows} margin={{ top: 20, right: 8, bottom: 0, left: 0 }}>
+        <BarChart data={rows} margin={{ top: 22, right: 8, bottom: 0, left: 0 }}>
           <CartesianGrid stroke="var(--grid)" vertical={false} />
           <XAxis dataKey="name" interval={0} {...axis} />
           <YAxis domain={[lo, hi]} allowDataOverflow tickFormatter={eurShort} width={56} {...axis} />
@@ -120,10 +172,17 @@ export function MrrBridge({ m }: { m: Month }) {
               return <ChartTooltip title={`MRR bridge, ${monthLabel(m.month)}`} rows={[{ name: r.full, value: eur(r.value), color: colour(r) }]} />;
             }}
           />
-          <Bar dataKey="range" radius={2} maxBarSize={44} isAnimationActive={false}>
+          <Bar dataKey="range" radius={[2, 2, 0, 0]} maxBarSize={44} isAnimationActive={false}>
             {rows.map((r) => <Cell key={r.name} fill={colour(r)} fillOpacity={r.total ? 0.6 : 0.85} />)}
-            <LabelList dataKey="value" position="top" formatter={(v) => (v === 0 ? "€0" : eurShort(Number(v)))}
-                       style={{ fill: "var(--text)", fontSize: 10 }} />
+            {/* Value above each bar; the two totals in bold. */}
+            <LabelList dataKey="value" content={(p) => {
+              const r = rows[Number(p.index)];
+              const top = Math.min(Number(p.y), Number(p.y) + Number(p.height));
+              return (
+                <text x={Number(p.x) + Number(p.width) / 2} y={top - 6} textAnchor="middle" fontSize={10.5}
+                      fontWeight={r.total ? 700 : 500} fill="var(--text)">{r.value === 0 ? "€0" : eurShort(r.value)}</text>
+              );
+            }} />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
@@ -146,10 +205,10 @@ export function BurnDrivers({ rows, type }: { rows: BurnDriver[]; type: "team" |
             <div className="h-2 rounded-sm bg-accent transition-[width] duration-200 motion-reduce:transition-none"
                  style={{ width: `${(r.amount / max) * 100}%` }} />
           </div>
-          <span className="text-right">{eurShort(r.amount)}</span>
+          <span className="text-right tabular-nums">{eurShort(r.amount)}</span>
         </div>
       ))}
-      <div className={`${row} border-t border-border pt-1.5 text-muted`}><span>Total</span><span /><span className="text-right">{eurShort(total)}</span></div>
+      <div className={`${row} border-t border-border pt-1.5 font-semibold`}><span>Total</span><span /><span className="text-right tabular-nums">{eurShort(total)}</span></div>
     </div>
   );
 }

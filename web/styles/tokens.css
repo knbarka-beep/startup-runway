@@ -28,6 +28,7 @@
   --on-accent: #ffffff;     /* text on an accent background, 7,5:1 */
 
   --shadow: 0 1px 2px rgb(28 27 25 / 0.04);
+  --shadow-pop: 0 6px 20px rgb(28 27 25 / 0.10);  /* popovers only */
 }
 
 [data-theme="dark"] {
@@ -53,6 +54,7 @@
   --on-accent: #141412;     /* 7,3:1 */
 
   --shadow: none;
+  --shadow-pop: 0 6px 20px rgb(0 0 0 / 0.45);
 }
 
 /* Tailwind reads the tokens, so utilities like bg-surface, text-muted, border-border and text-accent exist.
@@ -78,5 +80,6 @@
   --font-sans: var(--font-plex-sans), system-ui, sans-serif;
 
   --radius-card: 8px;
+  --radius-card-lg: 12px;   /* the big cash chart card */
   --shadow-card: var(--shadow);
 }

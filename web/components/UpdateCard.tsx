@@ -7,6 +7,7 @@
 import { attemptSummary, data, RETRY_SENTENCE, type NumberMatch, type UpdateMetrics } from "@/lib/data";
 import { dec, eur, eurShort, monthLabel, pct } from "@/lib/format";
 import { Card, CardHeader } from "./kit/Card";
+import { InfoTip } from "./kit/InfoTip";
 
 // "+€12k", "-€125k" or "no change"
 const signed = (x: number | null, f: (v: number) => string) =>
@@ -69,7 +70,19 @@ export default function UpdateCard({ month }: { month: string }) {
 
   return (
     <Card className="update">
-      <CardHeader title={`Draft investor update, ${monthLabel(month)}`}
+      <CardHeader eyebrow="AI draft, checked against the data" title={`Draft investor update, ${monthLabel(month)}`}
+                  infoLabel="the investor update"
+                  info={checks.length > 0 && (
+                    <p>
+                      TL;DR, highlights, lowlights and ask were drafted by {data.updates[0]?.model} (prompt{" "}
+                      {data.updates[0]?.prompt_version}) from that month&apos;s numbers only; the subject and the table come
+                      straight from the data. Highlighted text in [brackets] marks a reason only the founder knows.{" "}
+                      {RETRY_SENTENCE} A script without AI checks numbers, causes, structure and a few style rules, not
+                      writing quality: {sum.firstPass} of {sum.months} drafts passed on the first attempt, {sum.finalPass} of{" "}
+                      {checks.length} after retries; {sum.retried.length} months needed a retry. In the kept drafts{" "}
+                      {sum.numbersMatched} of {sum.numbersFound} numbers match the data.
+                    </p>
+                  )}
                   aside={check && <span className={`badge ${check.passed ? "positive" : "negative"}`}>{check.passed ? "Check passed" : "Check flagged"}</span>} />
 
       {data.updates.length === 0 ? (
@@ -98,16 +111,18 @@ export default function UpdateCard({ month }: { month: string }) {
             </div>
           </article>
 
-          <aside aria-label="Behind the draft">
+          {/* Sticky on desktop, so this column stays in view while the email is read. */}
+          <aside aria-label="Behind the draft" className="lg:sticky lg:top-16">
             <h3 className="t-label mb-3">Behind the draft</h3>
 
-            <h4 className="mb-1 text-sm font-semibold">Numbers in the draft</h4>
-            {check && (
-              <p className="mb-2 text-xs text-muted">
-                {check.numbers_matched} of {check.numbers_found} match a value in this month&apos;s fact sheet,
-                within the rounding the text uses. If a number fits more than one value, the closest is shown.
-              </p>
-            )}
+            <div className="mb-1 flex items-center gap-1.5">
+              <h4 className="text-sm font-semibold">Numbers in the draft</h4>
+              <InfoTip label="numbers in the draft" align="right">
+                <p>Each number must match a value in this month&apos;s fact sheet, within the rounding the text uses.
+                  If a number fits more than one value, the closest is shown.</p>
+              </InfoTip>
+            </div>
+            {check && <p className="mb-2 text-xs text-muted">{check.numbers_matched} of {check.numbers_found} match the data.</p>}
             <div className="table-scroll">
               <table className="data-table text-[0.82rem]">
                 <thead><tr><th>In the draft</th><th>Matched value in the data</th><th><span className="sr-only">Result</span></th></tr></thead>
@@ -155,14 +170,8 @@ export default function UpdateCard({ month }: { month: string }) {
       )}
 
       {checks.length > 0 && (
-        <p className="mt-5 max-w-[100ch] text-xs text-muted">
-          A draft for the founder to finish, not a finished email. TL;DR, highlights, lowlights and ask were drafted by{" "}
-          {data.updates[0]?.model} (prompt {data.updates[0]?.prompt_version}) from that month&apos;s numbers only; the
-          subject and the table come straight from the data. Highlighted text in [brackets] marks a reason only the
-          founder knows. {RETRY_SENTENCE} A script without AI checks numbers, causes, structure and a few style rules,
-          not writing quality: {sum.firstPass} of {sum.months} drafts passed on the first attempt,{" "}
-          {sum.finalPass} of {checks.length} after retries; {sum.retried.length} months needed a retry. In the kept
-          drafts {sum.numbersMatched} of {sum.numbersFound} numbers match the data. <a href="method/">How this works</a>
+        <p className="mt-5 text-xs text-muted">
+          A draft for the founder to finish, not a finished email. <a href="method/">How this works</a>
         </p>
       )}
     </Card>

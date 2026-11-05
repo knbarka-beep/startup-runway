@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { attemptSummary, data, RETRY_SENTENCE } from "@/lib/data";
+import { attemptSummary, cashAnnotations, data, RETRY_SENTENCE } from "@/lib/data";
 import { eur, monthLabel, pct } from "@/lib/format";
 
 export const metadata = { title: "How this works: Nordlys Analytics (fictional)" };
@@ -46,6 +46,27 @@ export default function Method() {
           </tbody>
         </table>
       </div>
+
+      <h2>Reading the dashboard</h2>
+      <p>
+        The (i) buttons next to titles, stats and sliders hold the short explanations. Everything in them is also
+        explained on this page.
+      </p>
+      <ul>
+        <li>The large number at the top is the runway for the selected month, shown in red below 12 months. Each stat
+          has its change vs the previous month: green when it moved the right way (cash, runway and ARR up, net burn
+          down), red when not.</li>
+        <li>On the cash chart the solid line with a soft fill is actual cash and the dashed line over a hatch is the
+          projection from the presets and sliders. The red pill on the axis marks the month the projection reaches
+          zero. Three events are marked on the actual line, each picked from the data:
+          <ul>{cashAnnotations().map((n) => <li key={n.month}>{monthLabel(n.month)}: {n.text}</li>)}</ul>
+        </li>
+        <li>The MRR bridge axis does not start at zero, otherwise the monthly movements would be invisible next to
+          the total MRR.</li>
+        <li>In the investor update, &quot;Numbers in the draft&quot; lists each number with the value it matched in
+          that month&apos;s fact sheet. If a number fits more than one value within the rounding, the closest is
+          shown.</li>
+      </ul>
 
       <h2>Why runway uses a 3-month average</h2>
       <p>
