@@ -3,12 +3,14 @@
 1. Load the CSVs from data/raw/ into tables.
 2. Load AI drafts and their checks if they exist (data/ai/, data/check/).
 3. Run every file in sql/ in filename order. Each file creates one view.
-4. Export data/export/dashboard.json, the only file the website reads.
+4. Export data/export/dashboard.json, the only file the website reads, and copy it
+   to web/data/dashboard.json so the website builds from web/ alone (as on Vercel).
 
 Run:  python build_db.py
 """
 
 import json
+import shutil
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
@@ -19,6 +21,7 @@ ROOT = Path(__file__).resolve().parent
 RAW = ROOT / "data" / "raw"
 DB_PATH = ROOT / "data" / "runway.duckdb"
 EXPORT = ROOT / "data" / "export" / "dashboard.json"
+WEB_COPY = ROOT / "web" / "data" / "dashboard.json"
 UPDATES = ROOT / "data" / "ai" / "updates.csv"
 CHECKS = ROOT / "data" / "check" / "update_checks.csv"
 ATTEMPTS = ROOT / "data" / "ai" / "update_attempts.csv"
@@ -95,6 +98,8 @@ def export(con):
                                                 FROM update_attempts ORDER BY month, attempt""")
     EXPORT.parent.mkdir(parents=True, exist_ok=True)
     EXPORT.write_text(json.dumps(data, indent=1, ensure_ascii=False), encoding="utf-8")
+    WEB_COPY.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(EXPORT, WEB_COPY)  # identical copy, never edited by hand
     print(f"Exported {EXPORT.relative_to(ROOT)}: {len(monthly)} months, "
           f"{len(data['updates'])} updates, {len(data['update_checks'])} checks")
 

@@ -2,9 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 
+const title = "Nordlys Analytics (fictional): runway dashboard";
+const description =
+  "Cash, burn and runway for a fictional Copenhagen SaaS startup, with AI-drafted investor updates checked against the data. All data is synthetic.";
+
+// The preview image is app/opengraph-image.png (a cropped screenshot), picked up by Next.js.
 export const metadata: Metadata = {
-  title: "Nordlys Analytics (fictional): runway dashboard",
-  description: "Cash, burn and runway for a fictional Copenhagen SaaS startup. All data is synthetic.",
+  title,
+  description,
+  openGraph: { title, description, type: "website" },
+  twitter: { card: "summary_large_image", title, description },
 };
 
 // Sets the theme before the page paints: ?theme=dark|light, then saved choice, then system setting.
@@ -22,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <span>Built with Claude Code by Knut Barka</span>
           <span>All data is fictional</span>
           <Link href="/method/">How this works</Link>
+          <a href="https://github.com/knbarka-beep/startup-runway">Code on GitHub</a>
         </footer>
       </body>
     </html>

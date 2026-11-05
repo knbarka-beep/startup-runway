@@ -1,6 +1,7 @@
-// The only data source of the website: data/export/dashboard.json, written by build_db.py.
-// It is bundled into the static site at build time. No API calls at runtime.
-import raw from "../../data/export/dashboard.json";
+// The only data source of the website: web/data/dashboard.json, an exact copy of
+// data/export/dashboard.json made by build_db.py. It is bundled into the static site
+// at build time. No API calls at runtime.
+import raw from "../data/dashboard.json";
 import type { ScenarioBase } from "./scenario";
 
 export type Month = {

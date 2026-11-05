@@ -1,0 +1,1 @@
+Runway dashboard for Nordlys Analytics ApS, a fictional company: cash, burn, runway and ARR.
