@@ -1,6 +1,8 @@
 # CLAUDE.md: rules for this repo
 
-Portfolio project: runway dashboard for **Nordlys Analytics ApS (fictional)**. Author: Knut Barka (economics master's student, not a developer). Every choice must be explainable by him in an interview: prefer simple, readable code over clever code.
+Claude Code reads this file at the start of every session. It stays in the public repo because it shows the rules the project was built under.
+
+Portfolio project: runway dashboard for **Nordlys Analytics ApS (fictional)**. Author: Knut Barka (economics student, not a developer). Every choice must be explainable by him in an interview: prefer simple, readable code over clever code.
 
 ## Hard rules
 
@@ -11,8 +13,8 @@ Portfolio project: runway dashboard for **Nordlys Analytics ApS (fictional)**. A
 - British English in all user-facing text.
 - Numbers in the UI: EUR, European format (`1.234.567`, `€1,23m`, comma decimals). Dates as `31.12.2026` or `Sep 2026`.
 - No em dashes anywhere in written text.
-- Do not touch `C:\Users\knbar\Projects\variance-cockpit`.
-- Never push, never create a GitHub remote, never deploy.
+- Do not touch the sibling project `../variance-cockpit`.
+- Never push, create a GitHub remote or deploy unless Knut is at the keyboard and has said yes in that session.
 - Record every self-made choice in `docs/decisions.md` (what, why, alternative considered).
 
 ## Data flow (one place the numbers come from)

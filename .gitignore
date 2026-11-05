@@ -1,14 +1,14 @@
-web/node_modules/
-web/.next/
-web/out/
-web/next-env.d.ts
-data/*.duckdb
-data/*.duckdb.wal
-__pycache__/
-.env
-*.log
-private/
-.env*
+# Generated, rebuilt by the data flow or npm
+node_modules/
 .next/
 out/
-node_modules/
+web/next-env.d.ts
+web/tsconfig.tsbuildinfo
+__pycache__/
+data/*.duckdb
+data/*.duckdb.wal
+*.log
+
+# Secrets and private drafts (never committed)
+.env*
+private/
